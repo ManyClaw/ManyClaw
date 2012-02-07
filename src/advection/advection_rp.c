@@ -92,4 +92,7 @@ int advection_step_serial(real* q, real* aux, int nx, int ny,
     }
   }
   free(waves);
+  free(amdq);
+  free(apdq);
+  free(wave_speeds);
 }
