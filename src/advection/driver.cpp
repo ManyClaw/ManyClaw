@@ -2,12 +2,14 @@
 #include <stdio.h>
 #include <iostream>
 
-// TODO add other step headers here
 #include "advection_rp_step_serial.h"
 #include "advection_rp_step_tbb.h"
 #include "advection_rp_step_ispc.h"
+// TODO add other step headers here
 
-void benchmark(int nx, int ny, int numGhost, int numStates, int numWaves, advection_rp_step_t rp_stepper)
+#include "timer.h"
+
+double benchmark(int nx, int ny, int numGhost, int numStates, int numWaves, advection_rp_step_t rp_stepper)
 {
   real* q     = (real*) malloc(sizeof(real)*(nx+numGhost*2)*(ny+numGhost*2)*numStates);
   real* aux   = (real*) malloc(sizeof(real)*(nx+numGhost*2)*(ny+numGhost*2)*2);
@@ -16,18 +18,20 @@ void benchmark(int nx, int ny, int numGhost, int numStates, int numWaves, advect
   real* waves = (real*) malloc(sizeof(real)*(nx+numGhost*2)*(ny+numGhost*2)*numStates*numWaves);
   real* wave_speeds = (real*) malloc(sizeof(real)*(nx+numGhost*2)*(ny+numGhost*2)*4*numStates);
 
-  // TODO start timer
+  timer t;
 
   rp_stepper(q, aux, numGhost, numStates, numWaves, nx, ny, amdq, apdq, waves, wave_speeds);
   
-  // TODO stop timer
-  
+  double time = t.elapsed();
+
   free(q);
   free(aux);
   free(waves);
   free(amdq);
   free(apdq);
   free(wave_speeds);
+
+  return time;
 }
 
 int main(int argc, char ** argv)
@@ -59,8 +63,8 @@ int main(int argc, char ** argv)
 
   for (size_t i = 0; i < num_rp_kernels; i++)
   {
-    std::cout << "Benchmarking " << advection_rp_stepper_names[i] << " Riemann kernel\n";
-    benchmark(nx, ny, 2, 3, 2, advection_rp_steppers[i]);
+    std::cout << "Benchmarking " << advection_rp_stepper_names[i] << " Riemann kernel...\n";
+    std::cout << "  finished in " << 1e3 * benchmark(nx, ny, 2, 3, 2, advection_rp_steppers[i]) << " ms\n";
   }
   
   return 0;
