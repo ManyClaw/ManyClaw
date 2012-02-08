@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
+#include <vector>
 
 #include "advection_rp_step_serial.h"
 #include "advection_rp_step_tbb.h"
@@ -9,27 +10,37 @@
 
 #include "timer.h"
 
+template <typename Vector>
+void randomize(Vector& v)
+{
+  // generate numbers in [0,1) deterministically
+  real seed = 0.123456789;
+
+  for(size_t i = 0; i < v.size(); i++)
+  {
+    seed = (314159.26535 * seed);
+    seed = seed - floor(seed);
+    v[i] = seed;
+  }
+}
+
 double benchmark(int nx, int ny, int numGhost, int numStates, int numWaves, advection_rp_step_t rp_stepper)
 {
-  real* q     = (real*) malloc(sizeof(real)*(nx+numGhost*2)*(ny+numGhost*2)*numStates);
-  real* aux   = (real*) malloc(sizeof(real)*(nx+numGhost*2)*(ny+numGhost*2)*2);
-  real* amdq  = (real*) malloc(sizeof(real)*(nx+numGhost*2)*(ny+numGhost*2)*numStates);
-  real* apdq  = (real*) malloc(sizeof(real)*(nx+numGhost*2)*(ny+numGhost*2)*numStates);
-  real* waves = (real*) malloc(sizeof(real)*(nx+numGhost*2)*(ny+numGhost*2)*numStates*numWaves);
-  real* wave_speeds = (real*) malloc(sizeof(real)*(nx+numGhost*2)*(ny+numGhost*2)*4*numStates);
+  std::vector<real> q           ((nx+numGhost*2)*(ny+numGhost*2)*numStates);
+  std::vector<real> aux         ((nx+numGhost*2)*(ny+numGhost*2)*2);
+  std::vector<real> amdq        ((nx+numGhost*2)*(ny+numGhost*2)*numStates);
+  std::vector<real> apdq        ((nx+numGhost*2)*(ny+numGhost*2)*numStates);
+  std::vector<real> waves       ((nx+numGhost*2)*(ny+numGhost*2)*numStates*numWaves);
+  std::vector<real> wave_speeds ((nx+numGhost*2)*(ny+numGhost*2)*4*numStates);
+
+  randomize(q);
+  randomize(aux);
 
   timer t;
 
-  rp_stepper(q, aux, numGhost, numStates, numWaves, nx, ny, amdq, apdq, waves, wave_speeds);
+  rp_stepper(&q[0], &aux[0], numGhost, numStates, numWaves, nx, ny, &amdq[0], &apdq[0], &waves[0], &wave_speeds[0]);
   
   double time = t.elapsed();
-
-  free(q);
-  free(aux);
-  free(waves);
-  free(amdq);
-  free(apdq);
-  free(wave_speeds);
 
   return time;
 }
