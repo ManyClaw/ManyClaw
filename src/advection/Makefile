@@ -1,7 +1,8 @@
 CXX=g++
 CXXFLAGS=-I./ -O3 -Wall
+LDFLAGS=-ltbb
 ISPC=ispc
-ISPCFLAGS=-O2 --arch=x86-64 --target=sse2
+ISPCFLAGS=-O2 --arch=x86-64 --target=sse2 #,sse4-x2,avx-x2
 
 default: driver
 
@@ -11,14 +12,19 @@ default: driver
 clean:
 	/bin/rm -rf driver *.o
 
-driver: driver.o advection_rp_step_serial.o
-	$(CXX) $(CXXFLAGS) -o $@ *.o
+driver: driver.o advection_rp_step_serial.o advection_rp_step_tbb.o advection_rp_step_ispc.o advection_rp_step_ispc.h
+	$(CXX) $(CXXFLAGS) -o $@ *.o $(LDFLAGS)
 
-advection_rp_step_serial.o: advection_rp_step_serial.h
+# ISPC must generate the advection_rp_step_ispc.h header before compiling driver
+driver.o: driver.cpp advection_rp_step_ispc.o
+	$(CXX) $(CXXFLAGS) -o $@ -c driver.cpp
+
+advection_rp_step_serial.o: advection_rp_step_serial.cpp advection_rp.h
 	$(CXX) $(CXXFLAGS) -o $@ -c advection_rp_step_serial.cpp
 
-#objs/simple.o: simple.cpp objs/simple_ispc.h 
-#	$(CXX) $(CXXFLAGS) -c -o $@ $<
-#
-#objs/%_ispc.h objs/%_ispc.o: %.ispc
-#	$(ISPC) $(ISPCFLAGS) $< -o objs/$*_ispc.o -h objs/$*_ispc.h
+advection_rp_step_tbb.o: advection_rp_step_tbb.cpp advection_rp.h
+	$(CXX) $(CXXFLAGS) -o $@ -c advection_rp_step_tbb.cpp
+
+advection_rp_step_ispc.o: advection_rp_step_ispc.ispc advection_rp.h
+	$(ISPC) $(ISPCFLAGS) -o $@ -h advection_rp_step_ispc.h advection_rp_step_ispc.ispc
+

@@ -48,5 +48,11 @@ void advection_rp(real* q_left, real* q_right, int numStates,
   apdq[2] = 0;	// 0   * wave[2 + 1*numStates];
 }
 
+typedef void (*advection_rp_step_t)
+  (real* q,     real* aux,
+   int numGhost, int numStates, int numWaves, int nx, int ny, // inputs
+   real* amdq,  real* apdq,
+   real* wave,  real* wave_speeds);
+
 #endif // ADVECTION_RP_H
 

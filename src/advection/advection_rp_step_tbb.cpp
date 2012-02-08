@@ -1,15 +1,16 @@
 #include "advection_rp_step_serial.h"
 
-#include <iostream>
 #include <tbb/blocked_range2d.h>
 
-//void advection_rp_step_serial(real* q,     real* aux,
-//                              int numGhost, int numStates, int numWaves, int nx, int ny, // inputs
-//                              real* amdq,  real* apdq,
-//                              real* wave,  real* wave_speeds)
-//{
-//  ::tbb::parallel_for(::tbb::blocked_range<Size>(0,n), for_each_detail::make_body<Size>(first,f));
-//
+void advection_rp_step_tbb(real* q,     real* aux,
+                           int numGhost, int numStates, int numWaves, int nx, int ny, // inputs
+                           real* amdq,  real* apdq,
+                           real* wave,  real* wave_speeds)
+{
+// TODO use  blocked_range2d to parallelize computation
+//  ::tbb::parallel_for(::tbb::blocked_range2d<int,int>(0,n), body);
+
+
 //  int x_i, row, left, right;
 //  for(row = 0; row <= ny; ++row)
 //  {
@@ -37,13 +38,5 @@
 //                   wave + 2*left, wave_speeds + 2*left);
 //    }
 //  }
-//}
-
-void advection_rp_step_tbb(real* q,     real* aux,
-                           int numGhost, int numStates, int numWaves, int nx, int ny, // inputs
-                           real* amdq,  real* apdq,
-                           real* wave,  real* wave_speeds)
-{
-  std::cout << "hello from tbb" << std::endl;
 }
 
