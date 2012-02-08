@@ -8,6 +8,7 @@
 #include "advection_rp_step_serial.h"
 #include "advection_rp_step_tbb.h"
 #include "advection_rp_step_ispc.h"
+#include "advection_rp_step_omp.h"
 // TODO add other step headers here
 
 #include "timer.h"
@@ -96,7 +97,7 @@ double benchmark(int nx, int ny, int numGhost, int numStates, int numWaves, adve
   timer t;
 
   rp_stepper(&q[0], &aux[0], numGhost, numStates, numWaves, nx, ny, &amdq[0], &apdq[0], &waves[0], &wave_speeds[0]);
-  
+
   double time = t.elapsed();
 
   return time;
@@ -120,13 +121,15 @@ int main(int argc, char ** argv)
   const char * advection_rp_stepper_names[] =
     {
       "serial",
-      "TBB"
+      //"TBB",
+      "omp"
     };
 
   advection_rp_step_t advection_rp_steppers[] =
     {
       advection_rp_step_serial,
-      advection_rp_step_tbb
+      //advection_rp_step_tbb,
+      advection_rp_step_omp
       // TODO add other advection_rp_step functions here
     };
 
@@ -138,7 +141,7 @@ int main(int argc, char ** argv)
     compare_kernels(nx, ny, numGhost, numStates, numWaves, advection_rp_step_serial, advection_rp_steppers[i]);
     std::cout << "  Benchmark finished in " << 1e3 * benchmark(nx, ny, numGhost, numStates, numWaves, advection_rp_steppers[i]) << " ms\n";
   }
-  
+
   return 0;
 }
 
