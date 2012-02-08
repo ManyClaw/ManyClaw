@@ -24,9 +24,9 @@ struct advection_rp_step_tbb_body
   void operator()(const tbb::blocked_range2d<int>& r) const
   {
     int x_i, row, left, right;
-    for(row = r.cols().begin(); row <= r.cols().end(); ++row)
+    for(row = r.cols().begin(); row < r.cols().end(); ++row)
     {
-      for(x_i = r.rows().begin(); x_i <= r.rows().end(); ++x_i)
+      for(x_i = r.rows().begin(); x_i < r.rows().end(); ++x_i)
       {
         left = x_i + row * nx;
         right = left + 1;
@@ -38,9 +38,9 @@ struct advection_rp_step_tbb_body
     }
 
     int y_i, col;
-    for(col = r.rows().begin(); col <= r.rows().end(); ++col)
+    for(col = r.rows().begin(); col < r.rows().end(); ++col)
     {
-      for(y_i = r.cols().begin(); y_i <= r.cols().end(); ++y_i)
+      for(y_i = r.cols().begin(); y_i < r.cols().end(); ++y_i)
       {
         left = y_i * nx + col;
         right = left + nx;
@@ -62,6 +62,7 @@ void advection_rp_step_tbb(real* q,     real* aux,
     (q, aux, numGhost, numStates, numWaves, nx, ny,
      amdq, apdq, wave, wave_speeds);
 
-  ::tbb::parallel_for(::tbb::blocked_range2d<int,int>(0, nx, 0, ny), body);
+  // note: we use nx+1 and ny+1 here and < in the body (instead of <= in the serial reference)
+  tbb::parallel_for(::tbb::blocked_range2d<int,int>(0, nx+1, 0, ny+1), body);
 }
 
