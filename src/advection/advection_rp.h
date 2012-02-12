@@ -5,10 +5,17 @@
 
 typedef double real;
 
+struct rp_params {
+  int num_states, dim;
+};
+
+static const rp_params advection_rp_params = {3, 2};
+
+
 // Advection Riemann problem.
 inline
-void advection_rp(real* q_left, real* q_right, int numStates,
-                  real* u_left, real* u_right,	// input
+void advection_rp(const real* q_left, const real* q_right, const int numStates,
+                  const real* u_left, const real* u_right,	// input
                   real* amdq, real* apdq, real* wave,
                   real* wave_speeds) // output
 {

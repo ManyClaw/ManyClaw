@@ -1,6 +1,6 @@
 CXX=g++
-CXXFLAGS=-I./ -O3 -Wall
-LDFLAGS= #-ltbb
+CXXFLAGS=-I./ -O3 -Wall -I/Users/aterrel/workspace/tbb30_20110704oss/include
+LDFLAGS= -L/Users/aterrel/workspace/tbb30_20110704oss/lib -ltbb
 ISPC=ispc
 ISPCFLAGS=-O2 --arch=x86-64 --target=sse2 #,sse4-x2,avx-x2
 OMPCFLAGS=-fopenmp
@@ -13,7 +13,7 @@ default: driver
 clean:
 	/bin/rm -rf driver *.o
 
-driver: driver.o advection_rp_step_serial.o advection_rp_step_omp.o # advection_rp_step_tbb.o advection_rp_step_ispc.o advection_rp_step_ispc.h
+driver: driver.o advection_rp_step_serial.o advection_rp_step_omp.o advection_rp_step_tbb.o #advection_rp_step_ispc.o advection_rp_step_ispc.h
 	$(CXX) $(CXXFLAGS) $(OMPCFLAGS) -o $@ *.o $(LDFLAGS)
 
 # ISPC must generate the advection_rp_step_ispc.h header before compiling driver

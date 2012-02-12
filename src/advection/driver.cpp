@@ -7,7 +7,7 @@
 
 #include "advection_rp_step_serial.h"
 #include "advection_rp_step_tbb.h"
-#include "advection_rp_step_ispc.h"
+//#include "advection_rp_step_ispc.h"
 #include "advection_rp_step_omp.h"
 // TODO add other step headers here
 
@@ -52,22 +52,26 @@ void compare_kernels(int nx, int ny, int numGhost, int numStates, int numWaves,
                      advection_rp_step_t rp_stepper1,
                      advection_rp_step_t rp_stepper2)
 {
+  const int num_aux = 2;
+  const int dim = 2;
   // TODO make this a function of the encapsulated states
+  // Cell centered values
   std::vector<real> q           ((nx+numGhost*2)*(ny+numGhost*2)*numStates);
-  std::vector<real> aux         ((nx+numGhost*2)*(ny+numGhost*2)*2);
+  std::vector<real> aux         ((nx+numGhost*2)*(ny+numGhost*2)*num_aux);
 
   randomize(q);
   randomize(aux);
 
-  std::vector<real> amdq1        ((nx+numGhost*2)*(ny+numGhost*2)*numStates);
-  std::vector<real> apdq1        ((nx+numGhost*2)*(ny+numGhost*2)*numStates);
-  std::vector<real> waves1       ((nx+numGhost*2)*(ny+numGhost*2)*numStates*numWaves);
-  std::vector<real> wave_speeds1 ((nx+numGhost*2)*(ny+numGhost*2)*4*numStates);
-  
-  std::vector<real> amdq2        ((nx+numGhost*2)*(ny+numGhost*2)*numStates);
-  std::vector<real> apdq2        ((nx+numGhost*2)*(ny+numGhost*2)*numStates);
-  std::vector<real> waves2       ((nx+numGhost*2)*(ny+numGhost*2)*numStates*numWaves);
-  std::vector<real> wave_speeds2 ((nx+numGhost*2)*(ny+numGhost*2)*4*numStates);
+  // Outputs on interfaces
+  std::vector<real> amdq1        ((nx+1)*(ny+1)*numStates*dim);
+  std::vector<real> apdq1        ((nx+1)*(ny+1)*numStates*dim);
+  std::vector<real> waves1       ((nx+1)*(ny+1)*numStates*numWaves*dim);
+  std::vector<real> wave_speeds1 ((nx+1)*(ny+1)*4*numStates*dim);
+
+  std::vector<real> amdq2        ((nx+1)*(ny+1)*numStates*dim);
+  std::vector<real> apdq2        ((nx+1)*(ny+1)*numStates*dim);
+  std::vector<real> waves2       ((nx+1)*(ny+1)*numStates*numWaves*dim);
+  std::vector<real> wave_speeds2 ((nx+1)*(ny+1)*4*numStates*dim);
 
   rp_stepper1(&q[0], &aux[0], numGhost, numStates, numWaves, nx, ny,
               &amdq1[0], &apdq1[0], &waves1[0], &wave_speeds1[0]);
@@ -83,13 +87,15 @@ void compare_kernels(int nx, int ny, int numGhost, int numStates, int numWaves,
 
 double benchmark(int nx, int ny, int numGhost, int numStates, int numWaves, advection_rp_step_t rp_stepper)
 {
+  const int num_aux = 2;
+  const int dim = 2;
   // TODO encapsulate all state into a single structure
   std::vector<real> q           ((nx+numGhost*2)*(ny+numGhost*2)*numStates);
-  std::vector<real> aux         ((nx+numGhost*2)*(ny+numGhost*2)*2);
-  std::vector<real> amdq        ((nx+numGhost*2)*(ny+numGhost*2)*numStates);
-  std::vector<real> apdq        ((nx+numGhost*2)*(ny+numGhost*2)*numStates);
-  std::vector<real> waves       ((nx+numGhost*2)*(ny+numGhost*2)*numStates*numWaves);
-  std::vector<real> wave_speeds ((nx+numGhost*2)*(ny+numGhost*2)*4*numStates);
+  std::vector<real> aux         ((nx+numGhost*2)*(ny+numGhost*2)*num_aux);
+  std::vector<real> amdq        (((nx+1)*(ny+1)*numStates)*dim);
+  std::vector<real> apdq        (((nx+1)*(ny+1)*numStates)*dim);
+  std::vector<real> waves       ((nx+1)*(ny+1)*numStates*numWaves*dim);
+  std::vector<real> wave_speeds ((nx+1)*(ny+1)*4*numStates*dim);
 
   randomize(q);
   randomize(aux);
@@ -121,14 +127,14 @@ int main(int argc, char ** argv)
   const char * advection_rp_stepper_names[] =
     {
       "serial",
-      //"TBB",
+      "TBB",
       "omp"
     };
 
   advection_rp_step_t advection_rp_steppers[] =
     {
       advection_rp_step_serial,
-      //advection_rp_step_tbb,
+      advection_rp_step_tbb,
       advection_rp_step_omp
       // TODO add other advection_rp_step functions here
     };
