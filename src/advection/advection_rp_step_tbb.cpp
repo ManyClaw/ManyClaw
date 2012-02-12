@@ -45,7 +45,7 @@ struct advection_rp_step_tbb_body
       for(row = r.cols().begin(); row < r.cols().end(); ++row)
       {
       idx_up = col + (row - 1)*(nx + 2*num_ghost);
-      idx_down = nx + 2*num_ghost;
+      idx_down = idx_up + nx + 2*num_ghost;
       idx_out = (col - num_ghost) + (row - num_ghost) * (nx + 1) + ((nx + 1)*(ny + 1));
       advection_rp(q + idx_up*num_states, q + idx_down*num_states, num_states,
                    aux + idx_up*num_aux, aux + idx_down*num_aux,

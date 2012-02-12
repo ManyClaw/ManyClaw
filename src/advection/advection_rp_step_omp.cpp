@@ -30,7 +30,7 @@ void advection_rp_step_omp( real* q,  real* aux,  int num_ghost,
       for(row = num_ghost; row <= ny + num_ghost; ++row)
       {
         idx_up = col + (row - 1)*(nx + 2*num_ghost);
-        idx_down = nx + 2*num_ghost;
+        idx_down = idx_up + nx + 2*num_ghost;
         idx_out = (col - num_ghost) + (row - num_ghost) * (nx + 1) + ((nx + 1)*(ny + 1));
         advection_rp(q + idx_up*num_states, q + idx_down*num_states, num_states,
                      aux + idx_up*num_aux, aux + idx_down*num_aux,
