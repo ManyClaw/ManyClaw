@@ -6,6 +6,8 @@
 #include <numeric>
 
 #include "advection_rp_step_serial.h"
+#include "advection_rp_step_serial_tiled.h"
+#include "advection_rp_step_serial_cellwise.h"
 #include "advection_rp_step_tbb.h"
 //#include "advection_rp_step_ispc.h"
 #include "advection_rp_step_omp.h"
@@ -127,6 +129,8 @@ int main(int argc, char ** argv)
   const char * advection_rp_stepper_names[] =
     {
       "serial",
+      "serial_tiled",
+      "serial_cellwise",
       "TBB",
       "omp"
     };
@@ -134,6 +138,8 @@ int main(int argc, char ** argv)
   advection_rp_step_t advection_rp_steppers[] =
     {
       advection_rp_step_serial,
+      advection_rp_step_serial_tiled,
+      advection_rp_step_serial_cellwise,
       advection_rp_step_tbb,
       advection_rp_step_omp
       // TODO add other advection_rp_step functions here

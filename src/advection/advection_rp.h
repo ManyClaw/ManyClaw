@@ -2,6 +2,7 @@
 #define ADVECTION_RP_H
 
 #include <math.h>
+#include <stdio.h>
 
 typedef double real;
 
