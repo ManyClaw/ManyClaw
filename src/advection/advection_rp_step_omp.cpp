@@ -4,38 +4,27 @@ void advection_rp_step_omp( real* q,  real* aux,  int num_ghost,
    int num_states,  int num_waves,  int nx,  int ny,
   real* amdq, real* apdq, real* wave, real* wave_speeds)
 {
-  int col, row, idx_left, idx_right, idx_up, idx_down, idx_out;
+  int col, row, idx_left, idx_center, idx_up, idx_out_x, idx_out_y;
   const int num_aux = 2;
 
-#pragma omp parallel shared(q, aux, num_ghost, num_states, num_waves, nx, ny, amdq, apdq, wave, wave_speeds) private(col, row, idx_left, idx_right, idx_up, idx_down, idx_out)
+#pragma omp parallel shared(q, aux, num_ghost, num_states, num_waves, nx, ny, amdq, apdq, wave, wave_speeds) private(col, row, idx_left, idx_center, idx_up, idx_out_x, idx_out_y)
   {
     #pragma omp for schedule(runtime) nowait
-    for(row = num_ghost; row <= ny + num_ghost; ++row)
-    {
-      for(col = num_ghost; col <= nx + num_ghost; ++col)
-      {
+    for(row = num_ghost; row <= ny + num_ghost; ++row) {
+      for(col = num_ghost; col <= nx + num_ghost; ++col) {
         idx_left = col + row*(nx + 2*num_ghost) - 1;
-        idx_right = idx_left + 1;
-        idx_out = (col - num_ghost) + (row - num_ghost) * (nx + 1);
-        advection_rp(q + idx_left*num_states, q + idx_right*num_states, num_states,
-                     aux + idx_left*num_aux, aux + idx_right*num_aux,
-                     amdq + idx_out*num_states, apdq + idx_out*num_states,
-                     wave + num_waves*num_states*idx_out, wave_speeds + num_waves*idx_out);
-      }
-    }
-
-    #pragma omp for schedule(runtime) nowait
-    for(col = num_ghost; col <= nx + num_ghost; ++col)
-    {
-      for(row = num_ghost; row <= ny + num_ghost; ++row)
-      {
         idx_up = col + (row - 1)*(nx + 2*num_ghost);
-        idx_down = idx_up + nx + 2*num_ghost;
-        idx_out = (col - num_ghost) + (row - num_ghost) * (nx + 1) + ((nx + 1)*(ny + 1));
-        advection_rp(q + idx_up*num_states, q + idx_down*num_states, num_states,
-                     aux + idx_up*num_aux, aux + idx_down*num_aux,
-                     amdq + idx_out*num_states, apdq + idx_out*num_states,
-                     wave + num_waves*num_states*idx_out, wave_speeds + num_waves*idx_out);
+        idx_center = idx_left + 1;
+        idx_out_x = (col - num_ghost) + (row - num_ghost) * (nx + 1);
+        idx_out_y = idx_out_x + ((nx + 1)*(ny + 1));
+        advection_rp(q + idx_left*num_states, q + idx_center*num_states, num_states,
+                     aux + idx_left*num_aux, aux + idx_center*num_aux,
+                     amdq + idx_out_x*num_states, apdq + idx_out_x*num_states,
+                     wave + num_waves*num_states*idx_out_x, wave_speeds + num_waves*idx_out_x);
+        advection_rp(q + idx_up*num_states, q + idx_center*num_states, num_states,
+                     aux + idx_up*num_aux, aux + idx_center*num_aux,
+                     amdq + idx_out_y*num_states, apdq + idx_out_y*num_states,
+                     wave + num_waves*num_states*idx_out_y, wave_speeds + num_waves*idx_out_y);
       }
     }
   }
