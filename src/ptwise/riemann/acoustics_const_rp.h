@@ -5,54 +5,46 @@
 #include <stdio.h>
 
 typedef double real;
+const real BULK = 1.0;
+const real RHO = 1.0;
 
-struct rp_params
+typedef struct rp_params
 {
     // Bulk modules (k)
     real bulk;
     // Density
     real rho;
     // Impedence
-    real Z;
+    real c;  // = sqrt(bulk / rho);
     // Speed of sound
-    real c
-}
-
-// These values are all constant for this Riemann solver so calculate them
-// here instead of in the Riemann solver
-static const rp_params acoustics_rp_params = 
-{ 
-    bulk = 1.0;
-    rho = 1.0;
-    c = sqrt(bulk / rho);
-    Z = c * rho ;
-}
+    real Z; // = c * rho;
+} rp_params;
 
 // Point-wise constant acoustics Riemann solver
 inline
 void acoustics_const_rp(const real* q_left, const real* q_right,
                         const real* aux_left, const real* aux_right,
-                        rp_params* params,
+                        const rp_params* params,
                         real* amdq, real* apdq, real *wave, real *s)
 {
     // Local physical constants
-    real[2] alpha;
+    real alpha[2];
     
     // Wave strengths
-    real alpha[0] = ( q_left[0] - q_right[0] + 
-                        params.z * (q_right[1] - q_left[1])) / (2.0 * params.z);
-    real alpha[1] = ( q_right[0] - q_left[0] +
-                        params.z * (q_right[1] - q_left[1])) / (2.0 * params.z);
+    alpha[0] = ( q_left[0] - q_right[0] + 
+                        params->Z * (q_right[1] - q_left[1])) / (2.0 * params->Z);
+    alpha[1] = ( q_right[0] - q_left[0] +
+                        params->Z * (q_right[1] - q_left[1])) / (2.0 * params->Z);
     
     // Wave speeds
-    s[0] = -params.c, s[1] = params.c;
+    s[0] = -params->c, s[1] = params->c;
  
     // Set wave vectors
-    wave[0,0] = -alpha[0] * params.z; 
+    wave[0,0] = -alpha[0] * params->Z; 
     wave[0,1] =  alpha[0];
     wave[0,2] =  0.0;
     
-    wave[1,0] = alpha[1] * params.z;
+    wave[1,0] = alpha[1] * params->Z;
     wave[1,1] = alpha[1];
     wave[1,2] = 0.0;
     

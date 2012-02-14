@@ -6,13 +6,8 @@
 
 typedef double real;
 
-struct rp_params
-{}
-
-// All values are stored in the aux_left and aux_right arrays
-static const rp_params acoustics_rp_params = 
-{ 
-}
+typedef struct rp_params
+{} rp_params;
 
 // Point-wise constant acoustics Riemann solver
 // aux_* = [rho,bulk]
@@ -29,7 +24,7 @@ void acoustics_var_rp(const real* q_left, const real* q_right,
     real Z_right = c_right * aux_right[0];
     
     // Wave strengths
-    real[2] alpha;
+    real alpha[2];
     alpha[0] = ( q_left[0] - q_right[0] + Z_right * (q_right[1] - q_left[1]) ) 
                         / (Z_left + Z_right);
     alpha[1] = ( q_right[0] - q_left[0] + Z_left * (q_right[1] - q_left[1]) ) 
