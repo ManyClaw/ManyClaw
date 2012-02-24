@@ -12,7 +12,6 @@ void advection_rp_step_serial(const real* q, const real* aux,
                               real* wave, real* wave_speeds)
 {
   int col, row, idx_left, idx_right, idx_up, idx_down, idx_out;
-  const int num_aux = 2;
   const int num_ghost = advection_rp_params.num_ghost;
   const int num_states = advection_rp_params.num_states;
   const int num_waves = advection_rp_params.num_waves;

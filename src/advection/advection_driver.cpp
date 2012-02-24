@@ -7,11 +7,11 @@
 
 #include "../ptwise/riemann/advection_rp.h"
 #include "advection_rp_step_serial.h"
-//#include "advection_rp_step_serial_tiled.h"
-//#include "advection_rp_step_serial_cellwise.h"
-//#include "advection_rp_step_tbb.h"
+#include "advection_rp_step_serial_tiled.h"
+#include "advection_rp_step_serial_cellwise.h"
+#include "advection_rp_step_tbb.h"
 //#include "advection_rp_step_ispc.h"
-//#include "advection_rp_step_omp.h"
+#include "advection_rp_step_omp.h"
 // TODO add other step headers here
 
 #include "timer.h"
@@ -93,7 +93,7 @@ void compare_kernels(int nx, int ny, advection_rp_step_t rp_stepper1,
 
 double benchmark(int nx, int ny, advection_rp_step_t rp_stepper)
 {
-  const int num_aux = 2;
+  //const int num_aux = 2;
   const int dim = 2;
   const int num_ghost = advection_rp_params.num_ghost;
   const int num_states = advection_rp_params.num_states;
@@ -101,7 +101,7 @@ double benchmark(int nx, int ny, advection_rp_step_t rp_stepper)
 
   // TODO encapsulate all state into a single structure
   std::vector<real> q           ((nx+num_ghost*2)*(ny+num_ghost*2)*num_states);
-  std::vector<real> aux         ((nx+num_ghost*2)*(ny+num_ghost*2)*num_aux);
+  std::vector<real> aux         (0);//((nx+num_ghost*2)*(ny+num_ghost*2)*num_aux);
   std::vector<real> amdq        (((nx+1)*(ny+1)*num_states)*dim);
   std::vector<real> apdq        (((nx+1)*(ny+1)*num_states)*dim);
   std::vector<real> waves       ((nx+1)*(ny+1)*num_states*num_waves*dim);
@@ -143,10 +143,10 @@ int main(int argc, char ** argv)
   advection_rp_step_t advection_rp_steppers[] =
     {
       advection_rp_step_serial,
-      //advection_rp_step_serial_tiled,
-      //advection_rp_step_serial_cellwise,
-      //advection_rp_step_tbb,
-      //advection_rp_step_omp
+      advection_rp_step_serial_tiled,
+      advection_rp_step_serial_cellwise,
+      advection_rp_step_tbb,
+      advection_rp_step_omp
       // TODO add other advection_rp_step functions here
     };
 
@@ -154,8 +154,8 @@ int main(int argc, char ** argv)
 
   for (size_t i = 0; i < num_rp_kernels; i++)
   {
-    //std::cout << "Testing " << advection_rp_stepper_names[i] << " Riemann kernel...\n";
-    //compare_kernels(nx, ny, advection_rp_step_serial, advection_rp_steppers[i]);
+    std::cout << "Testing " << advection_rp_stepper_names[i] << " Riemann kernel...\n";
+    compare_kernels(nx, ny, advection_rp_step_serial, advection_rp_steppers[i]);
     std::cout << "  Benchmark finished in " << 1e3 * benchmark(nx, ny, advection_rp_steppers[i]) << " ms\n";
   }
 
