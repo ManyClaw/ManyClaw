@@ -5,7 +5,7 @@
 #include <cmath>
 #include <numeric>
 
-#include "../ptwise/riemann/advection_rp.h"
+#include "../../riemann/advection_rp.h"
 #include "advection_rp_step_serial.h"
 #include "advection_rp_step_serial_tiled.h"
 #include "advection_rp_step_serial_cellwise.h"
@@ -56,9 +56,9 @@ void compare_kernels(int nx, int ny, advection_rp_step_t rp_stepper1,
 {
   const int num_aux = 2;
   const int dim = 2;
-  const int num_ghost = advection_rp_params.num_ghost;
-  const int num_states = advection_rp_params.num_states;
-  const int num_waves  = advection_rp_params.num_waves;
+  const int num_ghost = advection_rp_grid_params.num_ghost;
+  const int num_states = advection_rp_grid_params.num_states;
+  const int num_waves  = advection_rp_grid_params.num_waves;
 
   // TODO make this a function of the encapsulated states
   // Cell centered values
@@ -95,9 +95,9 @@ double benchmark(int nx, int ny, advection_rp_step_t rp_stepper)
 {
   //const int num_aux = 2;
   const int dim = 2;
-  const int num_ghost = advection_rp_params.num_ghost;
-  const int num_states = advection_rp_params.num_states;
-  const int num_waves  = advection_rp_params.num_waves;
+  const int num_ghost = advection_rp_grid_params.num_ghost;
+  const int num_states = advection_rp_grid_params.num_states;
+  const int num_waves  = advection_rp_grid_params.num_waves;
 
   // TODO encapsulate all state into a single structure
   std::vector<real> q           ((nx+num_ghost*2)*(ny+num_ghost*2)*num_states);

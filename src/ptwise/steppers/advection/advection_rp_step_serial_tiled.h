@@ -1,7 +1,7 @@
 #ifndef ADVECTION_RP_STEP_SERIAL_TILED_H
 #define ADVECTION_RP_STEP_SERIAL_TILED_H
 
-#include "../ptwise/riemann/advection_rp.h"
+#include "../../riemann/advection_rp.h"
 
 void advection_rp_step_serial_tiled(const real* q,
                                     const real* aux,

@@ -1,7 +1,7 @@
 #ifndef ADVECTION_RP_STEP_TBB_H
 #define ADVECTION_RP_STEP_TBB_H
 
-#include "../ptwise/riemann/advection_rp.h"
+#include "../../riemann/advection_rp.h"
 
 void advection_rp_step_tbb(const real* q,
                            const real* aux,
