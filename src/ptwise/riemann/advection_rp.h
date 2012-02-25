@@ -3,15 +3,12 @@
 
 #include "../../many_claw.h"
 
-typedef double real;
-
 struct advection_rp_aux_global_t
 {
   real u;
 };
 
 static const advection_rp_aux_global_t advection_rp_aux_global = {1.0};
-
 static const rp_grid_params advection_rp_grid_params = {2, 1, 0, 1};
 
 // Constanst coefficient Riemann problem
