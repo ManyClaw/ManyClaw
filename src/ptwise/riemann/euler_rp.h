@@ -28,33 +28,35 @@ void euler_rp(const real* q_left, const real* q_right,
 
   real a1,a2,a3,a4;
   real delta[4];
-  real rhsqrtl,rhsqrtl,pl,pr,rhsq2,u,v,enth,u2v2,a,g1a2,euv
+  real gamma1;
+  real rhsqrtl,rhsqrtr,pl,pr,rhsq2,u,v,enth,u2v2,a,g1a2,euv;
 
   // Roe averages
-  rhsqrtl = sqrt(qr[0])
-  rhsqrtr = sqrt(ql[0])
-  pl = gamma1*(qr[3] - 0.5d0*(pow(qr[1],2) + pow(qr[2],2))/qr[0])
-  pr = gamma1*(ql[3] - 0.5d0*(pow(ql[1],2) + pow(ql[2],2))/ql[0])
-  rhsq2 = rhsqrtl + rhsqrtr
-  u = (qr[1]/rhsqrtl + ql[1]/rhsqrtr) / rhsq2
-  v = (qr[2]/rhsqrtl + ql[2]/rhsqrtr) / rhsq2
-  enth = (((qr[3]+pl)/rhsqrtl + (ql[3]+pr)/rhsqrtr)) / rhsq2
-  u2v2 = pow(u,2) + pow(v,2)
+  gamma1 = aux_global->gamma - 1.0;
+  rhsqrtl = sqrt(q_right[0]);
+  rhsqrtr = sqrt(q_left[0]);
+  pl = gamma1*(q_right[3] - 0.5*(pow(q_right[1],2) + pow(q_right[2],2))/q_right[0]);
+  pr = gamma1*(q_left[3] - 0.5*(pow(q_left[1],2) + pow(q_left[2],2))/q_left[0]);
+  rhsq2 = rhsqrtl + rhsqrtr;
+  u = (q_right[1]/rhsqrtl + q_left[1]/rhsqrtr) / rhsq2;
+  v = (q_right[2]/rhsqrtl + q_left[2]/rhsqrtr) / rhsq2;
+  enth = (((q_right[3]+pl)/rhsqrtl + (q_left[3]+pr)/rhsqrtr)) / rhsq2;
+  u2v2 = pow(u,2) + pow(v,2);
   // This line has been changed to handle the random init conditions
-  a2 = abs(gamma1 * (enth - 0.5 * u2v2))
-  a = sqrt(a2)
-  g1a2 = gamma1 / a2
-  euv = enth - u2v2
+  a2 = abs(gamma1 * (enth - 0.5 * u2v2));
+  a = sqrt(a2);
+  g1a2 = gamma1 / a2;
+  euv = enth - u2v2;
 
   // Wave strengths
-  delta[1] = ql[0] - qr[0]
-  delta[2] = ql[1] - qr[1]
-  delta[3] = ql[2] - qr[2]
-  delta[4] = ql[3] - qr[3]
-  a3 = g1a2 * (euv*delta[0] + u*delta[1] + v*delta[2] - delta[3])
-  a2 = delta[2] - v*delta[0]
-  a4 = (delta[1] + (a-u)*delta[0] - a*a3) / (2.0*a)
-  a1 = delta[0] - a3 - a4
+  delta[1] = q_left[0] - q_right[0];
+  delta[2] = q_left[1] - q_right[1];
+  delta[3] = q_left[2] - q_right[2];
+  delta[4] = q_left[3] - q_right[3];
+  a3 = g1a2 * (euv*delta[0] + u*delta[1] + v*delta[2] - delta[3]);
+  a2 = delta[2] - v*delta[0];
+  a4 = (delta[1] + (a-u)*delta[0] - a*a3) / (2.0*a);
+  a1 = delta[0] - a3 - a4;
 
   // Wave speeds
   s[0] = u-a;
