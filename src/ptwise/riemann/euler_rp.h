@@ -43,16 +43,16 @@ void euler_rp(const real* q_left, const real* q_right,
   enth = (((q_right[3]+pl)/rhsqrtl + (q_left[3]+pr)/rhsqrtr)) / rhsq2;
   u2v2 = pow(u,2) + pow(v,2);
   // This line has been changed to handle the random init conditions
-  a2 = abs(gamma1 * (enth - 0.5 * u2v2));
+  a2 = fabs(gamma1 * (enth - 0.5 * u2v2));
   a = sqrt(a2);
   g1a2 = gamma1 / a2;
   euv = enth - u2v2;
 
   // Wave strengths
-  delta[1] = q_left[0] - q_right[0];
-  delta[2] = q_left[1] - q_right[1];
-  delta[3] = q_left[2] - q_right[2];
-  delta[4] = q_left[3] - q_right[3];
+  delta[0] = q_left[0] - q_right[0];
+  delta[1] = q_left[1] - q_right[1];
+  delta[2] = q_left[2] - q_right[2];
+  delta[3] = q_left[3] - q_right[3];
   a3 = g1a2 * (euv*delta[0] + u*delta[1] + v*delta[2] - delta[3]);
   a2 = delta[2] - v*delta[0];
   a4 = (delta[1] + (a-u)*delta[0] - a*a3) / (2.0*a);
@@ -73,7 +73,7 @@ void euler_rp(const real* q_left, const real* q_right,
   wave[1*num_states + 0] = 0.0;
   wave[1*num_states + 1] = 0.0;
   wave[1*num_states + 2] = a2;
-  wave[1*num_states + 3] = a2 * v; 
+  wave[1*num_states + 3] = a2 * v;
 
   wave[2*num_states + 0] = a3;
   wave[2*num_states + 1] = a3 * u;
