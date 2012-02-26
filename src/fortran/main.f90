@@ -73,6 +73,6 @@ program manyclaw
     ave_time(3) = time_rp_row_function(row_rp_euler,num_tests)
     print *,"Euler row Riemann solver time = ",ave_time(3)," ms."
     ave_time(4) = time_rp_ptwise_function(ptwise_rp_euler,num_tests)
-    print *,"Euler row Riemann solver time = ",ave_time(4)," ms."
+    print *,"Euler ptwise Riemann solver time = ",ave_time(4)," ms."
 
 end program manyclaw

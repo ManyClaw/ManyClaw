@@ -25,7 +25,7 @@ contains
                     / real(clock_rate,kind=tk)
     end function end_timer
     
-    ! TODO:  This function should actually loop over a 2D grid, not just rows
+    
     real(kind=tk) function time_rp_row_function(rp_function,num_tests) &
                                 result(ave_time)
 
@@ -57,6 +57,12 @@ contains
             end subroutine rp_function
         end interface
         
+        ! Riemann solver input arguments
+        real(kind=sk), allocatable :: ql(:,:)
+        real(kind=sk), allocatable :: qr(:,:)
+        real(kind=sk), allocatable :: auxl(:,:)
+        real(kind=sk), allocatable :: auxr(:,:)
+        
         ! Output from the Riemann solver
         real(kind=sk), allocatable :: wave(:,:,:)
         real(kind=sk), allocatable :: s(:,:)
@@ -65,7 +71,7 @@ contains
         
         ! Local storage
         real(kind=tk) :: total_time = 0.0_tk
-        integer :: n,i,j,maxm
+        integer :: m,n,i,j,maxm
 
         ! Allocate actual arrays
         allocate(q(num_states,1-num_ghost:nx+num_ghost,1-num_ghost:ny+num_ghost))
@@ -73,6 +79,10 @@ contains
 
         ! Setup arrays and problem
         maxm = max(nx,ny)
+        allocate(ql(num_states,1-num_ghost:maxm+num_ghost))
+        allocate(qr(num_states,1-num_ghost:maxm+num_ghost))
+        allocate(auxl(num_states,1-num_ghost:maxm+num_ghost))
+        allocate(auxr(num_states,1-num_ghost:maxm+num_ghost))
         allocate(wave(num_states, num_waves, 1-num_ghost:maxm+num_ghost))
         allocate(s(num_waves, 1-num_ghost:maxm+num_ghost))
         allocate(apdq(num_states, 1-num_ghost:maxm+num_ghost))
@@ -88,12 +98,36 @@ contains
             
             call start_timer()
             do j=1-num_ghost,ny+num_ghost
-                call rp_function(1,maxm,num_states,num_waves,num_ghost,nx,q(:,:,j),q(:,:,j), &
-                                    aux(:,:,j),aux(:,:,j),wave,s,amdq,apdq,num_aux)
+                do m=1,num_states
+                    do i=1-num_ghost,nx+num_ghost
+                        ql(m,i) = q(m,i,j)
+                        qr(m,i) = q(m,i,j)
+                    enddo
+                enddo
+                do m=1,num_aux
+                    do i=1-num_ghost,nx+num_ghost
+                        auxl(m,i) = aux(m,i,j)
+                        auxr(m,i) = aux(m,i,j)
+                    enddo
+                enddo
+                call rp_function(1,maxm,num_states,num_waves,num_ghost,nx,ql,qr, &
+                                    auxl,auxr,wave,s,amdq,apdq,num_aux)
             enddo
             do i=1-num_ghost,nx+num_ghost
-                call rp_function(2,maxm,num_states,num_waves,num_ghost,nx,q(:,i,:),q(:,i,:), &
-                    aux(:,i,:),aux(:,i,:),wave,s,amdq,apdq,num_aux)
+                do m=1,num_states
+                    do j=1-num_ghost,ny+num_ghost
+                        ql(m,j) = q(m,i,j)
+                        qr(m,j) = q(m,i,j)
+                    enddo
+                enddo
+                do m=1,num_aux
+                    do j=1-num_ghost,ny+num_ghost
+                        auxl(m,j) = aux(m,i,j)
+                        auxr(m,j) = aux(m,i,j)
+                    enddo
+                enddo
+                call rp_function(2,maxm,num_states,num_waves,num_ghost,nx,ql,qr, &
+                    auxl,auxr,wave,s,amdq,apdq,num_aux)
             enddo
             total_time = total_time + end_timer()
         enddo

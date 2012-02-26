@@ -171,10 +171,10 @@ contains
             rhsq2 = rhsqrtl + rhsqrtr
             u(i) = (qr(mu,i-1)/rhsqrtl + ql(mu,i)/rhsqrtr) / rhsq2
             v(i) = (qr(mv,i-1)/rhsqrtl + ql(mv,i)/rhsqrtr) / rhsq2
-            enth(i) = (((qr(4,i-1)+pl)/rhsqrtl &
-            + (ql(4,i)+pr)/rhsqrtr)) / rhsq2
+            enth(i) = (((qr(4,i-1)+pl)/rhsqrtl + (ql(4,i)+pr)/rhsqrtr)) / rhsq2
             u2v2(i) = u(i)**2 + v(i)**2
-            a2 = gamma1*(enth(i) - .5d0*u2v2(i))
+            ! This line has been changed to handle the random init conditions
+            a2 = abs(gamma1*(enth(i) - .5d0*u2v2(i)))
             a(i) = sqrt(a2)
             g1a2(i) = gamma1 / a2
             euv(i) = enth(i) - u2v2(i)
@@ -290,7 +290,8 @@ contains
         enth = (((qr(4)+pl)/rhsqrtl &
         + (ql(4)+pr)/rhsqrtr)) / rhsq2
         u2v2 = u**2 + v**2
-        a2 = gamma1*(enth - .5d0*u2v2)
+        ! This line has been changed to handle the random init conditions
+        a2 = abs(gamma1*(enth - .5d0*u2v2))
         a = sqrt(a2)
         g1a2 = gamma1 / a2
         euv = enth - u2v2
