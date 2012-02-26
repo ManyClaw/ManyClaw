@@ -58,8 +58,12 @@ program manyclaw
     num_waves = 1
     u = 1.0_sk
     v = 1.0_sk
-    ave_time(1) = time_rp_row_function(row_rp_advection,num_tests)
-    print *,"Advection row Riemann solver time = ",ave_time(1)," ms."
+    ave_time(1) = time_rp_row1_function(row_rp_advection,num_tests)
+    print *,"Advection row method 1 Riemann solver time = ",ave_time(1)," ms."
+    ave_time(1) = time_rp_row2_function(row_rp_advection,num_tests)
+    print *,"Advection row method 2 Riemann solver time = ",ave_time(1)," ms."
+    ave_time(1) = time_rp_row3_function(row_rp_advection,num_tests)
+    print *,"Advection row method 3 Riemann solver time = ",ave_time(1)," ms."
     ave_time(2) = time_rp_ptwise_function(ptwise_rp_advection,num_tests)
     print *,"Advection ptwise Riemann solver time = ",ave_time(2)," ms."
     
@@ -70,8 +74,12 @@ program manyclaw
     num_waves = 4
     gamma = 1.4_sk
     gamma1 = 1.0_sk - gamma
-    ave_time(3) = time_rp_row_function(row_rp_euler,num_tests)
-    print *,"Euler row Riemann solver time = ",ave_time(3)," ms."
+    ave_time(3) = time_rp_row1_function(row_rp_euler,num_tests)
+    print *,"Euler row method 1 Riemann solver time = ",ave_time(3)," ms."
+    ave_time(3) = time_rp_row2_function(row_rp_euler,num_tests)
+    print *,"Euler row method 2 Riemann solver time = ",ave_time(3)," ms."
+    ave_time(3) = time_rp_row3_function(row_rp_euler,num_tests)
+    print *,"Euler row method 3 Riemann solver time = ",ave_time(3)," ms."
     ave_time(4) = time_rp_ptwise_function(ptwise_rp_euler,num_tests)
     print *,"Euler ptwise Riemann solver time = ",ave_time(4)," ms."
 

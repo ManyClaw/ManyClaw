@@ -160,7 +160,7 @@ contains
             mv = 2
         endif
         
-        ! Calculate 
+        ! Calculate Roe variables
         do i = 2-mbc, mx+mbc
             rhsqrtl = sqrt(qr(1,i-1))
             rhsqrtr = sqrt(ql(1,i))
@@ -192,7 +192,7 @@ contains
             a4 = (delta(2) + (a(i)-u(i))*delta(1) - a(i)*a3) / (2.d0*a(i))
             a1 = delta(1) - a3 - a4
     
-            ! Computer the waves
+            ! Compute the waves
             ! Acoustic
             wave(1,1,i) = a1
             wave(mu,1,i) = a1*(u(i)-a(i))
