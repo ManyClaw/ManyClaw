@@ -1,0 +1,9 @@
+*.o
+*.mod
+*~
+src/drivers/advection
+src/drivers/acoustics_const
+src/drivers/acoustics_var
+src/drivers/euler
+src/fortran/manyclaw_fortran
+ 
