@@ -29,11 +29,15 @@ ifeq ($(findstring gfortran,$(FC)),gfortran)
 	# There should be no space between this flag and the argument
 	MODULE_FLAG = -J
 	PPFLAGS = -cpp
+    OPT_FLAGS = -O3 -funroll-loops -finline-functions -fdefault-real-8
+    DEBUG_FLAGS = -W -Wall -fbounds-check -pedantic-errors -Wunderflow -ffpe-trap=zero,overflow -g
 	OMP_FLAG = -fopenmp
 else ifeq ($(FC),ifort)
 	# Note that there shoud be a space after this flag
 	MODULE_FLAG = -module 
 	PPFLAGS = -fpp
+    OPT_FLAGS = -O2 -ip
+    DEBUG_FLAGS = -g -check all -traceback -fpe0
 	OMP_FLAGS = -openmp
 endif
 MAKELEVEL ?= 0
@@ -83,6 +87,12 @@ $(EXECUTABLE): $(MODULE_FILES) $(MODULE_OBJECTS) $(OBJECTS) $(MAKEFILE_LIST) ;
 clean:
 	-rm -f $(EXECUTABLE) $(MODULE_FILES) $(MODULE_OBJECTS) $(OBJECTS)
 	
+debug:
+	$(MAKE) new FFLAGS="$(DEBUG_FLAGS)"
+	
+opt:
+	$(MAKE) new FFLAGS="$(OPT_FLAGS)"
+    
 new:
 	$(MAKE) clean
 	$(MAKE) $(EXECUTABLE)
