@@ -30,14 +30,14 @@ void acoustics_const_rp(const real* q_left, const real* q_right,
                         real* amdq, real* apdq, real *wave, real *s)
 {
     // Local physical constants
-    real alpha[2];
+    real alpha[2],delta[2];
     const int num_states = acoustics_const_rp_grid_params.num_states;
 
     // Wave strengths
-    alpha[0] = ( q_left[0] - q_right[0] +
-                 aux_global->Z * (q_right[1] - q_left[1])) / (2.0 * aux_global->Z);
-    alpha[1] = ( q_right[0] - q_left[0] +
-                 aux_global->Z * (q_right[1] - q_left[1])) / (2.0 * aux_global->Z);
+    delta[0] = q_right[0] - q_left[0];
+    delta[1] = q_right[1] - q_left[1];
+    alpha[0] = (-delta[0] + aux_global->Z * delta[1]) / (2.0 * aux_global->Z);
+    alpha[1] = ( delta[1] + aux_global->Z * delta[1]) / (2.0 * aux_global->Z);
 
     // Wave speeds
     s[0] = -aux_global->c, s[1] = aux_global->c;
