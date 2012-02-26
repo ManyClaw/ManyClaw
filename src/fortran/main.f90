@@ -27,6 +27,8 @@ program manyclaw
     ny = 1028
     num_tests = 3
     select case(iargc())
+        case(0)
+            continue
         case(1)
             call getarg(1,input_nx)
             read(input_nx,'(I10)') nx
