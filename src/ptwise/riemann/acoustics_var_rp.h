@@ -27,11 +27,11 @@ void acoustics_var_rp(const real* q_left, const real* q_right,
     real Z_right = c_right * aux_right[0];
 
     // Wave strengths
-    real alpha[2];
-    alpha[0] = ( q_left[0] - q_right[0] + Z_right * (q_right[1] - q_left[1]) )
-                        / (Z_left + Z_right);
-    alpha[1] = ( q_right[0] - q_left[0] + Z_left * (q_right[1] - q_left[1]) )
-                        / (Z_left + Z_right);
+    real delta[2],alpha[2];
+    delta[0] = q_right[0] - q_left[0];
+    delta[1] = q_left[1] - q_right[1];
+    alpha[0] = (-delta[0] + Z_right * delta[1]) / (Z_right + Z_left);
+    alpha[1] = ( delta[0] + Z_left * delta[1])  / (Z_right + Z_left);
 
     // Wave speeds
     s[0] = -c_left;
