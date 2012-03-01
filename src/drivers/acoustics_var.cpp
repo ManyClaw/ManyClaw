@@ -1,4 +1,5 @@
 #include "../many_claw.h"
+#include <tbb/task_scheduler_init.h>
 
 #include "../ptwise/riemann/acoustics_var_rp.h"
 #include "../ptwise/steppers/acoustics_var/acoustics_var_rp_step_serial.h"
@@ -18,6 +19,11 @@ int main(int argc, char ** argv)
     nx = atoi(argv[1]);
     ny = atoi(argv[2]);
   }
+  int num_threads = -1;
+  char * descr = getenv("OMP_NUM_THREADS");
+  if (descr)
+    num_threads = atoi(descr);
+  tbb::task_scheduler_init init(num_threads);
 
   printf("Riemann Solve on %dx%d grid\n", nx, ny);
 

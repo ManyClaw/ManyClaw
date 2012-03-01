@@ -17,7 +17,8 @@ struct euler_rp_step_tbb_body
                              real* wave_speeds)
     : q(q), aux(aux), nx(nx), ny(ny), amdq(amdq), apdq(apdq),
         wave(wave), wave_speeds(wave_speeds)
-  {}
+  {
+  }
 
   void operator()(const tbb::blocked_range2d<int>& r) const
   {
