@@ -17,6 +17,7 @@ void euler_rp_step_serial_cellwise( const real* q,  const real* aux,
       idx_center = idx_left + 1;
       idx_out_x = (col - num_ghost) + (row - num_ghost) * (nx + 1);
       idx_out_y = idx_out_x + ((nx + 1)*(ny + 1));
+
       euler_rp(q + idx_left*num_states, q + idx_center*num_states,
                    aux, aux,  &euler_rp_aux_global,
                    amdq + idx_out_x*num_states, apdq + idx_out_x*num_states,
