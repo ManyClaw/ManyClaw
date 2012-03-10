@@ -25,10 +25,20 @@ inline void limiter(const int num_eqn, const int num_waves,
             left_dot_product += wave[wave_index, eqn_index] * wave_left[wave_index, eqn_index];
             right_dot_product += wave[wave_index, eqn_index] * wave_right[wave_index, eqn_index];
         }
-
+        
         if (s[wave_index] < 0.0)
         {
-            for ()
+            r = left_dot_product / wave_norm_squared
+        }
+        else
+        {
+            r = right_dot_product / wave_norm_squared;
+        }
+        
+        phi = limiter_func(r);
+        for (eqn_index=0; eqn_index < num_eqn; eqn_index++)
+        {
+            wave = phi * wave[eqn_index,wave_index]   
         }
     }
 }
