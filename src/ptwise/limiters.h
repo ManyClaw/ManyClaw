@@ -3,6 +3,7 @@
 #endif
 
 #include <algorithm>
+#include <cmath>
 
 typedef double real;
 
@@ -72,7 +73,7 @@ inline real vanleer_limiter(real r)
 // Monotonized Center
 inline real mc_limiter(real r)
 {
-    return std::max(0.0,std::min((1.0 + r) / 2.0,std::min(2.0,2.0*r)))
+    return std::max(0.0,std::min((1.0 + r) / 2.0,std::min(2.0,2.0*r)));
 }
 
 // Beam-Warstd::ming
