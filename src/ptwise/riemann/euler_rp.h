@@ -21,10 +21,11 @@ inline real pressure(real rho, real momentum, real E)
 inline
 void euler_rp(const real* q_left, const real* q_right,
               const real* aux_left, const real* aux_right,
-              const euler_rp_aux_global_t* aux_global,
+              const void* aux_global_void,
               real* amdq, real* apdq, real* wave, real* s)
 {
   const int num_states = euler_rp_grid_params.num_states;
+  const euler_rp_aux_global_t* aux_global = (const euler_rp_aux_global_t *) aux_global_void;
 
   real a1,a2,a3,a4;
   real delta[4];

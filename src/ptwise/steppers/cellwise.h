@@ -2,7 +2,7 @@
 #define CELLWISE_H
 
 struct RiemannCellwiseStepper {
-  inline int operator()(const rp_step_t rp_step, const rp_grid_params grid_params,
+  inline int operator()(const rp_t rp, const rp_grid_params grid_params,
                         const real* q,  const real* aux,
                         const void* aux_global,
                         const int nx, const  int ny,
@@ -20,17 +20,15 @@ struct RiemannCellwiseStepper {
         idx_center = idx_left + 1;
         idx_out_x = (col - num_ghost) + (row - num_ghost) * (nx + 1);
         idx_out_y = idx_out_x + ((nx + 1)*(ny + 1));
-
-        rp_step(q, q, aux, aux, aux_global, amdq, apdq, wave, wave_speeds);
-
-        /* rp_step(q + idx_left*num_states, q + idx_center*num_states, */
-        /*         aux, aux,  aux_global, */
-        /*         amdq + idx_out_x*num_states, apdq + idx_out_x*num_states, */
-        /*         wave + num_waves*num_states*idx_out_x, wave_speeds + num_waves*idx_out_x); */
-        /* rp_step(q + idx_up*num_states, q + idx_center*num_states, */
-        /*         aux, aux,  aux_global, */
-        /*         amdq + idx_out_y*num_states, apdq + idx_out_y*num_states, */
-        /*         wave + num_waves*num_states*idx_out_y, wave_speeds + num_waves*idx_out_y); */
+        
+        rp(q + idx_left*num_states, q + idx_center*num_states,
+           aux, aux,  aux_global,
+           amdq + idx_out_x*num_states, apdq + idx_out_x*num_states,
+           wave + num_waves*num_states*idx_out_x, wave_speeds + num_waves*idx_out_x);
+        rp(q + idx_up*num_states, q + idx_center*num_states,
+           aux, aux,  aux_global,
+           amdq + idx_out_y*num_states, apdq + idx_out_y*num_states,
+           wave + num_waves*num_states*idx_out_y, wave_speeds + num_waves*idx_out_y);
       }
     }
     return 0;

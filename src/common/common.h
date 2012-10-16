@@ -12,6 +12,11 @@ struct rp_grid_params
   int num_waves;
 };
 
+typedef void (*rp_t)(const real* q_left, const real* q_right,
+                  const real* aux_left, const real* aux_right,
+                  const void* aux_global,
+                     real* amdq, real* apdq, real* wave, real* s);
+
 typedef void (*rp_step_t)(const real* q, const real* aux,
                           const int nx, const int ny, real* amdq,  real* apdq,
                           real* wave, real* wave_speeds);

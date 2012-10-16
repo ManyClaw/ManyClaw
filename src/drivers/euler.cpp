@@ -6,6 +6,7 @@
 #include "../ptwise/steppers/euler/euler_rp_step_serial.h"
 #include "../ptwise/steppers/euler/euler_rp_step_serial_tiled.h"
 #include "../ptwise/steppers/euler/euler_rp_step_serial_cellwise.h"
+#include "../ptwise/steppers/euler/euler_rp_step_serial_cellwise_functor.h"
 #include "../ptwise/steppers/euler/euler_rp_step_tbb.h"
 //#include "euler_rp_step_ispc.h"
 #include "../ptwise/steppers/euler/euler_rp_step_omp.h"
@@ -35,6 +36,7 @@ int main(int argc, char ** argv)
       "serial",
       "serial_tiled",
       "serial_cellwise",
+      "serial_functor",
       "TBB",
       "omp",
       "omp2"
@@ -45,6 +47,7 @@ int main(int argc, char ** argv)
       euler_rp_step_serial,
       euler_rp_step_serial_tiled,
       euler_rp_step_serial_cellwise,
+      euler_rp_step_serial_cellwise_functor,
       euler_rp_step_tbb,
       euler_rp_step_omp,
       euler_rp_step_omp2
