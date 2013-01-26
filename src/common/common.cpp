@@ -1,5 +1,10 @@
 #include "common.h"
 
+int test_function(int nx)
+{
+  return nx * 2;
+}
+
 void compare_steppers(int nx, int ny, rp_grid_params params,
                       rp_step_t rp_stepper_1, rp_step_t rp_stepper_2)
 {
@@ -43,4 +48,41 @@ double benchmark_stepper(int nx, int ny, rp_grid_params params, rp_step_t rp_ste
   double time = t.elapsed();
 
   return time;
+}
+
+
+double compare_updates(int nx, int ny, rp_grid_params params, 
+                        rp_step_t rp_stepper, updater_t updater)
+{
+  int index;
+  Grid grid(nx, ny);
+
+  State state(grid, params.num_states, params.num_aux, params.num_ghost);
+  State ref_state(grid, params.num_states, params.num_aux, params.num_ghost);
+
+  for (int row = params.num_ghost; row <= ny + params.num_ghost; ++row) {
+    for (int col = params.num_ghost; col <= nx + params.num_ghost; ++col) {
+      index = col + row * (nx + 2 * params.num_ghost);
+      for (int state = 0; state < params.num_states; ++state) {
+        // q[index * params.num_states + state] = 0.0;
+        // q[index * params.num_states + state] = 0.0;
+
+      }
+    }
+  }
+
+  state.randomize();
+  ref_state.randomize();
+ 
+  Solution solution(grid, state);
+  Solver solver(solution, params.num_waves);
+
+  rp_stepper(&state.q[0], &state.aux[0], grid.nx, grid.ny,
+              &solver.amdq[0], &solver.apdq[0], &solver.waves[0],
+              &solver.wave_speeds[0]);
+
+  updater(&state.q[0], &state.aux[0], grid.nx, grid.ny, &solver.amdq[0],  
+          &solver.apdq[0],  &solver.waves[0], &solver.wave_speeds[0], params);
+
+  return max_error(ref_state.q, state.q);
 }

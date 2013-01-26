@@ -10,6 +10,8 @@
 #include "../ptwise/steppers/advection/advection_rp_step_omp.h"
 // TODO add other step headers here
 
+#include "../updates.h"
+
 int main(int argc, char ** argv)
 {
   int nx = 100, ny = 100;
@@ -58,6 +60,13 @@ int main(int argc, char ** argv)
     std::cout << "  Benchmark finished in " <<
       1e3 * benchmark_stepper(nx, ny, advection_rp_grid_params, advection_rp_steppers[i]) << " ms\n";
   }
+
+  std::cout << "Testing update...\n";
+  std::cout << test_function(1);
+  std::cout << "  Total error = " << 
+    compare_updates(nx, ny, advection_rp_grid_params, 
+                            advection_rp_step_serial,
+                            updater_first_order_dimensional_splitting) << "\n";
 
   return 0;
 }

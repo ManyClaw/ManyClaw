@@ -1,3 +1,4 @@
+#include "many_claw.h"
 
 // Upwind updater
 void updater_first_order_dimensional_splitting(real* q,
