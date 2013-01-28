@@ -1,3 +1,3 @@
-.cpp.o:
-	$(CXX) $(CFLAGS) $< -c -o $@
+#.cpp.o:
+#	$(CXX) $(CFLAGS) $< -c -o $@
 
