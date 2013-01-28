@@ -1,5 +1,4 @@
 include variables.inc
-include rules.inc
 
 all:
 	$(MAKE) -C common
