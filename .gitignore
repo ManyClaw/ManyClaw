@@ -1,9 +1,15 @@
 *.o
 *.mod
 *~
-src/drivers/advection
-src/drivers/acoustics_const
-src/drivers/acoustics_var
-src/drivers/euler
+*#
+*.#*
+test/advection
+test/acoustics_const
+test/acoustics_var
+test/euler
+benchmark/advection
+benchmark/acoustics_const
+benchmark/acoustics_var
+benchmark/euler
 src/fortran/manyclaw_fortran
  
