@@ -21,6 +21,11 @@ typedef void (*rp_step_t)(const real* q, const real* aux,
                           const int nx, const int ny, real* amdq,  real* apdq,
                           real* wave, real* wave_speeds);
 
+typedef void (*updater_t)(real* q, const real* aux, const int nx, const int ny,
+                                   const real* amdq, const real* apdq,
+                                   const real* wave, const real* wave_speeds,
+                                   const rp_grid_params grid_params);
+
 struct abs_diff
 {
   real operator()(real a, real b) const
@@ -55,9 +60,13 @@ real max_error(const Vector& v1, const Vector& v2)
      abs_diff());
 }
 
+int test_function(int nx);
+
 void compare_steppers(int nx, int ny, rp_grid_params params,
                       rp_step_t rp_stepper1, rp_step_t rp_stepper2);
 double benchmark_stepper(int nx, int ny, rp_grid_params params,
                          rp_step_t rp_stepper);
+double compare_updates(int nx, int ny, rp_grid_params params, 
+                         rp_step_t rp_stepper, updater_t updater);
 
 #endif // COMMON_H
