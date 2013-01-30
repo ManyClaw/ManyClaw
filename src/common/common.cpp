@@ -1,4 +1,6 @@
+#include "data_structures.h"
 #include "common.h"
+#include "timer.h"
 
 int test_function(int nx)
 {

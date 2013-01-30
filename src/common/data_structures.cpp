@@ -8,7 +8,7 @@ Grid::Grid(int nx, int ny) :
 }
 
 State::State(Grid& grid, int num_states, int num_aux, int num_ghost) :
-  grid(grid), num_ghost(num_ghost), num_states(num_states), num_aux(num_aux)
+  num_states(num_states), num_aux(num_aux), num_ghost(num_ghost), grid(grid)
 {
   const int nx = grid.nx;
   const int ny = grid.ny;
@@ -23,7 +23,7 @@ void State::randomize()
 }
 
 Solver::Solver(Solution& solution, int num_waves):
-  solution(solution), num_waves(num_waves)
+  num_waves(num_waves), solution(solution)
 {
   const int nx = solution.grid.nx;
   const int ny = solution.grid.ny;

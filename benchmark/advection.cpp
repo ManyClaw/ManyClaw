@@ -1,16 +1,16 @@
-#include "../many_claw.h"
+#include <many_claw.h>
 #include <tbb/task_scheduler_init.h>
 
-#include "../ptwise/riemann/advection_rp.h"
-#include "../ptwise/steppers/advection/advection_rp_step_serial.h"
-#include "../ptwise/steppers/advection/advection_rp_step_serial_tiled.h"
-#include "../ptwise/steppers/advection/advection_rp_step_serial_cellwise.h"
-#include "../ptwise/steppers/advection/advection_rp_step_tbb.h"
-//#include "advection_rp_step_ispc.h"
-#include "../ptwise/steppers/advection/advection_rp_step_omp.h"
+#include <ptwise/riemann/advection_rp.h>
+#include <ptwise/steppers/advection/advection_rp_step_serial.h>
+#include <ptwise/steppers/advection/advection_rp_step_serial_tiled.h>
+#include <ptwise/steppers/advection/advection_rp_step_serial_cellwise.h>
+#include <ptwise/steppers/advection/advection_rp_step_tbb.h>
+//#include "advection_rp_step_ispc.h>
+#include <ptwise/steppers/advection/advection_rp_step_omp.h>
 // TODO add other step headers here
 
-#include "../updates.h"
+#include <updates.h>
 
 int main(int argc, char ** argv)
 {
@@ -54,20 +54,9 @@ int main(int argc, char ** argv)
 
   for (size_t i = 0; i < num_rp_kernels; i++)
   {
-    std::cout << "Testing " << advection_rp_stepper_names[i] << " Riemann kernel...\n";
-    compare_steppers(nx, ny, advection_rp_grid_params,
-                    advection_rp_step_serial, advection_rp_steppers[i]);
-    std::cout << "  Benchmark finished in " <<
+    std::cout << advection_rp_stepper_names[i] << "  finished in " <<
       1e3 * benchmark_stepper(nx, ny, advection_rp_grid_params, advection_rp_steppers[i]) << " ms\n";
   }
-
-  std::cout << "Testing update...\n";
-  std::cout << test_function(1);
-  std::cout << "  Total error = " << 
-    compare_updates(nx, ny, advection_rp_grid_params, 
-                            advection_rp_step_serial,
-                            updater_first_order_dimensional_splitting) << "\n";
-
   return 0;
 }
 
