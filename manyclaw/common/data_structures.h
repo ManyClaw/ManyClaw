@@ -1,8 +1,11 @@
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef DATA_STRUCTURES_H
+#define DATA_STRUCTURES_H
 
-#include "../many_claw.h"
+#include <vector>
+#include <cmath>
+#include <numeric>
 
+typedef double real;
 
 struct rp_grid_params
 {
@@ -26,14 +29,6 @@ typedef void (*updater_t)(real* q, const real* aux, const int nx, const int ny,
                                    const real* wave, const real* wave_speeds,
                                    const rp_grid_params grid_params);
 
-struct abs_diff
-{
-  real operator()(real a, real b) const
-  {
-    return std::abs(a - b);
-  }
-};
-
 template <typename Vector>
 void randomize_vector(Vector& v)
 {
@@ -48,25 +43,65 @@ void randomize_vector(Vector& v)
   }
 }
 
-// maximum absolute difference between components
-template <typename Vector>
-real max_error(const Vector& v1, const Vector& v2)
+struct Grid
 {
-  return std::inner_product
-    (v1.begin(), v1.end(),
-     v2.begin(),
-     real(0),
-     std::max<real>,
-     abs_diff());
-}
+  // size info
+  int nx;
+  int ny;
+  static const int dim=2;
 
-int test_function(int nx);
+  Grid(int nx, int ny);
+};
 
-void compare_steppers(int nx, int ny, rp_grid_params params,
-                      rp_step_t rp_stepper1, rp_step_t rp_stepper2);
-double benchmark_stepper(int nx, int ny, rp_grid_params params,
-                         rp_step_t rp_stepper);
-double compare_updates(int nx, int ny, rp_grid_params params, 
-                         rp_step_t rp_stepper, updater_t updater);
+struct State
+{
+  // size info
+  int num_states;
+  int num_aux;
+  int num_ghost; // not strictly needed but makes life easier for now
 
-#endif // COMMON_H
+
+  // State and auxilary variables
+  std::vector<real> q;
+  std::vector<real> aux;
+
+  // Non-owned reference
+  Grid &grid;
+
+  State(Grid& grid, int num_states, int num_aux, int num_ghost);
+  void randomize();
+
+};
+
+struct Solution
+{
+  // non-own references
+  Grid& grid;
+  State& state;
+
+  Solution(Grid& grid, State& state):
+    grid(grid), state(state)
+  {}
+};
+
+struct Solver
+{
+  // Size info
+  int num_ghost;
+  int num_waves;
+
+  // Interface data
+  std::vector<real> amdq;
+  std::vector<real> apdq;
+  std::vector<real> waves;
+  std::vector<real> wave_speeds;
+
+  // Non-owned references
+  Solution& solution;
+
+  Solver(Solution& solution, int num_waves);
+};
+
+
+
+#endif // DATA_STRUCTURES_H

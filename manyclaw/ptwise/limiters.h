@@ -1,6 +1,5 @@
-#ifndef LIMITERS_H
-#define LIMITERS_H
-#endif
+#ifndef __LIMITERS_H
+#define __LIMITERS_H
 
 #include <algorithm>
 #include <cmath>
@@ -81,3 +80,5 @@ inline real beamwarming_limiter(real r)
 {
     return r;
 }
+
+#endif

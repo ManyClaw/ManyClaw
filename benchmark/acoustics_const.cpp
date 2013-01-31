@@ -1,12 +1,6 @@
-#include <many_claw.h>
+#include <manyclaw/manyclaw.h>
 #include <tbb/task_scheduler_init.h>
 
-#include <ptwise/riemann/acoustics_const_rp.h>
-#include <ptwise/steppers/acoustics_const/acoustics_const_rp_step_serial.h>
-#include <ptwise/steppers/acoustics_const/acoustics_const_rp_step_serial_tiled.h>
-#include <ptwise/steppers/acoustics_const/acoustics_const_rp_step_serial_cellwise.h>
-#include <ptwise/steppers/acoustics_const/acoustics_const_rp_step_tbb.h>
-#include <ptwise/steppers/acoustics_const/acoustics_const_rp_step_omp.h>
 // TODO add other step headers here
 
 int main(int argc, char ** argv)

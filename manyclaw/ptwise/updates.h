@@ -1,4 +1,5 @@
-#include "many_claw.h"
+#ifndef __UPDATES_H
+#define __UPDATES_H
 
 // Upwind updater
 void updater_first_order_dimensional_splitting(real* q,
@@ -17,7 +18,7 @@ void updater_first_order_dimensional_splitting(real* q,
   const int num_states = grid_params.num_states;
   //  const int num_waves = rp_grid_params.num_waves;
 
-#pragma omp parallel for schedule(runtime) 
+#pragma omp parallel for schedule(runtime)
   for(row = num_ghost; row <= ny + num_ghost; ++row) {
     for(col = num_ghost; col <= nx + num_ghost; ++col) {
       idx_left = col + row*(nx + 2*num_ghost) - 1;
@@ -36,3 +37,4 @@ void updater_first_order_dimensional_splitting(real* q,
   }
 }
 
+#endif

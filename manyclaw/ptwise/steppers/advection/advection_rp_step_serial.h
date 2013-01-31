@@ -1,8 +1,7 @@
-#ifndef ADVECTION_RP_STEP_SERIAL_H
-#define ADVECTION_RP_STEP_SERIAL_H
+#ifndef __ADVECTION_RP_STEP_SERIAL_H
+#define __ADVECTION_RP_STEP_SERIAL_H
 
 #include "../../riemann/advection_rp.h"
-#include "../../limiters.h"
 
 void advection_rp_step_serial( const real* q,
                                const real* aux,
