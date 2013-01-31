@@ -1,4 +1,4 @@
-#include <ptwise/limiters.h>
+#include <manyclaw/ptwise/limiters.h>
 
 // const int num_eqn, const int num_waves,
 //                     const real* wave_left, const real* wave_right,

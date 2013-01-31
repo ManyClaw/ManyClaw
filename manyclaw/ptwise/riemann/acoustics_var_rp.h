@@ -1,7 +1,7 @@
 #ifndef ACOUSTICS_VAR_RP_H
 #define ACOUSTICS_VAR_RP_H
 
-#include "../../many_claw.h"
+#include "../../common/manyclaw_common.h"
 
 struct acoustics_var_rp_aux_global_t
 {

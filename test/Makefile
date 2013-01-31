@@ -1,6 +1,6 @@
 include ../variables.inc
 
-CXXFLAGS += -I ../src
+CXXFLAGS += -I ..
 LDFLAGS += -L../ -lmanyclaw
 
 DRIVERS = advection \

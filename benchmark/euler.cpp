@@ -1,17 +1,5 @@
-#include <many_claw.h>
+#include <manyclaw/manyclaw.h>
 #include <tbb/task_scheduler_init.h>
-
-
-#include <ptwise/riemann/euler_rp.h>
-#include <ptwise/steppers/euler/euler_rp_step_serial.h>
-#include <ptwise/steppers/euler/euler_rp_step_serial_tiled.h>
-#include <ptwise/steppers/euler/euler_rp_step_serial_cellwise.h>
-#include <ptwise/steppers/euler/euler_rp_step_serial_cellwise_functor.h>
-#include <ptwise/steppers/euler/euler_rp_step_tbb.h>
-#include <ptwise/steppers/euler/euler_rp_step_omp.h>
-#include <ptwise/steppers/euler/euler_rp_step_omp2.h>
-// TODO add other step headers here
-
 
 int main(int argc, char ** argv)
 {
