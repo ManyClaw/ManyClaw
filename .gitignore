@@ -1,8 +1,11 @@
 *.o
+*.dylib
+*.so
 *.mod
 *~
 *#
 *.#*
+lib/*
 test/advection
 test/acoustics_const
 test/acoustics_var
