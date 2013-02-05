@@ -10,6 +10,7 @@ test/advection
 test/acoustics_const
 test/acoustics_var
 test/euler
+test/limiters
 benchmark/advection
 benchmark/acoustics_const
 benchmark/acoustics_var
