@@ -35,7 +35,7 @@ void randomize_vector(Vector& v)
   // generate numbers in [0,1) deterministically
   real seed = 0.123456789;
 
-  for(size_t i = 0; i < v.size(); i++)
+  for(int i = 0; i < v.size(); i++)
   {
     seed = (314159.26535 * seed);
     seed = seed - floor(seed);
