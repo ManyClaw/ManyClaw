@@ -27,7 +27,8 @@ typedef void (*rp_step_t)(const real* q, const real* aux,
 typedef void (*updater_t)(real* q, const real* aux, const int nx, const int ny,
                                    const real* amdq, const real* apdq,
                                    const real* wave, const real* wave_speeds,
-                                   const int num_ghost, const int num_states);
+                                   const int num_ghost, const int num_states,
+                                   const real dtdx);
 
 template <typename Vector>
 void randomize_vector(Vector& v)

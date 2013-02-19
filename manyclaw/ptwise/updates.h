@@ -11,8 +11,8 @@ void updater_first_order_dimensional_splitting(real* q,
                                                const real* wave,
                                                const real* wave_speeds,
                                                const int num_ghost, 
-                                               const int num_states
-                                               )
+                                               const int num_states,
+                                               const real dtdx)
 {
   int col, row, idx_left, idx_center, idx_up, idx_out_x, idx_out_y;
   //  const int num_waves = rp_grid_params.num_waves;
@@ -27,10 +27,10 @@ void updater_first_order_dimensional_splitting(real* q,
       idx_out_y = idx_out_x + ((nx + 1)*(ny + 1));
 
       for(int state=0; state < num_states; ++state){
-        q[idx_left*num_states + state]   -= amdq[idx_out_x*num_states + state];
-        q[idx_up*num_states + state]     -= amdq[idx_out_y*num_states + state];
-        q[idx_center*num_states + state] -= apdq[idx_out_x*num_states + state];
-        q[idx_center*num_states + state] -= apdq[idx_out_y*num_states + state];
+        q[idx_left*num_states + state]   -= dtdx * amdq[idx_out_x*num_states + state];
+        q[idx_up*num_states + state]     -= dtdx * amdq[idx_out_y*num_states + state];
+        q[idx_center*num_states + state] -= dtdx * apdq[idx_out_x*num_states + state];
+        q[idx_center*num_states + state] -= dtdx * apdq[idx_out_y*num_states + state];
       }
     }
   }

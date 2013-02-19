@@ -61,10 +61,10 @@ int main(int argc, char ** argv)
   for (int frame = 1; frame <= 10; frame++)
   {
     // Take a single time step
-    for (int steps = 0; steps < 1000; steps++)
+    for (int steps = 0; steps < 2; steps++)
     {
       solver.step(solution, grid.dx[0], advection_rp_step_serial, updater_first_order_dimensional_splitting);
-      if (solution.t == 0.2) break;
+      std::cout << "Solution now at t=" << solution.t << "\n";
     }
     solution.write(frame, "./_output");      
   }

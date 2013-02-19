@@ -80,7 +80,7 @@ double compare_updates(int nx, int ny, rp_grid_params params,
 
   updater(&state.q[0], &state.aux[0], grid.nx, grid.ny, &solver.amdq[0],  
           &solver.apdq[0],  &solver.waves[0], &solver.wave_speeds[0], 
-          params.num_ghost, params.num_states);
+          params.num_ghost, params.num_states, 1.0);
 
   return max_error(ref_state.q, state.q);
 }

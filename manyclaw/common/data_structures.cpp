@@ -117,6 +117,9 @@ Solver::Solver(Solution& solution, int num_waves):
 void Solver::step(Solution& solution, double dt, 
                   rp_step_t rp_step, updater_t update)
 {
+  // Note that this all will break if the grid is not uniform!
+  real dtdx = dt / solution.grid.dx[0];
+
   rp_step(&solution.state.q[0], &solution.state.aux[0], 
           solution.grid.num_cells[0], solution.grid.num_cells[1],
           &amdq[0], &apdq[0], &waves[0], &wave_speeds[0]);
@@ -124,7 +127,7 @@ void Solver::step(Solution& solution, double dt,
   update(&solution.state.q[0], &solution.state.aux[0], 
           solution.grid.num_cells[0], solution.grid.num_cells[1],
           &amdq[0], &apdq[0], &waves[0], &wave_speeds[0],
-          num_ghost, solution.state.num_states);
+          num_ghost, solution.state.num_states, dtdx);
 
   solution.t += dt;
 }
