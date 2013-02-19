@@ -10,12 +10,11 @@ void updater_first_order_dimensional_splitting(real* q,
                                                const real* apdq,
                                                const real* wave,
                                                const real* wave_speeds,
-                                               const rp_grid_params grid_params
+                                               const int num_ghost, 
+                                               const int num_states
                                                )
 {
   int col, row, idx_left, idx_center, idx_up, idx_out_x, idx_out_y;
-  const int num_ghost = grid_params.num_ghost;
-  const int num_states = grid_params.num_states;
   //  const int num_waves = rp_grid_params.num_waves;
 
 #pragma omp parallel for schedule(runtime)

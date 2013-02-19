@@ -27,7 +27,7 @@ typedef void (*rp_step_t)(const real* q, const real* aux,
 typedef void (*updater_t)(real* q, const real* aux, const int nx, const int ny,
                                    const real* amdq, const real* apdq,
                                    const real* wave, const real* wave_speeds,
-                                   const rp_grid_params grid_params);
+                                   const int num_ghost, const int num_states);
 
 template <typename Vector>
 void randomize_vector(Vector& v)
@@ -108,7 +108,7 @@ struct Solver
 
   Solver(Solution& solution, int num_waves);
 
-  void step(Solution& solution, double dt);
+  void step(Solution& solution, double dt, rp_step_t rp_step, updater_t update);
 };
 
 

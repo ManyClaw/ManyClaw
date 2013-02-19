@@ -3,7 +3,7 @@
 
 int main(int argc, char ** argv)
 {
-  int nx = 10, ny = 10;
+  int nx = 50, ny = 50;
 
   if (argc == 3)
   {
@@ -32,11 +32,6 @@ int main(int argc, char ** argv)
   Solution solution(grid, state);
   solution.t = 0.0;
 
-  // for (int j = 0; j < ny + 2*num_ghost; j++)
-  //   for (int i = 0; i < nx + 2*num_ghost; i++)
-  //     for (int m = 0; m < num_eqns; m++)
-  //       solution.state.q[m + i * num_eqns + j * (2*num_ghost + nx)] = 0.0;
-
   // Initialize q
   double x, y;
   for (int j = num_ghost; j < ny + num_ghost; j++)
@@ -47,7 +42,7 @@ int main(int argc, char ** argv)
       x = grid.lower[0] + (double(i) - 1.5) * grid.dx[0];
       for (int m = 0; m < num_eqns; m++)
       {
-        if (0.5 < x && x < 0.75 && 0.5 < y && y < 0.75) 
+        if (0.1 < x && x < 0.6 && 0.1 < y && y < 0.6) 
           solution.state.q[m + i * num_eqns + j * (2*num_ghost + nx)] = 1.0;
         else
           solution.state.q[m + i * num_eqns + j * (2*num_ghost + nx)] = 0.1;
@@ -62,10 +57,18 @@ int main(int argc, char ** argv)
   Solver solver(solution, num_waves);
   solver.num_ghost = num_ghost;
 
-  // Take one time step
-  solver.step(solution, 0.1);
+  // Take multiple steps
+  for (int frame = 1; frame <= 10; frame++)
+  {
+    // Take a single time step
+    for (int steps = 0; steps < 1000; steps++)
+    {
+      solver.step(solution, grid.dx[0], advection_rp_step_serial, updater_first_order_dimensional_splitting);
+      if (solution.t == 0.2) break;
+    }
+    solution.write(frame, "./_output");      
+  }
 
-  solution.write(1, "./_output");
 
   return 0;
 }

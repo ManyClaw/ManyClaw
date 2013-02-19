@@ -113,8 +113,18 @@ Solver::Solver(Solution& solution, int num_waves):
   wave_speeds.resize((nx+1)*(ny+1)*4*num_states*dim);
 }
 
-void Solver::step(Solution& solution, double dt)
+
+void Solver::step(Solution& solution, double dt, 
+                  rp_step_t rp_step, updater_t update)
 {
+  rp_step(&solution.state.q[0], &solution.state.aux[0], 
+          solution.grid.num_cells[0], solution.grid.num_cells[1],
+          &amdq[0], &apdq[0], &waves[0], &wave_speeds[0]);
 
+  update(&solution.state.q[0], &solution.state.aux[0], 
+          solution.grid.num_cells[0], solution.grid.num_cells[1],
+          &amdq[0], &apdq[0], &waves[0], &wave_speeds[0],
+          num_ghost, solution.state.num_states);
+
+  solution.t += dt;
 }
-

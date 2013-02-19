@@ -1,18 +1,19 @@
 #!/usr/bin/env python
+# encoding: utf-8
+r"""
+Simple convenience script for setting up and running an interactive plotting
+sesssion.
+"""
 
-import matplotlib.pyplot as plt
-import clawpack.pyclaw.solution as solution
+import sys
+import clawpack.visclaw.Iplotclaw as Iplotclaw
 
-num_frames = 2
-solutions = []
-fig = plt.figure()
-for frame in xrange(num_frames):
-    solutions.append(solution.Solution(frame))
-    axes = fig.add_subplot(1,int(num_frames / 2) + 1,frame+1)
-    x = solutions[frame].domain.grid.centers[0]
-    y = solutions[frame].domain.grid.centers[1]
-    plot = axes.pcolor(solutions[frame].q[0,:,:])
-    axes.set_title("Solution at t = %s" % solutions[frame].t)
-    axes.set_aspect('equal')
+def run_iplotclaw(setplot='setplot.py',outdir='./_output'):
+    ip = Iplotclaw.Iplotclaw(setplot=setplot,outdir=outdir)
+    ip.plotloop()
 
-plt.show()
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        run_iplotclaw(*sys.argv[1:])
+    else:
+        run_iplotclaw()

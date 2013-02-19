@@ -2,11 +2,6 @@
 #include "common.h"
 #include "timer.h"
 
-int test_function(int nx)
-{
-  return nx * 2;
-}
-
 void compare_steppers(int nx, int ny, rp_grid_params params,
                       rp_step_t rp_stepper_1, rp_step_t rp_stepper_2)
 {
@@ -84,7 +79,8 @@ double compare_updates(int nx, int ny, rp_grid_params params,
               &solver.wave_speeds[0]);
 
   updater(&state.q[0], &state.aux[0], grid.nx, grid.ny, &solver.amdq[0],  
-          &solver.apdq[0],  &solver.waves[0], &solver.wave_speeds[0], params);
+          &solver.apdq[0],  &solver.waves[0], &solver.wave_speeds[0], 
+          params.num_ghost, params.num_states);
 
   return max_error(ref_state.q, state.q);
 }
