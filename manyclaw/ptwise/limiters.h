@@ -6,41 +6,60 @@
 
 typedef double real;
 
-// Limit wave argument based on wave_left, wave_right, and s
-inline void limiter(const int num_eqn, const int num_waves,
-                    const real* wave_left, const real* wave_right,
-                    real (*limiter_func)(real),
-                    real* wave, real* s)
+inline void limit_waves(int num_eqn, int num_waves, int num_ghost, 
+                        int num_cells, real* wave, real* s, 
+                        real (*limiter_func)(real))
 {
-    int eqn_index, wave_index;
-    real wave_norm_squared, left_dot_product, right_dot_product;
-    real r;
-    
-    for (wave_index=0; wave_index < num_waves; wave_index++)
+    real wave_norm_squared = 0;
+    real left_dot_product = 0;
+    real right_dot_product = 0;
+    real r, phi;
+    real const epsilon = 1e-90;
+
+    for (int wave_index = 0; wave_index < num_waves; wave_index++)
     {
-        for (eqn_index=0; eqn_index < num_eqn; eqn_index++)
+        right_dot_product = 0.0;
+        for (int i = num_ghost - 1; i < num_cells + num_ghost + 1; i++)
         {
-            wave_norm_squared += pow(wave[wave_index*num_waves+eqn_index],2);
-            left_dot_product += wave[wave_index*num_waves+eqn_index] * wave_left[wave_index*num_waves+eqn_index];
-            right_dot_product += wave[wave_index*num_waves+eqn_index] * wave_right[wave_index*num_waves+eqn_index];
-        }
-        
-        if (s[wave_index] < 0.0)
-        {
-            r = left_dot_product / wave_norm_squared;
-        }
-        else
-        {
-            r = right_dot_product / wave_norm_squared;
-        }
-        
-        for (eqn_index=0; eqn_index < num_eqn; eqn_index++)
-        {
-            wave[wave_index*num_waves+eqn_index] = limiter_func(r) * wave[wave_index*num_waves+eqn_index];
+
+            wave_norm_squared = 0.0;
+            left_dot_product = right_dot_product;
+            right_dot_product = 0.0;
+            for (int eqn_index = 0; eqn_index < num_eqn; eqn_index++)
+            {
+                wave_norm_squared += pow(wave[eqn_index 
+                                            + wave_index * num_eqn 
+                                            + i * num_waves * num_eqn],2);
+                right_dot_product += wave[eqn_index 
+                                        + wave_index * num_eqn 
+                                        + i * num_waves * num_eqn] 
+                                   * wave[eqn_index 
+                                        + wave_index * num_eqn 
+                                        + (i+1) * num_waves * num_eqn];
+            }
+            
+            // Here to just calculate the left_dot_product, skip the iteration
+            if (i == 0) continue;
+
+            // If wave norm is too small, skip this cell
+            if (wave_norm_squared < epsilon) continue;
+
+            // Evaluate limiter
+            if (s[wave_index * num_eqn + i * num_waves * num_eqn] > 0.0)
+                r = left_dot_product / wave_norm_squared;
+            else
+                r = right_dot_product / wave_norm_squared;
+            phi = limiter_func(r);
+
+            // Apply limiter to this wave
+            for (int eqn_index = 0; eqn_index < num_eqn; eqn_index++)
+                wave[eqn_index 
+                   + wave_index * num_eqn 
+                   + i * num_waves * num_eqn] *= phi;
+                
         }
     }
 }
-
 
 /* In classic Clawpack the limiters are labeled by number via
     no limiting = 0
