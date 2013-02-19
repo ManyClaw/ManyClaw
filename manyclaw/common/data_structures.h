@@ -46,9 +46,13 @@ void randomize_vector(Vector& v)
 struct Grid
 {
   // size info
+  static const int dim=2;
   int nx;
   int ny;
-  static const int dim=2;
+  int num_cells[dim];
+  double dx[dim];
+  double lower[dim];
+  double upper[dim];
 
   Grid(int nx, int ny);
 };
@@ -78,10 +82,13 @@ struct Solution
   // non-own references
   Grid& grid;
   State& state;
+  double t;
 
   Solution(Grid& grid, State& state):
     grid(grid), state(state)
   {}
+
+  void write(int frame, char *output_path);
 };
 
 struct Solver
@@ -100,6 +107,8 @@ struct Solver
   Solution& solution;
 
   Solver(Solution& solution, int num_waves);
+
+  void step(Solution& solution, double dt);
 };
 
 
