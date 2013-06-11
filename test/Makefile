@@ -1,4 +1,5 @@
 CXX=g++
+# CXX=clang++
 LINK ?= $(CXX)
 ifeq ($(CXX), g++)
 	OMPCFLAGS = -fopenmp
@@ -35,3 +36,6 @@ limiters: limiters.o
 
 clean:
 	rm -rf advection advection.o euler euler.o acoustics_const acoustics_const.o acoustics_var acoustics_var.o limiters limiters.o
+
+clobber: clean
+	$(MAKE) -C ../ clean

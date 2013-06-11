@@ -4,19 +4,20 @@
 #include <sstream>
 #include <fstream>
 
-Grid::Grid(int nx, int ny) :
-  nx(nx), ny(ny)
+Grid::Grid(int nx, int ny)
 {
   // TODO make this a function of the encapsulated states
   // Cell centered values
+  num_cells[0] = nx;
+  num_cells[1] = ny;
 }
 
-State::State(Grid& grid, int num_states, int num_aux, int num_ghost) :
-  num_states(num_states), num_aux(num_aux), num_ghost(num_ghost), grid(grid)
+State::State(Grid& grid, int num_eqn, int num_aux, int num_ghost) :
+  num_eqn(num_eqn), num_aux(num_aux), num_ghost(num_ghost), grid(grid)
 {
-  const int nx = grid.nx;
-  const int ny = grid.ny;
-  q.resize((nx+num_ghost*2)*(ny+num_ghost*2)*num_states);
+  const int nx = grid.num_cells[0];
+  const int ny = grid.num_cells[1];
+  q.resize((nx+num_ghost*2)*(ny+num_ghost*2)*num_eqn);
   aux.resize((nx+num_ghost*2)*(ny+num_ghost*2)*num_aux);
 }
 
@@ -38,9 +39,9 @@ void Solution::write(int frame, char output_path[])
   q_file << std::setiosflags(std::ios::fixed) << std::setprecision(5)
               << 1 << "                 AMR_level\n";
   q_file << std::setiosflags(std::ios::fixed) << std::setprecision(5)
-              << grid.nx << "                 mx\n";
+              << grid.num_cells[0] << "                 mx\n";
   q_file << std::setiosflags(std::ios::fixed) << std::setprecision(5)
-              << grid.ny << "                 my\n";
+              << grid.num_cells[1] << "                 my\n";
   q_file << std::setiosflags(std::ios::fixed) << std::setprecision(8)
               << std::setw(18) << grid.lower[0] << "    xlow\n";
   q_file << std::setiosflags(std::ios::fixed) << std::setprecision(8)
@@ -51,17 +52,17 @@ void Solution::write(int frame, char output_path[])
               << std::setw(18) << grid.dx[1] << "    dy\n\n";
 
   // Write out q data
-  for (int j = state.num_ghost; j < grid.ny + state.num_ghost; j++)
+  for (int j = state.num_ghost; j < grid.num_cells[0] + state.num_ghost; j++)
   {
-    for(int i = state.num_ghost; i < grid.nx + state.num_ghost; i++)
+    for(int i = state.num_ghost; i < grid.num_cells[1] + state.num_ghost; i++)
     {
-      for (int m = 0; m < state.num_states; m++)
+      for (int m = 0; m < state.num_eqn; m++)
       {
         q_file << std::setiosflags(std::ios::fixed) 
                << std::setprecision(8)
                << std::setw(16) 
-               << state.q[m + i * state.num_states 
-                            + j * (2*state.num_ghost + grid.nx)] 
+               << state.q[m + i * state.num_eqn 
+                            + j * (2*state.num_ghost + grid.num_cells[0])] 
                << " ";
       }
       q_file << "\n";
@@ -82,7 +83,7 @@ void Solution::write(int frame, char output_path[])
   t_file << std::setiosflags(std::ios::fixed) << std::setprecision(16)
               << std::setw(26) << t << "        time\n";
   t_file << std::setiosflags(std::ios::fixed) << std::setprecision(5) 
-              << state.num_states << "                 meqn\n";
+              << state.num_eqn << "                 meqn\n";
   t_file << std::setiosflags(std::ios::fixed) << std::setprecision(5) 
               << 1 << "                 ngrids\n";
   t_file << std::setiosflags(std::ios::fixed) << std::setprecision(5) 
@@ -102,23 +103,25 @@ void State::randomize()
 Solver::Solver(Solution& solution, int num_waves):
   num_waves(num_waves), solution(solution)
 {
-  const int nx = solution.grid.nx;
-  const int ny = solution.grid.ny;
-  const int num_states = solution.state.num_states;
+  const int nx = solution.grid.num_cells[0];
+  const int ny = solution.grid.num_cells[1];
+  const int num_eqn = solution.state.num_eqn;
   const int dim = solution.grid.dim;
   // Outputs on interfaces
-  amdq.resize((nx+1)*(ny+1)*num_states*dim);
-  apdq.resize((nx+1)*(ny+1)*num_states*dim);
-  waves.resize((nx+1)*(ny+1)*num_states*num_waves*dim);
-  wave_speeds.resize((nx+1)*(ny+1)*4*num_states*dim);
+  amdq.resize((nx+1)*(ny+1)*num_eqn*dim);
+  apdq.resize((nx+1)*(ny+1)*num_eqn*dim);
+  waves.resize((nx+1)*(ny+1)*num_eqn*num_waves*dim);
+  wave_speeds.resize((nx+1)*(ny+1)*4*num_eqn*dim);
 }
 
-
-void Solver::step(Solution& solution, double dt, 
-                  rp_step_t rp_step, updater_t update)
+void Solver::step(Solution& solution, double dt, set_bc_t set_bc, rp_step_t rp_step, updater_t update)
 {
   // Note that this all will break if the grid is not uniform!
   real dtdx = dt / solution.grid.dx[0];
+
+  // set_bc(&solution.state.q[0], &solution.state.aux[0],
+  //       solution.grid.num_cells[0], solution.grid.num_cells[1],
+  //       num_ghost, solution.state.num_eqn);
 
   rp_step(&solution.state.q[0], &solution.state.aux[0], 
           solution.grid.num_cells[0], solution.grid.num_cells[1],
@@ -127,7 +130,7 @@ void Solver::step(Solution& solution, double dt,
   update(&solution.state.q[0], &solution.state.aux[0], 
           solution.grid.num_cells[0], solution.grid.num_cells[1],
           &amdq[0], &apdq[0], &waves[0], &wave_speeds[0],
-          num_ghost, solution.state.num_states, dtdx);
+          num_ghost, solution.state.num_eqn, dtdx);
 
   solution.t += dt;
 }

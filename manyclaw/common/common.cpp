@@ -7,17 +7,17 @@ void compare_steppers(int nx, int ny, rp_grid_params params,
 {
   Grid grid(nx, ny);
 
-  State state(grid, params.num_states, params.num_aux, params.num_ghost);
+  State state(grid, params.num_eqn, params.num_aux, params.num_ghost);
   state.randomize();
   Solution solution(grid, state);
 
   Solver solver_1(solution, params.num_waves);
   Solver solver_2(solution, params.num_waves);
 
-  rp_stepper_1(&state.q[0], &state.aux[0], grid.nx, grid.ny,
+  rp_stepper_1(&state.q[0], &state.aux[0], grid.num_cells[0], grid.num_cells[1],
               &solver_1.amdq[0], &solver_1.apdq[0], &solver_1.waves[0],
               &solver_1.wave_speeds[0]);
-  rp_stepper_2(&state.q[0], &state.aux[0], grid.nx, grid.ny,
+  rp_stepper_2(&state.q[0], &state.aux[0], grid.num_cells[0], grid.num_cells[1],
               &solver_2.amdq[0], &solver_2.apdq[0], &solver_2.waves[0],
               &solver_2.wave_speeds[0]);
 
@@ -33,13 +33,13 @@ double benchmark_stepper(int nx, int ny, rp_grid_params params, rp_step_t rp_ste
 
   Grid grid(nx, ny);
 
-  State state(grid, params.num_states, params.num_aux, params.num_ghost);
+  State state(grid, params.num_eqn, params.num_aux, params.num_ghost);
   state.randomize();
   Solution solution(grid, state);
   Solver solver(solution, params.num_waves);
 
   timer t;
-  rp_stepper(&state.q[0], &state.aux[0], grid.nx, grid.ny,
+  rp_stepper(&state.q[0], &state.aux[0], grid.num_cells[0], grid.num_cells[1],
              &solver.amdq[0], &solver.apdq[0], &solver.waves[0],
              &solver.wave_speeds[0]);
   double time = t.elapsed();
@@ -54,15 +54,15 @@ double compare_updates(int nx, int ny, rp_grid_params params,
   int index;
   Grid grid(nx, ny);
 
-  State state(grid, params.num_states, params.num_aux, params.num_ghost);
-  State ref_state(grid, params.num_states, params.num_aux, params.num_ghost);
+  State state(grid, params.num_eqn, params.num_aux, params.num_ghost);
+  State ref_state(grid, params.num_eqn, params.num_aux, params.num_ghost);
 
   for (int row = params.num_ghost; row <= ny + params.num_ghost; ++row) {
     for (int col = params.num_ghost; col <= nx + params.num_ghost; ++col) {
       index = col + row * (nx + 2 * params.num_ghost);
-      for (int state = 0; state < params.num_states; ++state) {
-        // q[index * params.num_states + state] = 0.0;
-        // q[index * params.num_states + state] = 0.0;
+      for (int state = 0; state < params.num_eqn; ++state) {
+        // q[index * params.num_eqn + state] = 0.0;
+        // q[index * params.num_eqn + state] = 0.0;
 
       }
     }
@@ -74,13 +74,13 @@ double compare_updates(int nx, int ny, rp_grid_params params,
   Solution solution(grid, state);
   Solver solver(solution, params.num_waves);
 
-  rp_stepper(&state.q[0], &state.aux[0], grid.nx, grid.ny,
+  rp_stepper(&state.q[0], &state.aux[0], grid.num_cells[0], grid.num_cells[1],
               &solver.amdq[0], &solver.apdq[0], &solver.waves[0],
               &solver.wave_speeds[0]);
 
-  updater(&state.q[0], &state.aux[0], grid.nx, grid.ny, &solver.amdq[0],  
-          &solver.apdq[0],  &solver.waves[0], &solver.wave_speeds[0], 
-          params.num_ghost, params.num_states, 1.0);
+  updater(&state.q[0], &state.aux[0], grid.num_cells[0], grid.num_cells[1], 
+          &solver.amdq[0],  &solver.apdq[0],  &solver.waves[0], 
+          &solver.wave_speeds[0], params.num_ghost, params.num_eqn, 1.0);
 
   return max_error(ref_state.q, state.q);
 }

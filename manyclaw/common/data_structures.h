@@ -10,10 +10,13 @@ typedef double real;
 struct rp_grid_params
 {
   int num_ghost;
-  int num_states;
+  int num_eqn;
   int num_aux;
   int num_waves;
 };
+
+typedef void (*set_bc_t)(real* q, real* aux, const int nx, const int ny,
+                               const int num_ghost, const int num_eqn);
 
 typedef void (*rp_t)(const real* q_left, const real* q_right,
                   const real* aux_left, const real* aux_right,
@@ -27,7 +30,7 @@ typedef void (*rp_step_t)(const real* q, const real* aux,
 typedef void (*updater_t)(real* q, const real* aux, const int nx, const int ny,
                                    const real* amdq, const real* apdq,
                                    const real* wave, const real* wave_speeds,
-                                   const int num_ghost, const int num_states,
+                                   const int num_ghost, const int num_eqn,
                                    const real dtdx);
 
 template <typename Vector>
@@ -36,7 +39,7 @@ void randomize_vector(Vector& v)
   // generate numbers in [0,1) deterministically
   real seed = 0.123456789;
 
-  for(int i = 0; i < v.size(); i++)
+  for(unsigned int i = 0; i < v.size(); i++)
   {
     seed = (314159.26535 * seed);
     seed = seed - floor(seed);
@@ -48,8 +51,6 @@ struct Grid
 {
   // size info
   static const int dim=2;
-  int nx;
-  int ny;
   int num_cells[dim];
   double dx[dim];
   double lower[dim];
@@ -61,7 +62,7 @@ struct Grid
 struct State
 {
   // size info
-  int num_states;
+  int num_eqn;
   int num_aux;
   int num_ghost; // not strictly needed but makes life easier for now
 
@@ -73,7 +74,7 @@ struct State
   // Non-owned reference
   Grid &grid;
 
-  State(Grid& grid, int num_states, int num_aux, int num_ghost);
+  State(Grid& grid, int num_eqn, int num_aux, int num_ghost);
   void randomize();
 
 };
@@ -109,7 +110,7 @@ struct Solver
 
   Solver(Solution& solution, int num_waves);
 
-  void step(Solution& solution, double dt, rp_step_t rp_step, updater_t update);
+  void step(Solution& solution, double dt, set_bc_t set_bc, rp_step_t rp_step, updater_t update);
 };
 
 

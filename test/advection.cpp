@@ -11,7 +11,7 @@ int main(int argc, char ** argv)
     ny = atoi(argv[2]);
   }
 
-  int num_eqns = 1;
+  int num_eqn = 1;
   int num_aux = 0;
   int num_ghost = 2;
   int num_waves = 1;
@@ -27,7 +27,7 @@ int main(int argc, char ** argv)
   for (int dim = 0; dim < grid.dim; dim++)
     grid.dx[dim] = (grid.upper[dim] - grid.lower[dim]) / grid.num_cells[dim];
 
-  State state(grid, num_eqns, num_aux, num_ghost);
+  State state(grid, num_eqn, num_aux, num_ghost);
 
   Solution solution(grid, state);
   solution.t = 0.0;
@@ -40,12 +40,12 @@ int main(int argc, char ** argv)
     for (int i = num_ghost; i < nx + num_ghost; i++)
     {
       x = grid.lower[0] + (double(i) - 1.5) * grid.dx[0];
-      for (int m = 0; m < num_eqns; m++)
+      for (int m = 0; m < num_eqn; m++)
       {
         if (0.1 < x && x < 0.6 && 0.1 < y && y < 0.6) 
-          solution.state.q[m + i * num_eqns + j * (2*num_ghost + nx)] = 1.0;
+          solution.state.q[m + i * num_eqn + j * (2*num_ghost + nx)] = 1.0;
         else
-          solution.state.q[m + i * num_eqns + j * (2*num_ghost + nx)] = 0.1;
+          solution.state.q[m + i * num_eqn + j * (2*num_ghost + nx)] = 0.1;
       }
     }
   }
@@ -60,10 +60,12 @@ int main(int argc, char ** argv)
   // Take multiple steps
   for (int frame = 1; frame <= 10; frame++)
   {
-    // Take a single time step
-    for (int steps = 0; steps < 2; steps++)
+    for (int steps = 0; steps < 1; steps++)
     {
-      solver.step(solution, grid.dx[0], advection_rp_step_serial, updater_first_order_dimensional_splitting);
+      // Take a single time step
+      solver.step(solution, grid.dx[0] * 0.9, set_zero_order_extrap_BCs, 
+                                              advection_rp_step_serial, 
+                                              updater_first_order_dimensional_splitting);
       std::cout << "Solution now at t=" << solution.t << "\n";
     }
     solution.write(frame, "./_output");      

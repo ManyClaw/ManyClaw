@@ -38,8 +38,8 @@ def setplot(plotdata):
     plotitem = plotaxes.new_plotitem(plot_type='2d_pcolor')
     plotitem.plot_var = 0
     plotitem.pcolor_cmap = colormaps.yellow_red_blue
-    plotitem.pcolor_cmin = 0.1
-    plotitem.pcolor_cmax = 1.
+    # plotitem.pcolor_cmin = 0.1
+    # plotitem.pcolor_cmax = 1.
     plotitem.add_colorbar = True
     
 
@@ -48,8 +48,8 @@ def setplot(plotdata):
 
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()
-    plotaxes.xlimits = [0,1]
-    plotaxes.ylimits = [0,1]
+    plotaxes.xlimits = 'auto'
+    plotaxes.ylimits = 'auto'
     plotaxes.title = 'Solution'
     plotaxes.scaled = True
 
