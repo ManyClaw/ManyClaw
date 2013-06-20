@@ -119,9 +119,9 @@ void Solver::step(Solution& solution, double dt, set_bc_t set_bc, rp_step_t rp_s
   // Note that this all will break if the grid is not uniform!
   real dtdx = dt / solution.grid.dx[0];
 
-  // set_bc(&solution.state.q[0], &solution.state.aux[0],
-  //       solution.grid.num_cells[0], solution.grid.num_cells[1],
-  //       num_ghost, solution.state.num_eqn);
+  set_bc(&solution.state.q[0], &solution.state.aux[0],
+        solution.grid.num_cells[0], solution.grid.num_cells[1],
+        num_ghost, solution.state.num_eqn);
 
   rp_step(&solution.state.q[0], &solution.state.aux[0], 
           solution.grid.num_cells[0], solution.grid.num_cells[1],

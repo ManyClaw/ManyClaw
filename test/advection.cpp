@@ -3,7 +3,7 @@
 
 int main(int argc, char ** argv)
 {
-  int nx = 50, ny = 50;
+  int nx = 10, ny = 10;
 
   if (argc == 3)
   {
@@ -33,22 +33,35 @@ int main(int argc, char ** argv)
   solution.t = 0.0;
 
   // Initialize q
-  double x, y;
+  // double x, y;
+  // for (int j = num_ghost; j < ny + num_ghost; j++)
+  // {
+  //   y = grid.lower[1] + (double(j) - 1.5) * grid.dx[1];
+  //   for (int i = num_ghost; i < nx + num_ghost; i++)
+  //   {
+  //     x = grid.lower[0] + (double(i) - 1.5) * grid.dx[0];
+  //     for (int m = 0; m < num_eqn; m++)
+  //     {
+  //       if (0.1 < x && x < 0.6 && 0.1 < y && y < 0.6) 
+  //         solution.state.q[m + i * num_eqn + j * (2*num_ghost + nx)] = 1.0;
+  //       else
+  //         solution.state.q[m + i * num_eqn + j * (2*num_ghost + nx)] = 0.1;
+  //     }
+  //   }
+  // }
   for (int j = num_ghost; j < ny + num_ghost; j++)
   {
-    y = grid.lower[1] + (double(j) - 1.5) * grid.dx[1];
+    // y = grid.lower[1] + (double(j) - 1.5) * grid.dx[1];
     for (int i = num_ghost; i < nx + num_ghost; i++)
     {
-      x = grid.lower[0] + (double(i) - 1.5) * grid.dx[0];
+      // x = grid.lower[0] + (double(i) - 1.5) * grid.dx[0];
       for (int m = 0; m < num_eqn; m++)
       {
-        if (0.1 < x && x < 0.6 && 0.1 < y && y < 0.6) 
-          solution.state.q[m + i * num_eqn + j * (2*num_ghost + nx)] = 1.0;
-        else
-          solution.state.q[m + i * num_eqn + j * (2*num_ghost + nx)] = 0.1;
+        solution.state.q[m + i * num_eqn + j * (2*num_ghost + nx)] = 0.1;
       }
     }
   }
+  solution.state.q[4 * num_eqn + 4 * (2*num_ghost + nx)] = 1.0;
   
   // Write out initial condition
   solution.write(0, "./_output");
@@ -64,7 +77,7 @@ int main(int argc, char ** argv)
     {
       // Take a single time step
       solver.step(solution, grid.dx[0] * 0.9, set_zero_order_extrap_BCs, 
-                                              advection_rp_step_serial, 
+                                              advection_rp_step_serial_cellwise, 
                                               updater_first_order_dimensional_splitting);
       std::cout << "Solution now at t=" << solution.t << "\n";
     }
