@@ -5,23 +5,26 @@ MAJOR_VERSION ?= 0
 MINOR_VERSION ?= 1.0
 
 
-
-CXX=g++
+CXX = g++
 LINK ?= $(CXX)
 ifeq ($(CXX), g++)
 	OMPCFLAGS = -fopenmp
 else ifeq ($(CXX), icc)
 	OMPCFLAGS = -openmp
 endif
-CXXFLAGS=-I ./ -O3 -Wall $(OMPCFLAGS)
-LDFLAGS=
+
+
+CXXFLAGS = -I./ -O0 -g -Wall $(OMPCFLAGS)
+LDFLAGS = 
 
 
 ifdef TBB_LIB
       CXXFLAGS += -I$(TBB_INC)
-      LDFLAGS += -L$(TBB_LIB)
+      TBB_LDFLAGS = -L$(TBB_LIB)  
 endif
-LDFLAGS += -ltbb
+TBB_LDFLAGS += -ltbb
+LDFLAGS += $(TBB_LD_FLAGS)
+
 
 # Dynamic library flags (archetecture dependent), note the platforms here are
 # found by sys.platform in ptyhon, check
