@@ -4,6 +4,8 @@ INSTALL_PATH ?= lib
 MAJOR_VERSION ?= 0
 MINOR_VERSION ?= 1.0
 
+
+
 CXX=g++
 LINK ?= $(CXX)
 ifeq ($(CXX), g++)
@@ -12,7 +14,14 @@ else ifeq ($(CXX), icc)
 	OMPCFLAGS = -openmp
 endif
 CXXFLAGS=-I ./ -O3 -Wall $(OMPCFLAGS)
-LDFLAGS= -ltbb
+LDFLAGS=
+
+
+ifdef TBB_LIB
+      CXXFLAGS += -I$(TBB_INC)
+      LDFLAGS += -L$(TBB_LIB)
+endif
+LDFLAGS += -ltbb
 
 # Dynamic library flags (archetecture dependent), note the platforms here are
 # found by sys.platform in ptyhon, check
@@ -26,7 +35,7 @@ ifeq ($(UNAME), Linux)
     
     # Compiler specific flags
     ifeq ($(CXX), g++)
-        CXXFLAGS += -J$(MOD_PATH) -fPIC
+        CXXFLAGS += -fPIC
         LDFLAGS += -shared
     endif
 else 

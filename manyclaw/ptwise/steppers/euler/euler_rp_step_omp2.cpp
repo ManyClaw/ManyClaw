@@ -9,7 +9,7 @@ void euler_rp_step_omp2( const real* q,  const real* aux,
   const int num_ghost = euler_rp_grid_params.num_ghost;
   const int num_eqn = euler_rp_grid_params.num_eqn;
   const int num_waves = euler_rp_grid_params.num_waves;
-  printf("Before loop\n");
+  //  printf("Before loop\n");
 
 #pragma omp parallel shared(q, aux, amdq, apdq, wave, wave_speeds) private(col, row, idx_left, idx_center, idx_up, idx_out_x, idx_out_y)
   {

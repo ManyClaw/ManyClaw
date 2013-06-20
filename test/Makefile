@@ -1,13 +1,6 @@
-CXX=g++
-# CXX=clang++
-LINK ?= $(CXX)
-ifeq ($(CXX), g++)
-	OMPCFLAGS = -fopenmp
-else ifeq ($(CXX), icc)
-	OMPCFLAGS = -openmp
-endif
-CXXFLAGS = -I ./ -O3 -Wall $(OMPCFLAGS) -I ..
-LDFLAGS = -ltbb -L../lib/ -lmanyclaw
+include ../variables.inc
+
+CXXFLAGS += -I../
 
 DRIVERS = advection \
           euler \
