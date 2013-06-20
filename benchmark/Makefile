@@ -1,6 +1,7 @@
 include ../variables.inc
 
 CXXFLAGS += -I../
+LDFLAGS += -L../lib -lmanyclaw
 
 DRIVERS = advection \
           euler \

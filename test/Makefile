@@ -1,14 +1,13 @@
 include ../variables.inc
 
-CXXFLAGS += -I../
+CXXFLAGS += -I..
+LDFLAGS += -L../lib -lmanyclaw
 
 DRIVERS = advection \
           euler \
           acoustics_const \
           acoustics_var \
           limiters
-
-COMMON_OBJS = ../src/common/common.o ../src/common/data_structures.o
 
 all: $(DRIVERS)
 

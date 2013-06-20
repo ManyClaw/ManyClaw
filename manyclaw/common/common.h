@@ -2,6 +2,7 @@
 #define __COMMON_H
 
 #include <iostream>
+#include <cstdio>
 #include "data_structures.h"
 
 struct abs_diff
