@@ -55,7 +55,7 @@ else
     
         # Compiler specific flags
         ifeq ($(CXX), g++)
-            CXXFLAGS += -J$(MOD_PATH) -fPIC
+            CXXFLAGS += -fPIC
             LDFLAGS += -dynamiclib -flat_namespace -undefined suppress
         else 
             ifeq ($(CXX), g++)
