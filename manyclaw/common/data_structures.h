@@ -47,20 +47,59 @@ void randomize_vector(Vector& v)
   }
 }
 
-template <unsigned nx, unsigned ny, unsigned num_ghosts, unsigned num_eqns>
 struct FieldIndexer
 {
-	inline int idx(int row, int col){return (col + row*(nx + 2*num_ghosts))*num_eqns;}
+  const unsigned nx, ny, num_ghosts, num_eqns;
 
-	inline int up(int row, int col){return (col + (row + 1)*(nx + 2*num_ghosts))*num_eqns;}
+  FieldIndexer(unsigned nx, unsigned ny, unsigned num_ghosts, unsigned num_eqns)
+    : nx(nx), ny(ny), num_ghosts(num_ghosts), num_eqns(num_eqns)
+  {}
 
-	inline int down(int row, int col){return (col + (row - 1)*(nx + 2*num_ghosts))*num_eqns;}
+  inline unsigned idx(int row, int col)
+  {return (col + row*(nx + 2*num_ghosts))*num_eqns;}
 
-	inline int left(int row, int col){return (col - 1 + row*(nx + 2*num_ghosts))*num_eqns;}
+  inline unsigned up(int row, int col)
+  {return (col + (row + 1)*(nx + 2*num_ghosts))*num_eqns;}
 
-	inline int right(int row, int col){return (col + 1 + row*(nx + 2*num_ghosts))*num_eqns;}
+  inline int down(int row, int col)
+  {return (col + (row - 1)*(nx + 2*num_ghosts))*num_eqns;}
 
-	inline int size(){return (nx + 2*num_ghosts)*(ny + 2*num_ghosts)*num_eqns;}
+  inline int left(int row, int col)
+  {return (col - 1 + row*(nx + 2*num_ghosts))*num_eqns;}
+
+  inline int right(int row, int col)
+  {return (col + 1 + row*(nx + 2*num_ghosts))*num_eqns;}
+
+  inline int size()
+  {return (nx + 2*num_ghosts)*(ny + 2*num_ghosts)*num_eqns;}
+};
+
+struct EdgeFieldIndexer
+{
+  const unsigned nx, ny, num_ghosts, num_eqns, num_waves;
+
+  EdgeFieldIndexer(unsigned nx, unsigned ny, unsigned num_ghosts, unsigned num_eqns)
+    : nx(nx), ny(ny), num_ghosts(num_ghosts), num_eqns(num_eqns), num_waves(1)
+  {}
+
+  EdgeFieldIndexer(unsigned nx, unsigned ny, unsigned num_ghosts, unsigned num_eqns, unsigned num_waves)
+    : nx(nx), ny(ny), num_ghosts(num_ghosts), num_eqns(num_eqns), num_waves(num_waves)
+  {}
+
+  inline int size()
+  {return (nx+1)*(ny+1)*num_eqns*num_waves;}
+
+  inline int left_edge(const int row, const int col)
+  {return ((col - num_ghosts) + (row - num_ghosts)*(nx + 1))*num_eqns*num_waves;}
+
+  inline int right_edge(const int row, const int col)
+  {return left_edge(row, col) + 1;}
+
+  inline int down_edge(int row, int col)
+  {return left_edge(row, col) + size();}
+
+  inline unsigned up_edge(const int row, const int col)
+  {return left_edge(row + 1, col) + size();}
 };
 
 struct Grid
