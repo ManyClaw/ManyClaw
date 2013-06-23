@@ -14,7 +14,7 @@
 
 # Points to the root of Google Test, relative to where this file is.
 # Remember to tweak this if you move this file.
-#GTEST_DIR = 
+GTEST_DIR = ../../../contrib
 
 include ../../../variables.inc
 
@@ -23,7 +23,7 @@ include ../../../variables.inc
 MANYCLAW_DIR = ../../../
 
 # Flags passed to the preprocessor.
-CPPFLAGS += -I$(GTEST_DIR)/include -I$(MANYCLAW_DIR)
+CPPFLAGS += -I$(GTEST_DIR) -I$(MANYCLAW_DIR)
 
 # Flags passed to the C++ compiler.
 CXXFLAGS += -g -Wall -Wextra
@@ -34,8 +34,7 @@ TESTS = test_data_structures
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
-GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
-                $(GTEST_DIR)/include/gtest/internal/*.h
+GTEST_HEADERS = $(GTEST_DIR)/gtest/gtest.h 
 
 # House-keeping build targets.
 
@@ -48,7 +47,7 @@ clean :
 
 # Usually you shouldn't tweak such internal variables, indicated by a
 # trailing _.
-GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
+GTEST_SRCS_ = $(GTEST_DIR)/gtest/gtest-all.cc $(GTEST_HEADERS)
 
 # For simplicity and to avoid depending on Google Test's
 # implementation details, the dependencies specified below are
@@ -56,11 +55,11 @@ GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
 # compiles fast and for ordinary users its source rarely changes.
 gtest-all.o : $(GTEST_SRCS_)
 	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c \
-            $(GTEST_DIR)/src/gtest-all.cc
+            $(GTEST_DIR)/gtest/gtest-all.cc
 
 gtest_main.o : $(GTEST_SRCS_)
 	$(CXX) $(CPPFLAGS) -I$(GTEST_DIR) $(CXXFLAGS) -c \
-            $(GTEST_DIR)/src/gtest_main.cc
+            $(GTEST_DIR)/gtest/gtest_main.cc
 
 gtest.a : gtest-all.o
 	$(AR) $(ARFLAGS) $@ $^
