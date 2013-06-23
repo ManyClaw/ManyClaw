@@ -3,6 +3,9 @@
 
 #include <iostream>
 #include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#include <algorithm>
 #include "data_structures.h"
 
 struct abs_diff

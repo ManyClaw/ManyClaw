@@ -7,9 +7,10 @@ int main_kyle(int argc, char ** argv)
 
   if (argc == 3)
   {
-    nx = atoi(argv[1]);
-    ny = atoi(argv[2]);
+    nx = std::atoi(argv[1]);
+    ny = std::atoi(argv[2]);
   }
+
 
   int num_eqn = 1;
   int num_aux = 0;
@@ -217,8 +218,7 @@ int small_test()
   Grid grid(nx, ny);
   State state(grid, num_eqn, num_aux, num_ghost);
   Solution solution(grid, state);
-  Solver solver(solution, num_waves);
-  solver.num_ghost = num_ghost;
+  Solver solver(solution, num_ghost, num_waves);
 
 
   grid.num_cells[0] = nx;

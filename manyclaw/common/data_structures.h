@@ -47,6 +47,22 @@ void randomize_vector(Vector& v)
   }
 }
 
+template <unsigned nx, unsigned ny, unsigned num_ghosts, unsigned num_eqns>
+struct FieldIndexer
+{
+	inline int idx(int row, int col){return (col + row*(nx + 2*num_ghosts))*num_eqns;}
+
+	inline int up(int row, int col){return (col + (row + 1)*(nx + 2*num_ghosts))*num_eqns;}
+
+	inline int down(int row, int col){return (col + (row - 1)*(nx + 2*num_ghosts))*num_eqns;}
+
+	inline int left(int row, int col){return (col - 1 + row*(nx + 2*num_ghosts))*num_eqns;}
+
+	inline int right(int row, int col){return (col + 1 + row*(nx + 2*num_ghosts))*num_eqns;}
+
+	inline int size(){return (nx + 2*num_ghosts)*(ny + 2*num_ghosts)*num_eqns;}
+};
+
 struct Grid
 {
   // size info
@@ -87,7 +103,7 @@ struct Solution
   double t;
 
   Solution(Grid& grid, State& state):
-    grid(grid), state(state)
+    grid(grid), state(state), t(0.0)
   {}
 
   void write(int frame, char *output_path);

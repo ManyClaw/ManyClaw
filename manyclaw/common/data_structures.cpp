@@ -100,8 +100,8 @@ void State::randomize()
   randomize_vector(aux);
 }
 
-Solver::Solver(Solution& solution, int num_waves):
-  num_waves(num_waves), solution(solution)
+Solver::Solver(Solution& solution, int num_ghost, int num_waves):
+  num_ghost(num_ghost), num_waves(num_waves), solution(solution)
 {
   const int nx = solution.grid.num_cells[0];
   const int ny = solution.grid.num_cells[1];
