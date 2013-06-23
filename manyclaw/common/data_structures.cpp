@@ -28,7 +28,7 @@ void Solution::write(int frame, char output_path[])
   std::ostringstream q_file_path;
   q_file_path << output_path << "/" << file_prefix << "q"
               << std::setfill('0') << std::setw(4) << frame;
-  std::cout << "Writing out frame: " << frame << '\n';
+  std::cout << "Writing out frame: " << frame << " to " << q_file_path.str() << '\n';
 
   std::fstream q_file;
   q_file.open(q_file_path.str().c_str(), std::ios::out);
@@ -119,9 +119,9 @@ void Solver::step(Solution& solution, double dt, set_bc_t set_bc, rp_step_t rp_s
   // Note that this all will break if the grid is not uniform!
   real dtdx = dt / solution.grid.dx[0];
 
-  set_bc(&solution.state.q[0], &solution.state.aux[0],
-        solution.grid.num_cells[0], solution.grid.num_cells[1],
-        num_ghost, solution.state.num_eqn);
+  // set_bc(&solution.state.q[0], &solution.state.aux[0],
+  //       solution.grid.num_cells[0], solution.grid.num_cells[1],
+  //       num_ghost, solution.state.num_eqn);
 
   rp_step(&solution.state.q[0], &solution.state.aux[0], 
           solution.grid.num_cells[0], solution.grid.num_cells[1],
