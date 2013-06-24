@@ -24,8 +24,8 @@ void advection_rp(const real* q_left, const real* q_right,
 
     // This could also be implemented as an if statement or statically
     // based on the sign of s[0] (a.k.a. u)
-    amdq[0] = std::min(0.0,s[0] * wave[0]);
-    apdq[0] = std::max(0.0,s[0] * wave[0]);
+    amdq[0] = std::min(0.0,s[0]) * wave[0];
+    apdq[0] = std::max(0.0,s[0]) * wave[0];
 
 }
 #endif // ADVECTION_RP_H
