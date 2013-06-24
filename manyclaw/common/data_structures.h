@@ -72,6 +72,12 @@ struct FieldIndexer
 
   inline int size()
   {return (nx + 2*num_ghosts)*(ny + 2*num_ghosts)*num_eqns;}
+
+  inline int row_size()
+  {return (nx + 2*num_ghosts)*num_eqns;}
+
+  inline int col_size()
+  {return (ny + 2*num_ghosts)*num_eqns;}
 };
 
 struct EdgeFieldIndexer
@@ -86,16 +92,22 @@ struct EdgeFieldIndexer
     : nx(nx), ny(ny), num_ghosts(num_ghosts), num_eqns(num_eqns), num_waves(num_waves)
   {}
 
+  inline int row_size()
+  {return (nx + 2*num_ghosts - 1)*num_eqns*num_waves;}
+
+  inline int col_size()
+  {return (ny + 2*num_ghosts - 1)*num_eqns*num_waves;}
+
   inline int size()
-  {return (nx+1)*(ny+1)*num_eqns*num_waves;}
+  {return row_size() * col_size();}
 
   inline int left_edge(const int row, const int col)
-  {return ((col - num_ghosts) + (row - num_ghosts)*(nx + 1))*num_eqns*num_waves;}
+  {return (col - 1)*num_eqns*num_waves + (row - 1)*row_size();}
 
   inline int right_edge(const int row, const int col)
   {return left_edge(row, col) + 1;}
 
-  inline int down_edge(int row, int col)
+  inline int down_edge(const int row, const int col)
   {return left_edge(row, col) + size();}
 
   inline unsigned up_edge(const int row, const int col)
