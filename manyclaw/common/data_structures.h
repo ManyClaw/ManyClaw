@@ -163,7 +163,7 @@ struct Solver
   // Non-owned references
   Solution& solution;
 
-  Solver(Solution& solution, int num_waves);
+  Solver(Solution& solution, int num_ghost, int num_waves);
 
   void step(Solution& solution, double dt, set_bc_t set_bc, rp_step_t rp_step, updater_t update);
 };
