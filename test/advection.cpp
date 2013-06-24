@@ -180,8 +180,7 @@ int big_test(int argc, char ** argv)
   solution.write(0, "./_output");
 
   // Initialize solver
-  Solver solver(solution, num_waves);
-  solver.num_ghost = num_ghost;
+  Solver solver(solution, num_waves, num_ghost);
 
   print_solver(solver, nx, ny);
 

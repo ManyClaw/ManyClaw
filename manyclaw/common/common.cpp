@@ -11,8 +11,8 @@ void compare_steppers(int nx, int ny, rp_grid_params params,
   state.randomize();
   Solution solution(grid, state);
 
-  Solver solver_1(solution, params.num_waves);
-  Solver solver_2(solution, params.num_waves);
+  Solver solver_1(solution, params.num_waves, params.num_ghost);
+  Solver solver_2(solution, params.num_waves, params.num_ghost);
 
   rp_stepper_1(&state.q[0], &state.aux[0], grid.num_cells[0], grid.num_cells[1],
               &solver_1.amdq[0], &solver_1.apdq[0], &solver_1.waves[0],
@@ -36,7 +36,7 @@ double benchmark_stepper(int nx, int ny, rp_grid_params params, rp_step_t rp_ste
   State state(grid, params.num_eqn, params.num_aux, params.num_ghost);
   state.randomize();
   Solution solution(grid, state);
-  Solver solver(solution, params.num_waves);
+  Solver solver(solution, params.num_waves, params.num_ghost);
 
   timer t;
   rp_stepper(&state.q[0], &state.aux[0], grid.num_cells[0], grid.num_cells[1],
@@ -72,7 +72,7 @@ double compare_updates(int nx, int ny, rp_grid_params params,
   ref_state.randomize();
  
   Solution solution(grid, state);
-  Solver solver(solution, params.num_waves);
+  Solver solver(solution, params.num_waves, params.num_ghost);
 
   rp_stepper(&state.q[0], &state.aux[0], grid.num_cells[0], grid.num_cells[1],
               &solver.amdq[0], &solver.apdq[0], &solver.waves[0],
