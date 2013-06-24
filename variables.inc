@@ -57,11 +57,9 @@ else
         ifeq ($(CXX), g++)
             CXXFLAGS += -fPIC
             LDFLAGS += -dynamiclib -flat_namespace -undefined suppress
-        else 
-            ifeq ($(CXX), g++)
-            	CXXFLAGS += -module $(MOD_PATH)
-                LDFLAGS += -dynamiclib -flat_namespace -undefined suppress
-            endif
+        else ifeq ($(CXX), clang++)
+        	CXXFLAGS += -fPIC
+            LDFLAGS += -dynamiclib -flat_namespace -undefined suppress
         endif
     endif
 endif
