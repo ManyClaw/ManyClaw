@@ -14,7 +14,7 @@ else ifeq ($(CXX), icc)
 endif
 
 
-CXXFLAGS = -I./ -O0 -g -Wall $(OMPCFLAGS)
+CXXFLAGS = -I./ -O0 -g -Wall -Wno-unused-parameter $(OMPCFLAGS)
 LDFLAGS = 
 
 
