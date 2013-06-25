@@ -1,6 +1,6 @@
 include ../../../../variables.inc
 
-OBJS=advection_rp_step_serial.o advection_rp_step_serial_cellwise.o advection_rp_step_serial_tiled.o advection_rp_step_omp.o advection_rp_step_tbb.o
+OBJS=advection_rp_step_serial.o advection_rp_step_serial_cellwise.o advection_rp_step_serial_tiled.o advection_rp_step_omp.o advection_rp_step_tbb.o advection_rp_step_serial_cellwise_indexer.o
 
 all: ${OBJS}
 

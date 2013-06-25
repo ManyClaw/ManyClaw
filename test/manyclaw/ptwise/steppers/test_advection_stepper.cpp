@@ -73,7 +73,7 @@ TEST(AdvectionStepper, base) {
   amdq_gold[efi.up_edge(5,5)] = 0.0;
   apdq_gold[efi.up_edge(5,5)] = -1.0;
   
-  advection_rp_step_serial_cellwise(q, NULL, nx, ny, amdq, apdq, wave, speed);
+  advection_rp_step_serial_cellwise_indexer(q, NULL, nx, ny, amdq, apdq, wave, speed);
 
   EXPECT_TRUE(ArraysMatch(wave, wave_gold, efi.size()));
   EXPECT_TRUE(ArraysMatch(speed, speed_gold, efi.size()));
