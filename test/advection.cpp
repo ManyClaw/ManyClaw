@@ -68,7 +68,7 @@ int main_kyle(int argc, char ** argv)
   solution.write(0, "./_output");
 
   // Initialize solver
-  Solver solver(solution, num_waves);
+  Solver solver(solution, num_ghost, num_waves);
   solver.num_ghost = num_ghost;
 
   // Take multiple steps
@@ -181,7 +181,6 @@ int big_test(int argc, char ** argv)
 
   // Initialize solver
   Solver solver(solution, num_waves, num_ghost);
-
   print_solver(solver, nx, ny);
 
   // Take multiple steps
