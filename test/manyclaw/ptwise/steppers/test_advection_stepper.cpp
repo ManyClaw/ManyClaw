@@ -4,14 +4,27 @@
 
 ::testing::AssertionResult ArraysMatch(const real *expected,
                                        const real *actual, int size){
+  std::vector<int> bad_loc;
   for (int i=0; i < size; ++i){
-    if (fabs(expected[i] - actual[i]) > 1e-8){
-      return ::testing::AssertionFailure() << "array[" << i
-                                           << "] (" << actual[i] << ") != expected[" << i
-                                           << "] (" << expected[i] << ")";
+    if (std::fabs(expected[i] - actual[i]) > 1e-8){
+      bad_loc.push_back(i);
     }
   }
-  
+
+  if (bad_loc.size() > 0) {
+    std::ostringstream fail;
+    fail << std::endl;
+    for(size_t i=0; i < bad_loc.size(); ++i){
+      int idx = bad_loc[i];
+      fail << std::scientific
+           << "  array[" << idx
+           << "] (" << actual[idx] << ") != expected[" << idx
+           << "] (" << expected[idx] << ")\n";
+    }
+    fail << "  Num_wrong:" << bad_loc.size();
+    return ::testing::AssertionFailure() << fail.str();
+  }
+
   return ::testing::AssertionSuccess();
 }
 
@@ -62,8 +75,8 @@ TEST(AdvectionStepper, base) {
   
   advection_rp_step_serial_cellwise(q, NULL, nx, ny, amdq, apdq, wave, speed);
 
-  EXPECT_TRUE(ArraysMatch(wave_gold, wave, efi.size()));
-  EXPECT_TRUE(ArraysMatch(speed_gold, speed, efi.size()));
-  EXPECT_TRUE(ArraysMatch(amdq_gold, amdq, efi.size()));
-  EXPECT_TRUE(ArraysMatch(apdq_gold, apdq, efi.size()));
+  EXPECT_TRUE(ArraysMatch(wave, wave_gold, efi.size()));
+  EXPECT_TRUE(ArraysMatch(speed, speed_gold, efi.size()));
+  EXPECT_TRUE(ArraysMatch(amdq, amdq_gold, efi.size()));
+  EXPECT_TRUE(ArraysMatch(apdq, apdq_gold, efi.size()));
 }
