@@ -1,4 +1,4 @@
-include ../../../variables.inc
+include ../../../../variables.inc
 
 OBJS = acoustics_var_rp_step_serial.o \
        acoustics_var_rp_step_serial_cellwise.o \

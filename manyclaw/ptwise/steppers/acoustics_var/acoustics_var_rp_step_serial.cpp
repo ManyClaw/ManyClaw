@@ -13,7 +13,7 @@ void acoustics_var_rp_step_serial(const real* q, const real* aux,
 {
   int col, row, idx_left, idx_right, idx_up, idx_down, idx_out;
   const int num_ghost = acoustics_var_rp_grid_params.num_ghost;
-  const int num_states = acoustics_var_rp_grid_params.num_states;
+  const int num_eqn = acoustics_var_rp_grid_params.num_eqn;
   const int num_waves = acoustics_var_rp_grid_params.num_waves;
 
   for(row = num_ghost; row <= ny + num_ghost; ++row)
@@ -23,10 +23,10 @@ void acoustics_var_rp_step_serial(const real* q, const real* aux,
       idx_left = col + row*(nx + 2*num_ghost) - 1;
       idx_right = idx_left + 1;
       idx_out = (col - num_ghost) + (row - num_ghost) * (nx + 1);
-      acoustics_var_rp(q + idx_left*num_states, q + idx_right*num_states,
+      acoustics_var_rp(q + idx_left*num_eqn, q + idx_right*num_eqn,
                    aux, aux, &acoustics_var_rp_aux_global,
-                   amdq + idx_out*num_states, apdq + idx_out*num_states,
-                   wave + num_waves*num_states*idx_out, wave_speeds + num_waves*idx_out);
+                   amdq + idx_out*num_eqn, apdq + idx_out*num_eqn,
+                   wave + num_waves*num_eqn*idx_out, wave_speeds + num_waves*idx_out);
     }
   }
 
@@ -37,10 +37,10 @@ void acoustics_var_rp_step_serial(const real* q, const real* aux,
       idx_up = col + (row - 1)*(nx + 2*num_ghost);
       idx_down = idx_up + nx + 2*num_ghost;
       idx_out = (col - num_ghost) + (row - num_ghost) * (nx + 1) + ((nx + 1)*(ny + 1));
-      acoustics_var_rp(q + idx_up*num_states, q + idx_down*num_states,
+      acoustics_var_rp(q + idx_up*num_eqn, q + idx_down*num_eqn,
                    aux, aux, &acoustics_var_rp_aux_global,
-                   amdq + idx_out*num_states, apdq + idx_out*num_states,
-                   wave + num_waves*num_states*idx_out, wave_speeds + num_waves*idx_out);
+                   amdq + idx_out*num_eqn, apdq + idx_out*num_eqn,
+                   wave + num_waves*num_eqn*idx_out, wave_speeds + num_waves*idx_out);
     }
   }
 }

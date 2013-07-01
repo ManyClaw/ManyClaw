@@ -1,6 +1,8 @@
 #ifndef __UPDATES_H
 #define __UPDATES_H
 
+#include <manyclaw/manyclaw.h>
+
 // Upwind updater
 void updater_first_order_dimensional_splitting(real* q,
                                                const real* aux,
@@ -11,26 +13,24 @@ void updater_first_order_dimensional_splitting(real* q,
                                                const real* wave,
                                                const real* wave_speeds,
                                                const int num_ghost, 
-                                               const int num_states,
+                                               const int num_eqns,
                                                const real dtdx)
 {
-  int col, row, idx_left, idx_center, idx_up, idx_out_x, idx_out_y;
-  //  const int num_waves = rp_grid_params.num_waves;
+  int col, row, eqn;
 
-#pragma omp parallel for schedule(runtime)
-  for(row = num_ghost; row <= ny + num_ghost; ++row) {
-    for(col = num_ghost; col <= nx + num_ghost; ++col) {
-      idx_left = col + row*(nx + 2*num_ghost) - 1;
-      idx_up = col + (row - 1)*(nx + 2*num_ghost);
-      idx_center = idx_left + 1;
-      idx_out_x = (col - num_ghost) + (row - num_ghost) * (nx + 1);
-      idx_out_y = idx_out_x + ((nx + 1)*(ny + 1));
+  FieldIndexer fi(nx, ny, num_ghost, num_eqns);
+  EdgeFieldIndexer efi(nx, ny, num_ghost, num_eqns);
 
-      for(int state=0; state < num_states; ++state){
-        q[idx_left*num_states + state]   -= dtdx * amdq[idx_out_x*num_states + state];
-        q[idx_up*num_states + state]     -= dtdx * amdq[idx_out_y*num_states + state];
-        q[idx_center*num_states + state] -= dtdx * apdq[idx_out_x*num_states + state];
-        q[idx_center*num_states + state] -= dtdx * apdq[idx_out_y*num_states + state];
+  for(row = num_ghost; row <= ny + num_ghost; ++row) 
+  {
+    for(col = num_ghost; col <= nx + num_ghost; ++col) 
+    {
+      for(int eqn=0; eqn < num_eqns; ++eqn)
+      {
+        q[fi.left(row, col) + eqn] -= dtdx * amdq[efi.left_edge(row, col)];
+        q[fi.idx(row, col) + eqn]  -= dtdx * apdq[efi.left_edge(row, col)];
+        q[fi.idx(row, col) + eqn]  -= dtdx * amdq[efi.up_edge(row, col)];
+        q[fi.up(row, col) + eqn]   -= dtdx * apdq[efi.up_edge(row, col)];
       }
     }
   }

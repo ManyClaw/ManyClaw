@@ -18,7 +18,7 @@ void acoustics_var_rp(const real* q_left, const real* q_right,
                       const acoustics_var_rp_aux_global_t* aux_global,
                       real* amdq, real* apdq, real *wave, real *s)
 {
-    const int num_states = acoustics_var_rp_grid_params.num_states;
+    const int num_eqn = acoustics_var_rp_grid_params.num_eqn;
 
     // Local physical constants
     real c_left = sqrt(aux_left[1] / aux_left[0]);
@@ -38,22 +38,22 @@ void acoustics_var_rp(const real* q_left, const real* q_right,
     s[1] =  c_right;
 
     // Set wave vectors
-    wave[0 * num_states + 0] = -alpha[0] * Z_left;
-    wave[0 * num_states + 1] = alpha[0];
-    wave[0 * num_states + 2] = 0.0;
+    wave[0 * num_eqn + 0] = -alpha[0] * Z_left;
+    wave[0 * num_eqn + 1] = alpha[0];
+    wave[0 * num_eqn + 2] = 0.0;
 
-    wave[1 * num_states + 0] = alpha[1] * Z_right;
-    wave[1 * num_states + 1] = alpha[1];
-    wave[1 * num_states + 2] = 0.0;
+    wave[1 * num_eqn + 0] = alpha[1] * Z_right;
+    wave[1 * num_eqn + 1] = alpha[1];
+    wave[1 * num_eqn + 2] = 0.0;
 
     // Grid edge fluctuations
-    amdq[0] = s[0] * wave[0 * num_states + 0];
-    amdq[1] = s[0] * wave[0 * num_states + 1];
-    amdq[2] = s[0] * wave[0 * num_states + 2];  // This could just be set to zero
+    amdq[0] = s[0] * wave[0 * num_eqn + 0];
+    amdq[1] = s[0] * wave[0 * num_eqn + 1];
+    amdq[2] = s[0] * wave[0 * num_eqn + 2];  // This could just be set to zero
 
-    apdq[0] = s[1] * wave[1 * num_states + 0];
-    apdq[1] = s[1] * wave[1 * num_states + 1];
-    apdq[2] = s[1] * wave[1 * num_states + 2];  // This could just be set to zero
+    apdq[0] = s[1] * wave[1 * num_eqn + 0];
+    apdq[1] = s[1] * wave[1 * num_eqn + 1];
+    apdq[2] = s[1] * wave[1 * num_eqn + 2];  // This could just be set to zero
 }
 
 #endif // ACOUSTICS_VAR_RP_H
