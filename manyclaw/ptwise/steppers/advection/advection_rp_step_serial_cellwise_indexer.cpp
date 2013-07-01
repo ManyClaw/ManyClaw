@@ -13,18 +13,40 @@ void advection_rp_step_serial_cellwise_indexer( const real* q,  const real* aux,
   FieldIndexer fi(nx, ny, num_ghost, num_eqn);
   EdgeFieldIndexer efi(nx, ny, num_ghost, num_eqn, num_waves);
 
-  for(row = 0; row < nx + 2*num_ghost - 1; ++row){
-    for(col = 0; col <= nx + 2*num_ghost - 1; ++col) {
-      advection_rp(q + fi.idx(row, col), q + fi.idx(row, col + 1),
+  for(row = 1; row < efi.row_edge_size(); ++row){
+    for(col = 1; col < efi.col_edge_size() + 1; ++col) {
+      //      printf("-> Calling %d, %d ", row, col);
+      //      printf("-> fi.idx %d, efi left %d down %d\n", fi.idx(row, col), efi.left_edge(row, col), efi.down_edge(row, col));
+      advection_rp(q + fi.idx(row, col-1), q + fi.idx(row, col),
                    aux, aux,  &advection_rp_aux_global,
-                   amdq + efi.right_edge(row, col), apdq + efi.right_edge(row, col),
-                   wave + efi.right_edge(row, col), wave_speeds + efi.right_edge(row, col));
+                   amdq + efi.left_edge(row, col), apdq + efi.left_edge(row, col),
+                   wave + efi.left_edge(row, col), wave_speeds + efi.left_edge(row, col));
 
-        advection_rp(q + fi.idx(row, col), q + fi.idx(row + 1, col),
+        advection_rp(q + fi.idx(row-1, col), q + fi.idx(row, col),
                    aux, aux,  &advection_rp_aux_global,
-                   amdq + efi.up_edge(row, col), apdq + efi.up_edge(row, col),
-                     wave + efi.up_edge(row, col), wave_speeds + efi.up_edge(row, col));
+                   amdq + efi.down_edge(row, col), apdq + efi.down_edge(row, col),
+                     wave + efi.down_edge(row, col), wave_speeds + efi.down_edge(row, col));
     }
+  }
+
+  for(col = 1; col < efi.col_edge_size() + 1; ++col) {
+    row = efi.row_edge_size();
+    //    printf("-> Calling %d, %d ", row, col);
+    //    printf("-> fi.idx %d, efi left %d down %d\n", fi.idx(row, col), efi.left_edge(row, col), efi.down_edge(row, col));
+    advection_rp(q + fi.idx(row - 1, col), q + fi.idx(row, col),
+                 aux, aux,  &advection_rp_aux_global,
+                 amdq + efi.down_edge(row, col), apdq + efi.down_edge(row, col),
+                 wave + efi.down_edge(row, col), wave_speeds + efi.down_edge(row, col));
+  }
+
+  for(row = 1; row < efi.row_edge_size(); ++row){
+    col = efi.col_edge_size() + 1;
+    //    printf("-> Calling %d, %d ", row, col);
+    //    printf("-> fi.idx %d, efi left %d down %d\n", fi.idx(row, col), efi.left_edge(row, col), efi.down_edge(row, col));
+    advection_rp(q + fi.idx(row, col - 1), q + fi.idx(row, col),
+                 aux, aux,  &advection_rp_aux_global,
+                 amdq + efi.left_edge(row, col), apdq + efi.left_edge(row, col),
+                 wave + efi.left_edge(row, col), wave_speeds + efi.left_edge(row, col));
   }
 }
 

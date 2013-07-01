@@ -92,14 +92,20 @@ struct EdgeFieldIndexer
     : nx(nx), ny(ny), num_ghosts(num_ghosts), num_eqns(num_eqns), num_waves(num_waves)
   {}
 
+  inline int row_edge_size()
+  {return (nx + 2*num_ghosts - 1);}
+
+  inline int col_edge_size()
+  {return (ny + 2*num_ghosts - 2);}
+
   inline int row_size()
   {return (nx + 2*num_ghosts - 1)*num_eqns*num_waves;}
 
   inline int col_size()
-  {return (ny + 2*num_ghosts - 1)*num_eqns*num_waves;}
+  {return (ny + 2*num_ghosts - 2)*num_eqns*num_waves;}
 
   inline int size()
-  {return row_size() * col_size();}
+  {return 2 * row_size() * col_size();}
 
   inline int left_edge(const int row, const int col)
   {return (col - 1)*num_eqns*num_waves + (row - 1)*row_size();}
@@ -108,10 +114,10 @@ struct EdgeFieldIndexer
   {return left_edge(row, col) + 1;}
 
   inline int down_edge(const int row, const int col)
-  {return left_edge(row, col) + size();}
+  {return (row-1)*col_size() + (col - 1) + size()/2;}
 
   inline unsigned up_edge(const int row, const int col)
-  {return left_edge(row + 1, col) + size();}
+  {return row*col_size() + (col - 1) + size()/2;}
 };
 
 struct Grid

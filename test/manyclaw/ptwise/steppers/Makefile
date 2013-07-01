@@ -26,7 +26,7 @@ CPPFLAGS += -I$(GTEST_DIR) -I$(MANYCLAW_DIR)
 
 # Flags passed to the C++ compiler.
 CXXFLAGS += -g -Wall -Wextra
-LDFLAGS = -L$(MANYCLAW_DIR)/lib -lmanyclaw -ltbb
+LDFLAGS = -L$(MANYCLAW_DIR)/lib -lmanyclaw $(TBB_LDFLAGS)
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.

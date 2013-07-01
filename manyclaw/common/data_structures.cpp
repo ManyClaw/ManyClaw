@@ -108,10 +108,12 @@ Solver::Solver(Solution& solution, int num_ghost, int num_waves):
   const int num_eqn = solution.state.num_eqn;
   const int dim = solution.grid.dim;
   // Outputs on interfaces
-  amdq.resize((nx+1)*(ny+1)*num_eqn*dim);
-  apdq.resize((nx+1)*(ny+1)*num_eqn*dim);
-  waves.resize((nx+1)*(ny+1)*num_eqn*num_waves*dim);
-  wave_speeds.resize((nx+1)*(ny+1)*4*num_eqn*dim);
+  EdgeFieldIndexer efi(nx, ny, num_ghost, num_eqn);
+  EdgeFieldIndexer wave_efi(nx, ny, num_ghost, num_eqn, num_waves);
+  amdq.resize(efi.size());
+  apdq.resize(efi.size());
+  waves.resize(wave_efi.size());
+  wave_speeds.resize(wave_efi.size());
 }
 
 void Solver::step(Solution& solution, double dt, set_bc_t set_bc, rp_step_t rp_step, updater_t update)
