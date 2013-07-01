@@ -11,12 +11,6 @@ struct euler_rp_aux_global_t
 static const euler_rp_aux_global_t euler_rp_aux_global = {1.0};
 static const rp_grid_params euler_rp_grid_params = {2, 4, 0, 4};
 
-// Evaluate the ideal gas law
-inline real pressure(real rho, real momentum, real E)
-{
-    return 0.0;
-}
-
 // Implementation of the Roe solver for the Euler equations
 inline
 void euler_rp(const real* q_left, const real* q_right,
@@ -24,7 +18,7 @@ void euler_rp(const real* q_left, const real* q_right,
               const void* aux_global_void,
               real* amdq, real* apdq, real* wave, real* s)
 {
-  const int num_states = euler_rp_grid_params.num_states;
+  const int num_eqn = euler_rp_grid_params.num_eqn;
   const euler_rp_aux_global_t* aux_global = (const euler_rp_aux_global_t *) aux_global_void;
 
   real a1,a2,a3,a4;
@@ -66,25 +60,25 @@ void euler_rp(const real* q_left, const real* q_right,
   s[3] = u+a;
 
   // Waves
-  wave[0*num_states + 0] = a1;
-  wave[0*num_states + 1] = a1 * s[0];
-  wave[0*num_states + 2] = a1 * v;
-  wave[0*num_states + 3] = a1 * (enth - u * a);
+  wave[0*num_eqn + 0] = a1;
+  wave[0*num_eqn + 1] = a1 * s[0];
+  wave[0*num_eqn + 2] = a1 * v;
+  wave[0*num_eqn + 3] = a1 * (enth - u * a);
 
-  wave[1*num_states + 0] = 0.0;
-  wave[1*num_states + 1] = 0.0;
-  wave[1*num_states + 2] = a2;
-  wave[1*num_states + 3] = a2 * v;
+  wave[1*num_eqn + 0] = 0.0;
+  wave[1*num_eqn + 1] = 0.0;
+  wave[1*num_eqn + 2] = a2;
+  wave[1*num_eqn + 3] = a2 * v;
 
-  wave[2*num_states + 0] = a3;
-  wave[2*num_states + 1] = a3 * u;
-  wave[2*num_states + 2] = a3 * v;
-  wave[2*num_states + 3] = a3 * 0.5 * u2v2;
+  wave[2*num_eqn + 0] = a3;
+  wave[2*num_eqn + 1] = a3 * u;
+  wave[2*num_eqn + 2] = a3 * v;
+  wave[2*num_eqn + 3] = a3 * 0.5 * u2v2;
 
-  wave[3*num_states + 0] = a4;
-  wave[3*num_states + 1] = a4 * s[3];
-  wave[3*num_states + 2] = a4 * v;
-  wave[3*num_states + 3] = a4 * (enth + u * a);
+  wave[3*num_eqn + 0] = a4;
+  wave[3*num_eqn + 1] = a4 * s[3];
+  wave[3*num_eqn + 2] = a4 * v;
+  wave[3*num_eqn + 3] = a4 * (enth + u * a);
 
   // Calculate fluctuations
   for (int eqn_index = 0; eqn_index < 4; eqn_index++)
@@ -99,14 +93,14 @@ void euler_rp(const real* q_left, const real* q_right,
     {
       for (int eqn_index = 0; eqn_index < 4; eqn_index++)
       {
-        amdq[eqn_index] += s[wave_index] * wave[wave_index + eqn_index*num_states];
+        amdq[eqn_index] += s[wave_index] * wave[wave_index + eqn_index*num_eqn];
       }
     }
     else
     {
       for (int eqn_index = 0; eqn_index < 4; eqn_index++)
       {
-        apdq[eqn_index] += s[wave_index] * wave[wave_index + eqn_index*num_states];
+        apdq[eqn_index] += s[wave_index] * wave[wave_index + eqn_index*num_eqn];
       }
     }
   }

@@ -4,15 +4,27 @@ INSTALL_PATH ?= lib
 MAJOR_VERSION ?= 0
 MINOR_VERSION ?= 1.0
 
-CXX=g++
+
+CXX = g++
 LINK ?= $(CXX)
 ifeq ($(CXX), g++)
 	OMPCFLAGS = -fopenmp
 else ifeq ($(CXX), icc)
 	OMPCFLAGS = -openmp
 endif
-CXXFLAGS=-I ./ -O3 -Wall $(OMPCFLAGS)
-LDFLAGS= -ltbb
+
+
+CXXFLAGS = -I./ -O0 -g -Wall -Wno-unused-parameter $(OMPCFLAGS)
+LDFLAGS = 
+
+
+ifdef TBB_LIB
+      CXXFLAGS += -I$(TBB_INC)
+      TBB_LDFLAGS = -L$(TBB_LIB)  
+endif
+TBB_LDFLAGS += -ltbb
+LDFLAGS += $(TBB_LD_FLAGS)
+
 
 # Dynamic library flags (archetecture dependent), note the platforms here are
 # found by sys.platform in ptyhon, check
@@ -26,7 +38,7 @@ ifeq ($(UNAME), Linux)
     
     # Compiler specific flags
     ifeq ($(CXX), g++)
-        CXXFLAGS += -J$(MOD_PATH) -fPIC
+        CXXFLAGS += -fPIC
         LDFLAGS += -shared
     endif
 else 
@@ -43,13 +55,11 @@ else
     
         # Compiler specific flags
         ifeq ($(CXX), g++)
-            CXXFLAGS += -J$(MOD_PATH) -fPIC
+            CXXFLAGS += -fPIC
             LDFLAGS += -dynamiclib -flat_namespace -undefined suppress
-        else 
-            ifeq ($(CXX), g++)
-            	CXXFLAGS += -module $(MOD_PATH)
-                LDFLAGS += -dynamiclib -flat_namespace -undefined suppress
-            endif
+        else ifeq ($(CXX), clang++)
+        	CXXFLAGS += -fPIC
+            LDFLAGS += -dynamiclib -flat_namespace -undefined suppress
         endif
     endif
 endif

@@ -24,7 +24,7 @@ struct acoustics_const_rp_step_tbb_body
 
     int col, row, idx_left, idx_center, idx_up, idx_out_x, idx_out_y;
     const int num_ghost = acoustics_const_rp_grid_params.num_ghost;
-    const int num_states = acoustics_const_rp_grid_params.num_states;
+    const int num_eqn = acoustics_const_rp_grid_params.num_eqn;
     const int num_waves = acoustics_const_rp_grid_params.num_waves;
 
     for(row = r.cols().begin(); row < r.cols().end(); ++row) {
@@ -34,14 +34,14 @@ struct acoustics_const_rp_step_tbb_body
         idx_center = idx_left + 1;
         idx_out_x = (col - num_ghost) + (row - num_ghost) * (nx + 1);
         idx_out_y = idx_out_x + ((nx + 1)*(ny + 1));
-        acoustics_const_rp(q + idx_left*num_states, q + idx_center*num_states,
+        acoustics_const_rp(q + idx_left*num_eqn, q + idx_center*num_eqn,
                      aux, aux, &acoustics_const_rp_aux_global,
-                     amdq + idx_out_x*num_states, apdq + idx_out_x*num_states,
-                     wave + num_waves*num_states*idx_out_x, wave_speeds + num_waves*idx_out_x);
-        acoustics_const_rp(q + idx_up*num_states, q + idx_center*num_states,
+                     amdq + idx_out_x*num_eqn, apdq + idx_out_x*num_eqn,
+                     wave + num_waves*num_eqn*idx_out_x, wave_speeds + num_waves*idx_out_x);
+        acoustics_const_rp(q + idx_up*num_eqn, q + idx_center*num_eqn,
                      aux, aux, &acoustics_const_rp_aux_global,
-                     amdq + idx_out_y*num_states, apdq + idx_out_y*num_states,
-                     wave + num_waves*num_states*idx_out_y, wave_speeds + num_waves*idx_out_y);
+                     amdq + idx_out_y*num_eqn, apdq + idx_out_y*num_eqn,
+                     wave + num_waves*num_eqn*idx_out_y, wave_speeds + num_waves*idx_out_y);
       }
     }
   }

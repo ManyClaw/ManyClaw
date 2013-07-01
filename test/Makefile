@@ -1,20 +1,13 @@
-CXX=g++
-LINK ?= $(CXX)
-ifeq ($(CXX), g++)
-	OMPCFLAGS = -fopenmp
-else ifeq ($(CXX), icc)
-	OMPCFLAGS = -openmp
-endif
-CXXFLAGS = -I ./ -O3 -Wall $(OMPCFLAGS) -I ..
-LDFLAGS = -ltbb -L../lib/ -lmanyclaw
+include ../variables.inc
+
+CXXFLAGS += -I..
+LDFLAGS = $(TBB_LDFLAGS) -L../lib -lmanyclaw 
 
 DRIVERS = advection \
           euler \
           acoustics_const \
           acoustics_var \
           limiters
-
-COMMON_OBJS = ../src/common/common.o ../src/common/data_structures.o
 
 all: $(DRIVERS)
 
@@ -35,3 +28,6 @@ limiters: limiters.o
 
 clean:
 	rm -rf advection advection.o euler euler.o acoustics_const acoustics_const.o acoustics_var acoustics_var.o limiters limiters.o
+
+clobber: clean
+	$(MAKE) -C ../ clean

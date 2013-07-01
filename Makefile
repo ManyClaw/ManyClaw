@@ -3,7 +3,7 @@ include variables.inc
 .PHONY.: all, build, lib, test, benchmark, clean, clobber
 
 all: lib install test benchmark
-
+ 
 build:
 	$(MAKE) -C manyclaw/common
 	$(MAKE) -C manyclaw/ptwise/steppers/advection
@@ -14,7 +14,7 @@ build:
 lib: $(LIB_FULL_NAME)
 
 $(LIB_FULL_NAME): build
-	$(LINK) $(LIB_INSTALL_NAME) $(VERSION_FLAGS) $(shell find manyclaw -name "*.o") -o $(LIB_FULL_NAME) $(INCLUDE) $(LDFLAGS)
+	$(LINK) $(LIB_INSTALL_NAME) $(VERSION_FLAGS) $(shell find manyclaw -name "*.o") -o $(LIB_FULL_NAME) $(LDFLAGS)
 
 install: $(INSTALL_PATH)/$(LIB_FULL_NAME)
 
@@ -22,7 +22,7 @@ $(INSTALL_PATH)/$(LIB_FULL_NAME): $(LIB_FULL_NAME)
 	@if [ ! -d ${INSTALL_PATH} ]; then \
 	  mkdir $(INSTALL_PATH); \
 	fi
-	-cp $(LIB_FULL_NAME) $(INSTALL_PATH)
+	-mv $(LIB_FULL_NAME) $(INSTALL_PATH)
 	@if [ ! -e $(INSTALL_PATH)/$(LIB_MAJOR_NAME) ]; then \
 	  ln -s $(LIB_FULL_NAME) $(INSTALL_PATH)/$(LIB_MAJOR_NAME); \
 	fi
