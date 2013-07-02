@@ -1,7 +1,7 @@
 #ifndef ACOUSTICS_CONST_RP_H
 #define ACOUSTICS_CONST_RP_H
 
-#include "../../common/manyclaw_common.h"
+#include "../common/manyclaw_common.h"
 
 const real BULK = 1.0;
 const real RHO = 1.0;

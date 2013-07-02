@@ -17,3 +17,5 @@ benchmark/acoustics_var
 benchmark/euler
 src/fortran/manyclaw_fortran
  
+test/gtest_main.a
+*tester
