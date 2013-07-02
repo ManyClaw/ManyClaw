@@ -1,4 +1,4 @@
-include ../../../../variables.inc
+include ../../../variables.inc
 
 OBJS = acoustics_var_rp_step_serial.o \
        acoustics_var_rp_step_serial_cellwise.o \
@@ -8,7 +8,7 @@ OBJS = acoustics_var_rp_step_serial.o \
 
 all: $(OBJS)
 
-$(OBJS): ../../riemann/acoustics_var_rp.h ../../../common/common.h ../../../common/data_structures.h
+$(OBJS): ../../riemann/acoustics_var_rp.h ../../common/common.h ../../common/data_structures.h
 
 .PHONY: clean
 
