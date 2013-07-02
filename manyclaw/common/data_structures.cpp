@@ -106,7 +106,7 @@ Solver::Solver(Solution& solution, int num_ghost, int num_wave):
   const int nx = solution.grid.num_cells[0];
   const int ny = solution.grid.num_cells[1];
   const int num_eqn = solution.state.num_eqn;
-  const int dim = solution.grid.dim;
+  //const int dim = solution.grid.dim;
   // Outputs on interfaces
   EdgeFieldIndexer efi(nx, ny, num_ghost, num_eqn);
   EdgeFieldIndexer wave_efi(nx, ny, num_ghost, num_eqn, num_wave);

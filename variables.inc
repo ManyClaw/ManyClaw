@@ -14,13 +14,19 @@ else ifeq ($(CXX), icc)
 endif
 
 
-CXXFLAGS = -I./ -O0 -g -Wall -Wno-unused-parameter $(OMPCFLAGS)
+ifdef OPT
+	OPTFLAGS = -03
+else 
+	OPTFLAGS = -O0 -g
+endif
+WARNFLAGS =  -Wall -Wno-unused-parameter
+CXXFLAGS = -I./ $(OPTFLAGS) $(WARNFLAGS) $(OMPCFLAGS)
 LDFLAGS = 
 
 
 ifdef TBB_LIB
-      CXXFLAGS += -I$(TBB_INC)
-      TBB_LDFLAGS = -L$(TBB_LIB)  
+	CXXFLAGS += -I$(TBB_INC)
+	TBB_LDFLAGS = -L$(TBB_LIB)  
 endif
 TBB_LDFLAGS += -ltbb
 LDFLAGS += $(TBB_LD_FLAGS)
@@ -35,7 +41,7 @@ ifeq ($(UNAME), Linux)
     LIB_SHORT_NAME = lib$(NAME).so
     LIB_INSTALL_NAME = -Wl,-soname,$(LIB_MAJOR_NAME)
     VERSION_FLAGS =
-    
+
     # Compiler specific flags
     ifeq ($(CXX), g++)
         CXXFLAGS += -fPIC
@@ -52,14 +58,14 @@ else
         LIB_SHORT_NAME = lib$(NAME).dylib
         LIB_INSTALL_NAME = -install_name $(LIB_MAJOR_NAME)
         VERSION_FLAGS = -compatibility_version $(MAJOR_VERSION) -current_version $(MAJOR_VERSION).$(MINOR_VERSION)
-    
+
         # Compiler specific flags
         ifeq ($(CXX), g++)
-            CXXFLAGS += -fPIC
-            LDFLAGS += -dynamiclib -flat_namespace -undefined suppress
+		CXXFLAGS += -fPIC
+		LDFLAGS += -dynamiclib -flat_namespace -undefined suppress
         else ifeq ($(CXX), clang++)
-        	CXXFLAGS += -fPIC
-            LDFLAGS += -dynamiclib -flat_namespace -undefined suppress
+		CXXFLAGS += -fPIC
+		LDFLAGS += -dynamiclib -flat_namespace -undefined suppress
         endif
     endif
 endif

@@ -1,12 +1,13 @@
 include ../variables.inc
 
 CXXFLAGS += -I../
-LDFLAGS = $(TBB_LDFLAGS) -L../lib -lmanyclaw
+LDFLAGS =  -L../lib -lmanyclaw $(TBB_LDFLAGS)
 
-DRIVERS = advection \
-          euler \
-          acoustics_const \
-          acoustics_var
+DRIVERS = advection 
+#\
+#          euler \
+#          acoustics_const \
+#          acoustics_var
 
 all: $(DRIVERS)
 

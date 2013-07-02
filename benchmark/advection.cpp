@@ -25,19 +25,15 @@ int main(int argc, char ** argv)
   const char * advection_rp_stepper_names[] =
     {
       "serial",
-      "serial_tiled",
-      "serial_cellwise",
       "TBB",
       "omp"
     };
 
   rp_step_t advection_rp_steppers[] =
     {
-      advection_rp_step_serial,
-      advection_rp_step_serial_tiled,
-      advection_rp_step_serial_cellwise,
-      advection_rp_step_tbb,
-      advection_rp_step_omp
+      advection_rp_grid_eval_serial,
+      advection_rp_grid_eval_tbb,
+      advection_rp_grid_eval_omp
       // TODO add other advection_rp_step functions here
     };
 

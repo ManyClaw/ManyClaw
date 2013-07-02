@@ -3,4 +3,4 @@
 
 #include <manyclaw/grid_eval/advection_grid_eval.h>
 
-#endif __MANYCLAW_GRID_EVAL_H
+#endif // __MANYCLAW_GRID_EVAL_H

@@ -51,10 +51,10 @@ void advection_rp_grid_eval_serial( const real* q,  const real* aux,
 }
 
 
-void advection_rp_step_omp( const real* q,  const real* aux,
-                            const int nx, const  int ny,
-                            real* amdq, real* apdq, real* wave,
-                            real* wave_speed)
+void advection_rp_grid_eval_omp( const real* q,  const real* aux,
+                                 const int nx, const  int ny,
+                                 real* amdq, real* apdq, real* wave,
+                                 real* wave_speed)
 {
   int col, row;
   const int num_ghost = advection_rp_grid_params.num_ghost;
