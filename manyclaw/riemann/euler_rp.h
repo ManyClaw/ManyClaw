@@ -1,7 +1,7 @@
 #ifndef EULER_RP_H
 #define EULER_RP_H
 
-#include "../../common/manyclaw_common.h"
+#include "../common/manyclaw_common.h"
 
 struct euler_rp_aux_global_t
 {

@@ -1,7 +1,7 @@
 #ifndef ADVECTION_RP_H
 #define ADVECTION_RP_H
 
-#include "../../common/manyclaw_common.h"
+#include "../common/manyclaw_common.h"
 
 struct advection_rp_aux_global_t
 {

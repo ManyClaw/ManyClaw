@@ -1,5 +1,5 @@
-#ifndef __MANYCLAW_ADVECTION_STEPPERS_H
-#define __MANYCLAW_ADVECTION_STEPPERS_H
+#ifndef __MANYCLAW_GRID_EVAL_ADVECTION_H
+#define __MANYCLAW_GRID_EVAL_ADVECTION_H
 
 #include "advection_rp_step_serial.h"
 #include "advection_rp_step_serial_tiled.h"

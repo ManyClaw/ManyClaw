@@ -1,5 +1,5 @@
-#ifndef __MANYCLAW_PTWISE_EULER_STEPPERS_H
-#define  __MANYCLAW_PTWISE_EULER_STEPPERS_H
+#ifndef __MANYCLAW_GRID_EVAL_EULER_H
+#define  __MANYCLAW_GRID_EVAL_EULER_H
 
 #include "euler_rp_step_serial.h"
 #include "euler_rp_step_serial_tiled.h"

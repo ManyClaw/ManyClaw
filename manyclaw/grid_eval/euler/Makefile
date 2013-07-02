@@ -1,4 +1,4 @@
-include ../../../../variables.inc
+include ../../../variables.inc
 
 OBJS = euler_rp_step_serial.o  \
        euler_rp_step_serial_cellwise_functor.o \
@@ -10,7 +10,7 @@ OBJS = euler_rp_step_serial.o  \
 
 all: $(OBJS)
 
-$(OBJS): ../../riemann/euler_rp.h ../../../common/common.h ../../../common/data_structures.h
+$(OBJS): ../../riemann/euler_rp.h ../../common/common.h ../../common/data_structures.h
 
 .PHONY: clean
 

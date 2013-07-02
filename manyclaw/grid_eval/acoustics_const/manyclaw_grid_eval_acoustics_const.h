@@ -1,5 +1,5 @@
-#ifndef __MANYCLAW_PTWISE_ACOUSTICS_CONST_STEPPERS_H
-#define __MANYCLAW_PTWISE_ACOUSTICS_CONST_STEPPERS_H
+#ifndef __MANYCLAW_GRID_EVAL_ACOUSTICS_CONST_H
+#define __MANYCLAW_GRID_EVAL_ACOUSTICS_CONST_H
 
 #include "acoustics_const_rp_step_serial.h"
 #include "acoustics_const_rp_step_serial_tiled.h"
