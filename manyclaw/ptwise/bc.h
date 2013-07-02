@@ -1,9 +1,10 @@
-#ifndef __BC_H
-#define __BC_H
+#ifndef BC_H
+#define BC_H
 
 typedef double real;
 
 // Zero-order Extrapolation boundary conditions
+inline
 void set_zero_order_extrap_BCs(real* q, real* aux, const int nx, const int ny,
                                const int num_ghost, const int num_eqn)
 {
@@ -83,6 +84,7 @@ void set_zero_order_extrap_BCs(real* q, real* aux, const int nx, const int ny,
 }
 
 // Set periodic BCs in all directions
+inline
 void set_all_periodic_BCs(real* q, real* aux, const int nx, const int ny,
                                const int num_ghost, const int num_states)
 {
