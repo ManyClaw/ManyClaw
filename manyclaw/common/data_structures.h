@@ -4,6 +4,7 @@
 #include <vector>
 #include <cmath>
 #include <numeric>
+#include <string>
 
 typedef double real;
 
@@ -20,7 +21,7 @@ typedef void (*set_bc_t)(real* q, real* aux, const int nx, const int ny,
 
 typedef void (*rp_t)(const real* q_left, const real* q_right,
                      const real* aux_left, const real* aux_right,
-                     const void* aux_global,
+                     const void* aux_global, const int direction,
                      real* amdq, real* apdq, real* wave, real* s);
 
 typedef void (*rp_grid_eval_t)(const real* q, const real* aux,

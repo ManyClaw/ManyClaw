@@ -3,16 +3,16 @@ include ../variables.inc
 CXXFLAGS += -I..
 LDFLAGS = $(TBB_LDFLAGS) -L../lib -lmanyclaw 
 
-DRIVERS = advection \
-          euler \
-          acoustics_const \
-          acoustics_var \
-          limiters
+DRIVERS = advection
+          # euler \
+          # acoustics_const \
+          # acoustics_var \
+          # limiters
 
 all: $(DRIVERS)
 
 advection: advection.o
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $< 
+	$(LINK) $(CXXFLAGS) $(LDFLAGS) -o $@ $<
 
 euler: euler.o 
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $<
