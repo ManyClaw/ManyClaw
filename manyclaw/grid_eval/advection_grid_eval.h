@@ -39,22 +39,9 @@ void advection_rp_grid_eval_tbb(const real* q,
 				real* wave_speed);
 
 
-const char * advection_rp_grid_eval_names[] =
-  {
-    "serial",
-    "TBB",
-    "omp"
-  };
-
-rp_grid_eval_t advection_rp_grid_evals[] =
-  {
-    advection_rp_grid_eval_serial,
-    advection_rp_grid_eval_tbb,
-    advection_rp_grid_eval_omp
-    // TODO add other advection_rp_grid_eval functions here
-  };
-
-size_t num_advection_rp_grid_eval_kernels = sizeof(advection_rp_grid_evals)/sizeof(rp_grid_eval_t);
+extern const char * advection_rp_grid_eval_names[];
+extern const rp_grid_eval_t advection_rp_grid_evals[];
+extern const size_t num_advection_rp_grid_eval_kernels;
 
 #endif // ADVECTION_GRID_EVAL_H
 

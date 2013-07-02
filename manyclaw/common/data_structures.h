@@ -61,22 +61,22 @@ struct FieldIndexer
   inline unsigned up(int row, int col)
   {return (col + (row + 1)*(nx + 2*num_ghosts))*num_eqns;}
 
-  inline int down(int row, int col)
+  inline unsigned down(int row, int col)
   {return (col + (row - 1)*(nx + 2*num_ghosts))*num_eqns;}
 
-  inline int left(int row, int col)
+  inline unsigned left(int row, int col)
   {return (col - 1 + row*(nx + 2*num_ghosts))*num_eqns;}
 
-  inline int right(int row, int col)
+  inline unsigned right(int row, int col)
   {return (col + 1 + row*(nx + 2*num_ghosts))*num_eqns;}
 
-  inline int size()
+  inline unsigned size()
   {return (nx + 2*num_ghosts)*(ny + 2*num_ghosts)*num_eqns;}
 
-  inline int row_size()
+  inline unsigned row_size()
   {return (nx + 2*num_ghosts)*num_eqns;}
 
-  inline int col_size()
+  inline unsigned col_size()
   {return (ny + 2*num_ghosts)*num_eqns;}
 };
 

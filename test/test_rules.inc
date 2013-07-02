@@ -4,7 +4,6 @@ TOP_DIR = $(MANYCLAW_DIR)/test
 GTEST_DIR = $(MANYCLAW_DIR)/contrib
 
 CPPFLAGS += -I$(GTEST_DIR) -I$(MANYCLAW_DIR)
-CXXFLAGS += -g -Wall -Wextra
 LDFLAGS = -L$(MANYCLAW_DIR)/lib -lmanyclaw $(TBB_LDFLAGS)
 
 # All Google Test headers.  Usually you shouldn't change this

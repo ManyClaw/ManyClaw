@@ -1,5 +1,24 @@
 #include "advection_grid_eval.h"
 
+
+const char * advection_rp_grid_eval_names[] =
+  {
+    "serial",
+    "TBB",
+    "omp"
+  };
+
+const rp_grid_eval_t advection_rp_grid_evals[] =
+  {
+    advection_rp_grid_eval_serial,
+    advection_rp_grid_eval_tbb,
+    advection_rp_grid_eval_omp
+    // TODO add other advection_rp_grid_eval functions here
+  };
+
+const size_t num_advection_rp_grid_eval_kernels = sizeof(advection_rp_grid_evals)/sizeof(rp_grid_eval_t);
+
+
 void advection_rp_grid_eval_serial( const real* q,  const real* aux,
 				    const int nx, const  int ny,
 				    real* amdq, real* apdq, real* wave,
