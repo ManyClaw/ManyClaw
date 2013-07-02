@@ -2,7 +2,7 @@ include variables.inc
 
 .PHONY: all, build, lib, test, benchmark, clean, clobber
 
-all: lib 
+all: lib install
 
 build:
 	$(MAKE) -C manyclaw/common
