@@ -64,9 +64,9 @@ inline void set_zero_order_extrap_BCs(real* q, real* aux, const int nx, const in
 
 // Set periodic BCs in all directions
 void set_all_periodic_BCs(real* q, real* aux, const int nx, const int ny,
-                               const int num_ghost, const int num_states)
+                               const int num_ghost, const int num_eqn)
 {
-        FieldIndexer fi(nx, ny, num_ghost, num_eqn);
+    FieldIndexer fi(nx, ny, num_ghost, num_eqn);
 
     // Bottom edge
     for (int row = 0; row < num_ghost; ++row)

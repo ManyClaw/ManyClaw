@@ -1,4 +1,5 @@
 #include "data_structures.h"
+#include <string>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
@@ -21,7 +22,7 @@ State::State(Grid& grid, int num_eqn, int num_aux, int num_ghost) :
   aux.resize((nx+num_ghost*2)*(ny+num_ghost*2)*num_aux);
 }
 
-void Solution::write(int frame, char output_path[])
+void Solution::write(int frame, std::string output_path)
 {
   const char file_prefix[] = "fort.";
 
