@@ -1,33 +1,9 @@
-include ../variables.inc
+all : execute_test
 
-CXXFLAGS += -I..
-LDFLAGS = $(TBB_LDFLAGS) -L../lib -lmanyclaw 
+MANYCLAW_DIR=..
+include $(MANYCLAW_DIR)/variables.inc
 
-DRIVERS = advection \
-          euler \
-          acoustics_const \
-          acoustics_var \
-          limiters
+TEST_SRC = $(call rwildcard,manyclaw,*.cpp)
+TEST_OBJ =  $(patsubst %.cpp,%.o,$(TEST_SRC))
 
-all: $(DRIVERS)
-
-advection: advection.o
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $< 
-
-euler: euler.o 
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $<
-
-acoustics_const: acoustics_const.o
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $<
-
-acoustics_var: acoustics_var.o
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $<
-
-limiters: limiters.o
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $<
-
-clean:
-	rm -rf advection advection.o euler euler.o acoustics_const acoustics_const.o acoustics_var acoustics_var.o limiters limiters.o
-
-clobber: clean
-	$(MAKE) -C ../ clean
+include $(MANYCLAW_DIR)/test/test_rules.inc

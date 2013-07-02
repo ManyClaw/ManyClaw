@@ -1,9 +1,9 @@
 include variables.inc
 
-.PHONY.: all, build, lib, test, benchmark, clean, clobber
+.PHONY: all, build, lib, test, benchmark, clean, clobber
 
-all: lib install test benchmark
- 
+all: lib install
+
 build:
 	$(MAKE) -C manyclaw/common
 	$(MAKE) -C manyclaw/ptwise/steppers/advection
@@ -31,6 +31,7 @@ $(INSTALL_PATH)/$(LIB_FULL_NAME): $(LIB_FULL_NAME)
 	fi
 
 test: lib
+	echo "make test"
 	$(MAKE) -C test
 
 benchmark: lib

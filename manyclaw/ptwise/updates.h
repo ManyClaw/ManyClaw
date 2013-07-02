@@ -4,6 +4,7 @@
 #include <manyclaw/manyclaw.h>
 
 // Upwind updater
+inline
 void updater_first_order_dimensional_splitting(real* q,
                                                const real* aux,
                                                const int nx,
