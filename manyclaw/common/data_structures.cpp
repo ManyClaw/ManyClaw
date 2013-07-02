@@ -100,8 +100,8 @@ void State::randomize()
   randomize_vector(aux);
 }
 
-Solver::Solver(Solution& solution, int num_ghost, int num_waves):
-  num_ghost(num_ghost), num_waves(num_waves), solution(solution)
+Solver::Solver(Solution& solution, int num_ghost, int num_wave):
+  num_ghost(num_ghost), num_wave(num_wave), solution(solution)
 {
   const int nx = solution.grid.num_cells[0];
   const int ny = solution.grid.num_cells[1];
@@ -109,11 +109,11 @@ Solver::Solver(Solution& solution, int num_ghost, int num_waves):
   const int dim = solution.grid.dim;
   // Outputs on interfaces
   EdgeFieldIndexer efi(nx, ny, num_ghost, num_eqn);
-  EdgeFieldIndexer wave_efi(nx, ny, num_ghost, num_eqn, num_waves);
+  EdgeFieldIndexer wave_efi(nx, ny, num_ghost, num_eqn, num_wave);
   amdq.resize(efi.size());
   apdq.resize(efi.size());
-  waves.resize(wave_efi.size());
-  wave_speeds.resize(wave_efi.size());
+  wave.resize(wave_efi.size());
+  wave_speed.resize(wave_efi.size());
 }
 
 void Solver::step(Solution& solution, double dt, set_bc_t set_bc, rp_step_t rp_step, updater_t update)
@@ -127,11 +127,11 @@ void Solver::step(Solution& solution, double dt, set_bc_t set_bc, rp_step_t rp_s
 
   rp_step(&solution.state.q[0], &solution.state.aux[0], 
           solution.grid.num_cells[0], solution.grid.num_cells[1],
-          &amdq[0], &apdq[0], &waves[0], &wave_speeds[0]);
+          &amdq[0], &apdq[0], &wave[0], &wave_speed[0]);
 
   update(&solution.state.q[0], &solution.state.aux[0], 
           solution.grid.num_cells[0], solution.grid.num_cells[1],
-          &amdq[0], &apdq[0], &waves[0], &wave_speeds[0],
+          &amdq[0], &apdq[0], &wave[0], &wave_speed[0],
           num_ghost, solution.state.num_eqn, dtdx);
 
   solution.t += dt;

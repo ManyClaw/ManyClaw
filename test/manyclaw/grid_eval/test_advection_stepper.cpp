@@ -1,6 +1,9 @@
-#include <limits.h>
-#include <manyclaw/manyclaw.h>
 #include "gtest/gtest.h"
+
+#include <manyclaw/manyclaw.h>
+
+#include <limits.h>
+
 
 ::testing::AssertionResult ArraysMatch(const real *expected,
                                        const real *actual, int size){
@@ -33,9 +36,9 @@ TEST(AdvectionStepper, base) {
   int nx = 3, ny = 3;
   int num_ghost = advection_rp_grid_params.num_ghost; 
   int num_eqns = advection_rp_grid_params.num_eqn; 
-  int num_waves = advection_rp_grid_params.num_waves; 
+  int num_wave = advection_rp_grid_params.num_wave; 
   FieldIndexer fi(nx, ny, num_ghost, num_eqns);
-  EdgeFieldIndexer efi(nx, ny, num_ghost, num_eqns, num_waves);
+  EdgeFieldIndexer efi(nx, ny, num_ghost, num_eqns, num_wave);
   real q[fi.size()];
   real amdq[efi.size()], amdq_gold[efi.size()];
   real apdq[efi.size()], apdq_gold[efi.size()];
@@ -74,7 +77,7 @@ TEST(AdvectionStepper, base) {
   amdq_gold[efi.up_edge(r, c)] = 0.0;
   apdq_gold[efi.up_edge(r, c)] = -1.0;
   
-  advection_rp_step_serial_cellwise_indexer(q, NULL, nx, ny, amdq, apdq, wave, speed);
+  advection_rp_grid_eval_serial(q, NULL, nx, ny, amdq, apdq, wave, speed);
 
   EXPECT_TRUE(ArraysMatch(wave, wave_gold, efi.size()));
   EXPECT_TRUE(ArraysMatch(speed, speed_gold, efi.size()));

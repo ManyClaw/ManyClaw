@@ -12,7 +12,7 @@ struct rp_grid_params
   int num_ghost;
   int num_eqn;
   int num_aux;
-  int num_waves;
+  int num_wave;
 };
 
 typedef void (*set_bc_t)(real* q, real* aux, const int nx, const int ny,
@@ -25,11 +25,11 @@ typedef void (*rp_t)(const real* q_left, const real* q_right,
 
 typedef void (*rp_step_t)(const real* q, const real* aux,
                           const int nx, const int ny, real* amdq,  real* apdq,
-                          real* wave, real* wave_speeds);
+                          real* wave, real* wave_speed);
 
 typedef void (*updater_t)(real* q, const real* aux, const int nx, const int ny,
                                    const real* amdq, const real* apdq,
-                                   const real* wave, const real* wave_speeds,
+                                   const real* wave, const real* wave_speed,
                                    const int num_ghost, const int num_eqn,
                                    const real dtdx);
 
@@ -80,44 +80,83 @@ struct FieldIndexer
   {return (ny + 2*num_ghosts)*num_eqns;}
 };
 
+// Indexes a field defined on the edges of a grid.
+//
+// Sample usage:
+//   EdgeFieldIndexer(nx, ny, num_ghosts, num_eqns, num_wave);
+//   for (int row = 1; row < efi.num_row_edges; ++row) {
+//      right = field_data[efi.right_edge(row, col)]
+//      left = field_data[efi.left_edge(row, col)]
+//   }
+//
+//  Design Notes:
+//  *  num_<foo> is the number of edges based on foo
+//  *  <foo>_size is the number of arrays associated with field, so it include
+//         striding for multiple equations and wave.
+//  *  directions are either transverse (in the direction) or normal (any other direction)
+//  *  All members are inline and as const as possible, the hope is we can let 
+//         the compiler vectorize any math done on the fields
 struct EdgeFieldIndexer
 {
-  const unsigned nx, ny, num_ghosts, num_eqns, num_waves;
+  const unsigned nx, ny, num_ghosts, num_eqns, num_wave;
 
-  EdgeFieldIndexer(unsigned nx, unsigned ny, unsigned num_ghosts, unsigned num_eqns)
-    : nx(nx), ny(ny), num_ghosts(num_ghosts), num_eqns(num_eqns), num_waves(1)
+  EdgeFieldIndexer(unsigned nx, unsigned ny, unsigned num_ghosts, 
+		   unsigned num_eqns)
+    : nx(nx), ny(ny), num_ghosts(num_ghosts), num_eqns(num_eqns), num_wave(1)
   {}
 
-  EdgeFieldIndexer(unsigned nx, unsigned ny, unsigned num_ghosts, unsigned num_eqns, unsigned num_waves)
-    : nx(nx), ny(ny), num_ghosts(num_ghosts), num_eqns(num_eqns), num_waves(num_waves)
+  EdgeFieldIndexer(unsigned nx, unsigned ny, unsigned num_ghosts, 
+		   unsigned num_eqns, unsigned num_wave)
+    : nx(nx), ny(ny), num_ghosts(num_ghosts), num_eqns(num_eqns), num_wave(num_wave)
   {}
 
-  inline int row_edge_size()
+  inline int num_row_edge_normal() const
+  {return (nx + 2*num_ghosts - 2);}
+
+  inline int num_row_edge_transverse() const
   {return (nx + 2*num_ghosts - 1);}
 
-  inline int col_edge_size()
+  inline int num_row_edge() const
+  {return num_row_edge_normal() * num_row_edge_transverse();}
+
+  inline int num_col_edge_normal() const
   {return (ny + 2*num_ghosts - 2);}
 
-  inline int row_size()
-  {return (nx + 2*num_ghosts - 1)*num_eqns*num_waves;}
+  inline int num_col_edge_transverse() const
+  {return (ny + 2*num_ghosts - 1);}
 
-  inline int col_size()
-  {return (ny + 2*num_ghosts - 2)*num_eqns*num_waves;}
+  inline int num_col_edge() const
+  {return num_col_edge_normal() * num_col_edge_transverse();}
 
-  inline int size()
-  {return 2 * row_size() * col_size();}
+  inline int num_edge() const
+  {return num_row_edge() + num_col_edge();}
 
-  inline int left_edge(const int row, const int col)
-  {return (col - 1)*num_eqns*num_waves + (row - 1)*row_size();}
+  inline int row_normal_size() const
+  {return num_row_edge_normal()*num_eqns*num_wave;}
 
-  inline int right_edge(const int row, const int col)
+  inline int row_transverse_size() const
+  {return num_row_edge_transverse()*num_eqns*num_wave;}
+
+  inline int col_normal_size() const
+  {return num_col_edge_normal()*num_eqns*num_wave;}
+
+  inline int col_transverse_size() const
+  {return num_col_edge_transverse()*num_eqns*num_wave;}
+
+  inline int size() const
+  {return num_edge() * num_eqns * num_wave;}
+
+  inline int left_edge(const int row, const int col) const
+  {return (col - 1)*num_eqns*num_wave + (row - 1)*col_transverse_size();}
+
+  inline int right_edge(const int row, const int col) const
   {return left_edge(row, col) + 1;}
 
-  inline int down_edge(const int row, const int col)
-  {return (row-1)*col_size() + (col - 1) + size()/2;}
+  inline int down_edge(const int row, const int col) const
+  {return (col - 1)*num_eqns*num_wave + (row - 1)*col_normal_size() + size()/2;}
 
-  inline unsigned up_edge(const int row, const int col)
-  {return row*col_size() + (col - 1) + size()/2;}
+  inline int up_edge(const int row, const int col) const
+  {return (col - 1)*num_eqns*num_wave + row*col_normal_size() + size()/2;}
 };
 
 struct Grid
@@ -170,18 +209,18 @@ struct Solver
 {
   // Size info
   int num_ghost;
-  int num_waves;
+  int num_wave;
 
   // Interface data
   std::vector<real> amdq;
   std::vector<real> apdq;
-  std::vector<real> waves;
-  std::vector<real> wave_speeds;
+  std::vector<real> wave;
+  std::vector<real> wave_speed;
 
   // Non-owned references
   Solution& solution;
 
-  Solver(Solution& solution, int num_ghost, int num_waves);
+  Solver(Solution& solution, int num_ghost, int num_wave);
 
   void step(Solution& solution, double dt, set_bc_t set_bc, rp_step_t rp_step, updater_t update);
 };
