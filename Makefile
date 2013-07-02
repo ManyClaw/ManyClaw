@@ -1,9 +1,9 @@
 include variables.inc
 
-.PHONY.: all, build, lib, test, benchmark, clean, clobber
+.PHONY: all, build, lib, test, benchmark, clean, clobber
 
-all: lib install test benchmark
- 
+all: lib 
+
 build:
 	$(MAKE) -C manyclaw/common
 	$(MAKE) -C manyclaw/ptwise/steppers/advection
