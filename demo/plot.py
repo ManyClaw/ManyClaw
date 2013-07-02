@@ -14,8 +14,10 @@ def run_iplotclaw(setplot='setplot.py',outdir='./_output'):
     ip.plotloop()
 
 if __name__ == '__main__':
-    plot.plotclaw(outdir="./_output")
-    # if len(sys.argv) > 1:
-    #     run_iplotclaw(*sys.argv[1:])
-    # else:
-    #     run_iplotclaw()
+    if len(sys.argv) > 1:
+        if sys.argv[1].lower() == 'html':
+            plot.plotclaw()
+        else:
+            run_iplotclaw(**sys.argv[1])
+    else:
+        run_iplotclaw()

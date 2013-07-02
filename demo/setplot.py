@@ -45,6 +45,7 @@ def setplot(plotdata):
 
     # Figure for contour plot
     plotfigure = plotdata.new_plotfigure(name='contour', figno=1)
+    plotfigure.show = False
 
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes()
