@@ -70,6 +70,12 @@ struct FieldIndexer
   inline int right(int row, int col)
   {return (col + 1 + row*(nx + 2*num_ghosts))*num_eqns;}
 
+  inline int num_row()
+  {return nx + 2 * num_ghosts;}
+
+  inline int num_col()
+  {return ny + 2 * num_ghosts;}
+
   inline int size()
   {return (nx + 2*num_ghosts)*(ny + 2*num_ghosts)*num_eqns;}
 
@@ -202,7 +208,7 @@ struct Solution
     grid(grid), state(state), t(0.0)
   {}
 
-  void write(int frame, char *output_path);
+  void write(int frame, std::string output_path);
 };
 
 struct Solver
