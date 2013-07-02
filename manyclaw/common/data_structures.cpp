@@ -116,7 +116,7 @@ Solver::Solver(Solution& solution, int num_ghost, int num_wave):
   wave_speed.resize(wave_efi.size());
 }
 
-void Solver::step(Solution& solution, double dt, set_bc_t set_bc, rp_step_t rp_step, updater_t update)
+void Solver::step(Solution& solution, double dt, set_bc_t set_bc, rp_grid_eval_t rp_grid_eval, updater_t update)
 {
   // Note that this all will break if the grid is not uniform!
   real dtdx = dt / solution.grid.dx[0];
@@ -125,7 +125,7 @@ void Solver::step(Solution& solution, double dt, set_bc_t set_bc, rp_step_t rp_s
   //       solution.grid.num_cells[0], solution.grid.num_cells[1],
   //       num_ghost, solution.state.num_eqn);
 
-  rp_step(&solution.state.q[0], &solution.state.aux[0], 
+  rp_grid_eval(&solution.state.q[0], &solution.state.aux[0], 
           solution.grid.num_cells[0], solution.grid.num_cells[1],
           &amdq[0], &apdq[0], &wave[0], &wave_speed[0]);
 

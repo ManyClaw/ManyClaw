@@ -2,8 +2,8 @@
 #include "common.h"
 #include "timer.h"
 
-void compare_steppers(int nx, int ny, rp_grid_params params,
-                      rp_step_t rp_stepper_1, rp_step_t rp_stepper_2)
+void compare_grid_evals(int nx, int ny, rp_grid_params params,
+                      rp_grid_eval_t rp_grid_eval_1, rp_grid_eval_t rp_grid_eval_2)
 {
   Grid grid(nx, ny);
 
@@ -14,10 +14,10 @@ void compare_steppers(int nx, int ny, rp_grid_params params,
   Solver solver_1(solution, params.num_ghost, params.num_wave);
   Solver solver_2(solution, params.num_ghost, params.num_wave);
 
-  rp_stepper_1(&state.q[0], &state.aux[0], grid.num_cells[0], grid.num_cells[1],
+  rp_grid_eval_1(&state.q[0], &state.aux[0], grid.num_cells[0], grid.num_cells[1],
               &solver_1.amdq[0], &solver_1.apdq[0], &solver_1.wave[0],
               &solver_1.wave_speed[0]);
-  rp_stepper_2(&state.q[0], &state.aux[0], grid.num_cells[0], grid.num_cells[1],
+  rp_grid_eval_2(&state.q[0], &state.aux[0], grid.num_cells[0], grid.num_cells[1],
               &solver_2.amdq[0], &solver_2.apdq[0], &solver_2.wave[0],
               &solver_2.wave_speed[0]);
 
@@ -28,7 +28,7 @@ void compare_steppers(int nx, int ny, rp_grid_params params,
   std::cout << "    wave_speed " << max_error(solver_1.wave_speed, solver_2.wave_speed) << "\n";
 }
 
-double benchmark_stepper(int nx, int ny, rp_grid_params params, rp_step_t rp_stepper)
+double benchmark_grid_eval(int nx, int ny, rp_grid_params params, rp_grid_eval_t rp_grid_eval)
 {
 
   Grid grid(nx, ny);
@@ -39,7 +39,7 @@ double benchmark_stepper(int nx, int ny, rp_grid_params params, rp_step_t rp_ste
   Solver solver(solution, params.num_ghost, params.num_wave);
 
   timer t;
-  rp_stepper(&state.q[0], &state.aux[0], grid.num_cells[0], grid.num_cells[1],
+  rp_grid_eval(&state.q[0], &state.aux[0], grid.num_cells[0], grid.num_cells[1],
              &solver.amdq[0], &solver.apdq[0], &solver.wave[0],
              &solver.wave_speed[0]);
   double time = t.elapsed();
@@ -49,7 +49,7 @@ double benchmark_stepper(int nx, int ny, rp_grid_params params, rp_step_t rp_ste
 
 
 double compare_updates(int nx, int ny, rp_grid_params params, 
-                        rp_step_t rp_stepper, updater_t updater)
+                        rp_grid_eval_t rp_grid_eval, updater_t updater)
 {
   int index;
   Grid grid(nx, ny);
@@ -74,7 +74,7 @@ double compare_updates(int nx, int ny, rp_grid_params params,
   Solution solution(grid, state);
   Solver solver(solution, params.num_ghost, params.num_wave);
 
-  rp_stepper(&state.q[0], &state.aux[0], grid.num_cells[0], grid.num_cells[1],
+  rp_grid_eval(&state.q[0], &state.aux[0], grid.num_cells[0], grid.num_cells[1],
               &solver.amdq[0], &solver.apdq[0], &solver.wave[0],
               &solver.wave_speed[0]);
 

@@ -19,11 +19,11 @@ typedef void (*set_bc_t)(real* q, real* aux, const int nx, const int ny,
                                const int num_ghost, const int num_eqn);
 
 typedef void (*rp_t)(const real* q_left, const real* q_right,
-                  const real* aux_left, const real* aux_right,
-                  const void* aux_global,
+                     const real* aux_left, const real* aux_right,
+                     const void* aux_global,
                      real* amdq, real* apdq, real* wave, real* s);
 
-typedef void (*rp_step_t)(const real* q, const real* aux,
+typedef void (*rp_grid_eval_t)(const real* q, const real* aux,
                           const int nx, const int ny, real* amdq,  real* apdq,
                           real* wave, real* wave_speed);
 
@@ -222,7 +222,7 @@ struct Solver
 
   Solver(Solution& solution, int num_ghost, int num_wave);
 
-  void step(Solution& solution, double dt, set_bc_t set_bc, rp_step_t rp_step, updater_t update);
+  void step(Solution& solution, double dt, set_bc_t set_bc, rp_grid_eval_t rp_grid_eval, updater_t update);
 };
 
 
