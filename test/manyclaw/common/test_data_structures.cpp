@@ -22,6 +22,7 @@ TEST(DataStructuresTest, FieldIndexer) {
 TEST(DataStructuresTest, EdgeFieldIndexer) {
   EdgeFieldIndexer efi(2, 2, 2, 1);
 
+  EXPECT_EQ(40, efi.num_edge());
   EXPECT_EQ(40, efi.size());
 
   EXPECT_EQ(0, efi.left_edge(1, 1));

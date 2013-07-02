@@ -6,10 +6,7 @@ all: lib install
 
 build:
 	$(MAKE) -C manyclaw/common
-	$(MAKE) -C manyclaw/grid_eval/advection
-	$(MAKE) -C manyclaw/grid_eval/acoustics_const
-	$(MAKE) -C manyclaw/grid_eval/acoustics_var
-	$(MAKE) -C manyclaw/grid_eval/euler
+	$(MAKE) -C manyclaw/grid_eval
 
 lib: $(LIB_FULL_NAME)
 
@@ -39,10 +36,7 @@ benchmark: lib
 
 clean:
 	$(MAKE) -C manyclaw/common clean
-	$(MAKE) -C manyclaw/grid_eval/advection clean
-	$(MAKE) -C manyclaw/grid_eval/acoustics_const clean
-	$(MAKE) -C manyclaw/grid_eval/acoustics_var clean
-	$(MAKE) -C manyclaw/grid_eval/euler clean
+	$(MAKE) -C manyclaw/grid_eval clean
 	$(MAKE) -C test clean
 	$(MAKE) -C benchmark clean
 	@echo $(LIB_FULL_NAME) $(INSTALL_PATH)
