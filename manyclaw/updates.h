@@ -17,7 +17,7 @@ void updater_first_order_dimensional_splitting(real* q,
                                                const int num_eqns,
                                                const real dtdx)
 {
-  int col, row, eqn;
+  int col, row; //, eqn;
 
   FieldIndexer fi(nx, ny, num_ghost, num_eqns);
   EdgeFieldIndexer efi(nx, ny, num_ghost, num_eqns);

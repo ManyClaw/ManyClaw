@@ -19,11 +19,11 @@ typedef void (*set_bc_t)(real* q, real* aux, const int nx, const int ny,
                                const int num_ghost, const int num_eqn);
 
 typedef void (*rp_t)(const real* q_left, const real* q_right,
-                  const real* aux_left, const real* aux_right,
-                  const void* aux_global,
+                     const real* aux_left, const real* aux_right,
+                     const void* aux_global,
                      real* amdq, real* apdq, real* wave, real* s);
 
-typedef void (*rp_step_t)(const real* q, const real* aux,
+typedef void (*rp_grid_eval_t)(const real* q, const real* aux,
                           const int nx, const int ny, real* amdq,  real* apdq,
                           real* wave, real* wave_speed);
 
@@ -61,22 +61,22 @@ struct FieldIndexer
   inline unsigned up(int row, int col)
   {return (col + (row + 1)*(nx + 2*num_ghosts))*num_eqns;}
 
-  inline int down(int row, int col)
+  inline unsigned down(int row, int col)
   {return (col + (row - 1)*(nx + 2*num_ghosts))*num_eqns;}
 
-  inline int left(int row, int col)
+  inline unsigned left(int row, int col)
   {return (col - 1 + row*(nx + 2*num_ghosts))*num_eqns;}
 
-  inline int right(int row, int col)
+  inline unsigned right(int row, int col)
   {return (col + 1 + row*(nx + 2*num_ghosts))*num_eqns;}
 
-  inline int size()
+  inline unsigned size()
   {return (nx + 2*num_ghosts)*(ny + 2*num_ghosts)*num_eqns;}
 
-  inline int row_size()
+  inline unsigned row_size()
   {return (nx + 2*num_ghosts)*num_eqns;}
 
-  inline int col_size()
+  inline unsigned col_size()
   {return (ny + 2*num_ghosts)*num_eqns;}
 };
 
@@ -222,7 +222,7 @@ struct Solver
 
   Solver(Solution& solution, int num_ghost, int num_wave);
 
-  void step(Solution& solution, double dt, set_bc_t set_bc, rp_step_t rp_step, updater_t update);
+  void step(Solution& solution, double dt, set_bc_t set_bc, rp_grid_eval_t rp_grid_eval, updater_t update);
 };
 
 

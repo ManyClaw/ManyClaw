@@ -32,7 +32,7 @@
 }
 
 // Test the indexer methods
-TEST(AdvectionStepper, base) {
+TEST(AdvectionGridEval, base) {
   int nx = 3, ny = 3;
   int num_ghost = advection_rp_grid_params.num_ghost; 
   int num_eqns = advection_rp_grid_params.num_eqn; 
@@ -83,4 +83,9 @@ TEST(AdvectionStepper, base) {
   EXPECT_TRUE(ArraysMatch(speed, speed_gold, efi.size()));
   EXPECT_TRUE(ArraysMatch(amdq, amdq_gold, efi.size()));
   EXPECT_TRUE(ArraysMatch(apdq, apdq_gold, efi.size()));
+}
+
+// validates the different methods
+TEST(AdvectionGridEval, validate) {
+
 }
