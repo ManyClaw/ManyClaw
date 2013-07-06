@@ -5,6 +5,8 @@
 *~
 *#
 *.#*
+.project
+.cproject
 lib/*
 test/advection
 test/acoustics_const
