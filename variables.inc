@@ -32,6 +32,11 @@ TBB_LDFLAGS += -ltbb
 LDFLAGS += $(TBB_LD_FLAGS)
 
 
+OCL_CXXFLAGS = -I$(MANYCLAW_DIR)/contrib -framework OpenCL
+OCL_LDFLAGS =
+CXXFLAGS += $(OCL_CXXFLAGS)
+LDFLAGS += $(OCL_LDFLAGS)
+
 # Dynamic library flags (archetecture dependent), note the platforms here are
 # found by sys.platform in ptyhon, check
 UNAME = $(shell uname)
