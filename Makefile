@@ -7,6 +7,7 @@ all: lib install
 build:
 	$(MAKE) -C manyclaw/common
 	$(MAKE) -C manyclaw/grid_eval
+	$(MAKE) -C manyclaw/ocl
 
 lib: $(LIB_FULL_NAME)
 
@@ -37,6 +38,7 @@ benchmark: lib
 clean:
 	$(MAKE) -C manyclaw/common clean
 	$(MAKE) -C manyclaw/grid_eval clean
+	$(MAKE) -C manyclaw/ocl clean
 	$(MAKE) -C test clean
 	$(MAKE) -C benchmark clean
 	@echo $(LIB_FULL_NAME) $(INSTALL_PATH)
