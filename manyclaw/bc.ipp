@@ -14,8 +14,7 @@ inline void set_zero_order_extrap_BCs(real* q, real* aux, const int nx, const in
         {
             for (int eqn = 0; eqn < num_eqn; ++eqn)
             {
-                // q[fi.idx(row, col) + eqn] = q[fi.idx(num_ghost,col) + eqn];
-                q[fi.idx(row, col) + eqn] = 1.0;
+                q[fi.idx(row, col) + eqn] = q[fi.idx(num_ghost,col) + eqn];
             }
         }
     }
@@ -27,8 +26,7 @@ inline void set_zero_order_extrap_BCs(real* q, real* aux, const int nx, const in
         {
             for (int eqn = 0; eqn < num_eqn; ++eqn)
             {
-                // q[fi.idx(row, col) + eqn] = q[fi.idx(num_ghost + ny,col) + eqn];    
-                q[fi.idx(row, col) + eqn] = 2.0;
+                q[fi.idx(row, col) + eqn] = q[fi.idx(num_ghost + ny,col) + eqn];    
             }
         }
     }
@@ -40,8 +38,7 @@ inline void set_zero_order_extrap_BCs(real* q, real* aux, const int nx, const in
         {
             for (int eqn = 0; eqn < num_eqn; ++eqn)
             {
-                // q[fi.idx(row, col) + eqn] = q[fi.idx(row, num_ghost + 1) + eqn];
-                q[fi.idx(row, col) + eqn] = 3.0;
+                q[fi.idx(row, col) + eqn] = q[fi.idx(row, num_ghost + 1) + eqn];
             }
         }
     }
@@ -53,10 +50,8 @@ inline void set_zero_order_extrap_BCs(real* q, real* aux, const int nx, const in
         {
             for (int eqn = 0; eqn < num_eqn; ++eqn)
                {
-                   // q[fi.idx(row, col) + eqn] = 
-                   //                 q[fi.idx(row, fi.num_col() - num_ghost - 1)];
-
-                   q[fi.idx(row, col) + eqn] = 4.0;
+                   q[fi.idx(row, col) + eqn] = 
+                                   q[fi.idx(row, fi.num_col() - num_ghost - 1)];
                }   
         }
     }
