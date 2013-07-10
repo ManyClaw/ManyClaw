@@ -29,7 +29,7 @@ $(INSTALL_PATH)/$(LIB_FULL_NAME): $(LIB_FULL_NAME)
 	fi
 
 test: lib
-	echo "make test"
+	@echo "make test"
 	$(MAKE) -C test
 
 benchmark: lib
