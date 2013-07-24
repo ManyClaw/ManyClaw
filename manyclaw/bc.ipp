@@ -26,7 +26,7 @@ inline void set_zero_order_extrap_BCs(real* q, real* aux, const int nx, const in
         {
             for (int eqn = 0; eqn < num_eqn; ++eqn)
             {
-                q[fi.idx(row, col) + eqn] = q[fi.idx(num_ghost + ny,col) + eqn];    
+                q[fi.idx(row, col) + eqn] = q[fi.idx(num_ghost + ny,col) + eqn];
             }
         }
     }
@@ -50,15 +50,15 @@ inline void set_zero_order_extrap_BCs(real* q, real* aux, const int nx, const in
         {
             for (int eqn = 0; eqn < num_eqn; ++eqn)
                {
-                   q[fi.idx(row, col) + eqn] = 
+                   q[fi.idx(row, col) + eqn] =
                                    q[fi.idx(row, fi.num_col() - num_ghost - 1)];
-               }   
+               }
         }
     }
 }
 
 // Set periodic BCs in all directions
-void set_all_periodic_BCs(real* q, real* aux, const int nx, const int ny,
+inline void set_all_periodic_BCs(real* q, real* aux, const int nx, const int ny,
                                const int num_ghost, const int num_eqn)
 {
     FieldIndexer fi(nx, ny, num_ghost, num_eqn);
@@ -70,7 +70,7 @@ void set_all_periodic_BCs(real* q, real* aux, const int nx, const int ny,
         {
             for (int eqn = 0; eqn < num_eqn; ++eqn)
             {
-                q[fi.idx(row, col) + eqn] = 
+                q[fi.idx(row, col) + eqn] =
                            q[fi.idx(row + fi.num_row() - num_ghost, col) + eqn];
             }
         }
@@ -83,7 +83,7 @@ void set_all_periodic_BCs(real* q, real* aux, const int nx, const int ny,
         {
             for (int eqn = 0; eqn < num_eqn; ++eqn)
             {
-                q[fi.idx(row, col) + eqn] = 
+                q[fi.idx(row, col) + eqn] =
                            q[fi.idx(row - fi.num_row() + num_ghost, col) + eqn];
             }
         }
@@ -96,7 +96,7 @@ void set_all_periodic_BCs(real* q, real* aux, const int nx, const int ny,
         {
             for (int eqn = 0; eqn < num_eqn; ++eqn)
             {
-                q[fi.idx(row, col) + eqn] = 
+                q[fi.idx(row, col) + eqn] =
                        q[fi.idx(row, col + fi.num_col() - num_ghost - 1) + eqn];
             }
         }
@@ -109,9 +109,9 @@ void set_all_periodic_BCs(real* q, real* aux, const int nx, const int ny,
         {
             for (int eqn = 0; eqn < num_eqn; ++eqn)
                {
-                   q[fi.idx(row, col) + eqn] = 
+                   q[fi.idx(row, col) + eqn] =
                                    q[fi.idx(row, col - fi.num_col() + num_ghost + 1)];
-               }   
+               }
         }
     }
 }

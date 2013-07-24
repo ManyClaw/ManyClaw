@@ -101,18 +101,18 @@ struct FieldIndexer
 //  *  <foo>_size is the number of arrays associated with field, so it include
 //         striding for multiple equations and wave.
 //  *  directions are either transverse (in the direction) or normal (any other direction)
-//  *  All members are inline and as const as possible, the hope is we can let 
+//  *  All members are inline and as const as possible, the hope is we can let
 //         the compiler vectorize any math done on the fields
 struct EdgeFieldIndexer
 {
   const unsigned nx, ny, num_ghosts, num_eqns, num_wave;
 
-  EdgeFieldIndexer(unsigned nx, unsigned ny, unsigned num_ghosts, 
+  EdgeFieldIndexer(unsigned nx, unsigned ny, unsigned num_ghosts,
 		   unsigned num_eqns)
     : nx(nx), ny(ny), num_ghosts(num_ghosts), num_eqns(num_eqns), num_wave(1)
   {}
 
-  EdgeFieldIndexer(unsigned nx, unsigned ny, unsigned num_ghosts, 
+  EdgeFieldIndexer(unsigned nx, unsigned ny, unsigned num_ghosts,
 		   unsigned num_eqns, unsigned num_wave)
     : nx(nx), ny(ny), num_ghosts(num_ghosts), num_eqns(num_eqns), num_wave(num_wave)
   {}
@@ -231,11 +231,28 @@ struct Solver
   Solver(Solution& solution, int num_ghost, int num_wave);
 
   Solver(int* num_cells, int num_eqn, int num_ghost, int num_wave);
-  
 
-  void step(Solution& solution, double dt, set_bc_t set_bc, rp_grid_eval_t rp_grid_eval, updater_t update);
+
+  void step(Solution& solution, double dt, set_bc_t set_bc, rp_grid_eval_t rp_grid_eval,
+updater_t update);
+
+    inline real cfl(int nx,int ny,int mbc, int meqn, int mwaves, real dtdx)
+        {
+            EdgeFieldIndexer efi(nx, ny, mbc, meqn, mwaves);
+            real cfl = 0.0;
+            for (int row=mbc; row < ny + mbc + 1; ++row)
+            {
+                for (int col=mbc; col < nx + mbc + 1; ++col)
+                {
+                    for (int wave=0; wave < num_wave; ++wave)
+                    {
+                        cfl = fabs(wave_speed[efi.left_edge(row, col) + wave]) * dtdx;
+                        cfl = fmax(cfl, abs(wave_speed[efi.down_edge(row, col) + wave]) * dtdx);
+                    }
+                }
+            }
+            return cfl;
+        }
 };
-
-
 
 #endif // DATA_STRUCTURES_H
