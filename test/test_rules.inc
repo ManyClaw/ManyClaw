@@ -33,7 +33,10 @@ $(TOP_DIR)/gtest.a : $(TOP_DIR)/gtest-all.o
 $(TOP_DIR)/gtest_main.a : $(TOP_DIR)/gtest-all.o $(TOP_DIR)/gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
-tester : $(TEST_OBJ) $(TOP_DIR)/gtest_main.a
+$(TOP_DIR)/test_utils.o : $(TOP_DIR)/test_utils.cpp
+	$(CXX) $(CPPFLAGS) -c $<
+
+tester : $(TEST_OBJ) $(TOP_DIR)/gtest_main.a $(TOP_DIR)/test_utils.o
 	echo $(TEST_OBJ)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@ -lpthread $(LDFLAGS)
 

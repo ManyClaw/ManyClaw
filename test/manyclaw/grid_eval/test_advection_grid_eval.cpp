@@ -1,35 +1,9 @@
 #include "gtest/gtest.h"
+#include "../../test_utils.h"
 
 #include <manyclaw/manyclaw.h>
 
 #include <limits.h>
-
-
-::testing::AssertionResult ArraysMatch(const real *expected,
-                                       const real *actual, int size){
-  std::vector<int> bad_loc;
-  for (int i=0; i < size; ++i){
-    if (std::fabs(expected[i] - actual[i]) > 1e-8){
-      bad_loc.push_back(i);
-    }
-  }
-
-  if (bad_loc.size() > 0) {
-    std::ostringstream fail;
-    fail << std::endl;
-    for(size_t i=0; i < bad_loc.size(); ++i){
-      int idx = bad_loc[i];
-      fail << std::scientific
-           << "  array[" << idx
-           << "] (" << actual[idx] << ") != expected[" << idx
-           << "] (" << expected[idx] << ")\n";
-    }
-    fail << "  Num_wrong: " << bad_loc.size() << " of " << size;
-    return ::testing::AssertionFailure() << fail.str();
-  }
-
-  return ::testing::AssertionSuccess();
-}
 
 // Test the indexer methods
 TEST(AdvectionGridEval, base) {
