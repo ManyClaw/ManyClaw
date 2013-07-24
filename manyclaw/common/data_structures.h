@@ -225,9 +225,13 @@ struct Solver
   std::vector<real> wave_speed;
 
   // Non-owned references
-  Solution& solution;
+  //Solution& solution;
 
+  //TODO: Deprecate this constructor
   Solver(Solution& solution, int num_ghost, int num_wave);
+
+  Solver(int* num_cells, int num_eqn, int num_ghost, int num_wave);
+  
 
   void step(Solution& solution, double dt, set_bc_t set_bc, rp_grid_eval_t rp_grid_eval, updater_t update);
 };
