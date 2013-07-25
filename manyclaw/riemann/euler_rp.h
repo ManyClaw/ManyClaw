@@ -9,13 +9,14 @@ struct euler_rp_aux_global_t
 };
 
 static const euler_rp_aux_global_t euler_rp_aux_global = {1.0};
-static const rp_grid_params euler_rp_grid_params = {2, 4, 0, 4};
+static const rp_grid_params_t euler_rp_grid_params = {2, 4, 0, 4};
 
 // Implementation of the Roe solver for the Euler equations
 inline
 void euler_rp(const real* q_left, const real* q_right,
               const real* aux_left, const real* aux_right,
               const void* aux_global_void,
+              const int direction,
               real* amdq, real* apdq, real* wave, real* s)
 {
   const int num_eqn = euler_rp_grid_params.num_eqn;

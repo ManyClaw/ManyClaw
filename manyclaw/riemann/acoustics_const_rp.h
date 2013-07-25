@@ -20,13 +20,14 @@ struct acoustics_const_rp_aux_global_t
 
 
 static const acoustics_const_rp_aux_global_t acoustics_const_rp_aux_global = {1.0, 1.0, 1.0, 1.0};
-static const rp_grid_params acoustics_const_rp_grid_params = {2, 3, 0, 2};
+static const rp_grid_params_t acoustics_const_rp_grid_params = {2, 3, 0, 2};
 
 // Point-wise constant acoustics Riemann solver
 inline
 void acoustics_const_rp(const real* q_left, const real* q_right,
                         const real* aux_left, const real* aux_right,
                         const acoustics_const_rp_aux_global_t* aux_global,
+                        const int direction,
                         real* amdq, real* apdq, real *wave, real *s)
 {
     // Local physical constants

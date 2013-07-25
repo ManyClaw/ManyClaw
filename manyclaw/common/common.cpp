@@ -2,7 +2,7 @@
 #include "common.h"
 #include "timer.h"
 
-void compare_grid_evals(int nx, int ny, rp_grid_params params,
+void compare_grid_evals(int nx, int ny, rp_grid_params_t params,
                       rp_grid_eval_t rp_grid_eval_1, rp_grid_eval_t rp_grid_eval_2)
 {
   Grid grid(nx, ny);
@@ -28,7 +28,7 @@ void compare_grid_evals(int nx, int ny, rp_grid_params params,
   std::cout << "    wave_speed " << max_error(solver_1.wave_speed, solver_2.wave_speed) << "\n";
 }
 
-double benchmark_grid_eval(int nx, int ny, rp_grid_params params, rp_grid_eval_t rp_grid_eval)
+double benchmark_grid_eval(int nx, int ny, rp_grid_params_t params, rp_grid_eval_t rp_grid_eval)
 {
 
   Grid grid(nx, ny);
@@ -48,7 +48,7 @@ double benchmark_grid_eval(int nx, int ny, rp_grid_params params, rp_grid_eval_t
 }
 
 
-double compare_updates(int nx, int ny, rp_grid_params params, 
+double compare_updates(int nx, int ny, rp_grid_params_t params, 
                         rp_grid_eval_t rp_grid_eval, updater_t updater)
 {
   int index;
