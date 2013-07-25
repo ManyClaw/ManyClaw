@@ -232,8 +232,25 @@ struct Solver
 
   Solver(int* num_cells, int num_eqn, int num_ghost, int num_wave);
   
-
   void step(Solution& solution, double dt, set_bc_t set_bc, rp_grid_eval_t rp_grid_eval, updater_t update);
+
+  inline real cfl(int nx, int ny, int mbc, int meqn, int mwaves, real dtdx)
+  {
+    EdgeFieldIndexer efi(nx, ny, mbc, meqn, mwaves);
+    real cfl = 0.0;
+    for (int row=mbc; row < ny + mbc + 1; ++row)
+    {
+      for (int col=mbc; col < nx + mbc + 1; ++col)
+      {
+        for (int wave=0; wave < num_wave; ++wave)
+        {
+          cfl = fabs(wave_speed[efi.left_edge(row, col) + wave]) * dtdx;
+          cfl = fmax(cfl, abs(wave_speed[efi.down_edge(row, col) + wave]) * dtdx);
+        }
+      }
+    }
+    return cfl;
+  }
 };
 
 
