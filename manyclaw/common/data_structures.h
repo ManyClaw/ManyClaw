@@ -245,7 +245,7 @@ struct Solver
         for (int wave=0; wave < num_wave; ++wave)
         {
           cfl = fabs(wave_speed[efi.left_edge(row, col) + wave]) * dtdx;
-          cfl = fmax(cfl, abs(wave_speed[efi.down_edge(row, col) + wave]) * dtdx);
+          cfl = fmax(cfl, fabs(wave_speed[efi.down_edge(row, col) + wave]) * dtdx);
         }
       }
     }
