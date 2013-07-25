@@ -5,6 +5,8 @@
 
 #include <limits.h>
 
+#ifdef HAVE_OCL
+
 const std::string vecAddSource =
     "__kernel void "
     "vadd(__global int * a, __global int * b, __global int *c)"
@@ -33,3 +35,4 @@ TEST(CLManager, vecAdd) {
   EXPECT_EQ(5, C[2]);
 }
 
+#endif

@@ -1,6 +1,6 @@
 #include "CLManager.h"
 
-
+#ifdef HAVE_OCL
 
 CLManager::CLManager()
 {
@@ -94,3 +94,5 @@ void CLManager::copyBackArg(int arg_number)
     throw err;
   }
 }
+
+#endif /* HAVE_OCL */

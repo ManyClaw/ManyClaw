@@ -7,7 +7,7 @@ all: lib install
 build:
 	$(MAKE) -C manyclaw/common
 	$(MAKE) -C manyclaw/grid_eval
-	#$(MAKE) -C manyclaw/ocl
+	$(MAKE) -C manyclaw/ocl
 
 lib: $(LIB_FULL_NAME)
 

@@ -1,6 +1,8 @@
 #ifndef __MANYCLAW_OCL_MANAGER_H
 #define __MANYCLAW_OCL_MANAGER_H
 
+#ifdef HAVE_OCL
+
 #define __CL_ENABLE_EXCEPTIONS
 
 #include <CL/cl.hpp>
@@ -42,5 +44,7 @@ private:
   std::vector<size_t> arg_sizes;
   std::vector<void*> arg_ptrs;
 };
+
+#endif // HAVE_OCL
 
 #endif  // __MANYCLAW_OCL_MANAGER_H
