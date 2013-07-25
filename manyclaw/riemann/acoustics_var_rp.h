@@ -8,7 +8,7 @@ struct acoustics_var_rp_aux_global_t
 };
 
 static const acoustics_var_rp_aux_global_t acoustics_var_rp_aux_global = {};
-static const rp_grid_params acoustics_var_rp_grid_params = {2, 3, 2, 2};
+static const rp_grid_params_t acoustics_var_rp_grid_params = {2, 3, 2, 2};
 
 // Point-wise constant acoustics Riemann solver
 // aux_* = [rho,bulk]
@@ -16,6 +16,7 @@ inline
 void acoustics_var_rp(const real* q_left, const real* q_right,
                       const real* aux_left, const real* aux_right,
                       const acoustics_var_rp_aux_global_t* aux_global,
+                      const int direction,
                       real* amdq, real* apdq, real *wave, real *s)
 {
     const int num_eqn = acoustics_var_rp_grid_params.num_eqn;

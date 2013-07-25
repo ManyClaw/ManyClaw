@@ -8,7 +8,7 @@
 
 typedef double real;
 
-struct rp_grid_params
+struct rp_grid_params_t
 {
   int num_ghost;
   int num_eqn;

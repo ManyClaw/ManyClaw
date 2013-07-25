@@ -37,7 +37,7 @@ void compare_arrays(const real *expected, const real *actual,
   return ::testing::AssertionSuccess();
 }
 
-::testing::AssertionResult GridEvalsMatch(int nx, int ny, rp_grid_params params,
+::testing::AssertionResult GridEvalsMatch(int nx, int ny, rp_grid_params_t params,
                       rp_grid_eval_t rp_grid_eval_1, rp_grid_eval_t rp_grid_eval_2)
 {
   bool results[4];
@@ -70,7 +70,7 @@ void compare_arrays(const real *expected, const real *actual,
 }
 
 
-double compare_updates(int nx, int ny, rp_grid_params params, 
+double compare_updates(int nx, int ny, rp_grid_params_t params, 
                        rp_grid_eval_t rp_grid_eval, updater_t updater)
 {
   int index;
