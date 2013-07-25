@@ -1,10 +1,9 @@
 ManyCLAW
 ========
 
-ManyClaw is a heterogeneous implementation of the CLAWPACK library. It
-has successfully modeled several Hyperbolic Partial Differential
-Equations at 400X speedups using the Intel MIC architecture. For more
-details see:
+ManyClaw is a heterogeneous implementation of the CLAWPACK library. It has
+successfully modeled several Hyperbolic Partial Differential Equations using
+the Intel MIC architecture. For more details see:
 
 A.R. Terrel and K. T. Mandli, ManyClaw: Slicing and dicing Riemann
 solvers for next generation highly parallel architectures, TACC-Intel
@@ -22,7 +21,7 @@ Install
 Authors
 -------
 
-## Main authors:
+## Main authors
 
 Andy R. Terrel <andy.terrel@gmail.com>
 Kyle T. Mandli <kyle.Mandli@gmail.com>
@@ -43,4 +42,4 @@ ManyClaw is licensed under the FreeBSD license. See LICENSE for details.
 Copyright
 ---------
 
-University of Texas at Austin 20012-13
+University of Texas at Austin 2012-2013
