@@ -1,18 +1,20 @@
 #include "advection_grid_eval.h"
-
+#include "template_grid_eval.ipp"
 
 const char * advection_rp_grid_eval_names[] =
   {
     "serial",
     "TBB",
-    "omp"
+    "omp",
+    "template"
   };
 
 const rp_grid_eval_t advection_rp_grid_evals[] =
   {
     advection_rp_grid_eval_serial,
     advection_rp_grid_eval_tbb,
-    advection_rp_grid_eval_omp
+    advection_rp_grid_eval_omp,
+    advection_rp_grid_eval_template
     // TODO add other advection_rp_grid_eval functions here
   };
 
@@ -196,4 +198,22 @@ void advection_rp_grid_eval_tbb( const real* q,  const real* aux,
   // note: we use nx+1 and ny+1 here and < in the body (instead of <= in the serial reference)
   tbb::parallel_for(::tbb::blocked_range2d<int,int>(1, efi.num_row_edge_transverse(), 
 						    1, efi.num_col_edge_transverse()), body);
+}
+
+void advection_rp_grid_eval_template( const real* q,  const real* aux,
+                                      const int nx, const  int ny,
+                                      real* amdq, real* apdq, real* wave,
+                                      real* wave_speed)
+{
+  template_rp_grid_eval_serial<advection_rp_aux_global_t>(&advection_rp,
+                                                          advection_rp_grid_params,
+                                                          advection_rp_aux_global,
+                                                          q,
+                                                          aux,
+                                                          nx,
+                                                          ny,
+                                                          amdq,
+                                                          apdq,
+                                                          wave,
+                                                          wave_speed);
 }

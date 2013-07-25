@@ -7,6 +7,7 @@
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range2d.h>
 
+#include "template_grid_eval.h"
 
 // Evaluates advection_rp via serial execution
 void advection_rp_grid_eval_serial(const real* q,
@@ -38,6 +39,14 @@ void advection_rp_grid_eval_tbb(const real* q,
 				real* wave,
 				real* wave_speed);
 
+void advection_rp_grid_eval_template(const real* q,
+                                     const real* aux,
+                                     const int nx,
+                                     const int ny,
+                                     real* amdq,
+                                     real* apdq,
+                                     real* wave,
+                                     real* wave_speed);
 
 extern const char * advection_rp_grid_eval_names[];
 extern const rp_grid_eval_t advection_rp_grid_evals[];
