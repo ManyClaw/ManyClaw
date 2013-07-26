@@ -94,14 +94,14 @@ void advection_rp_grid_eval_omp( const real* q,  const real* aux,
 		     aux, aux,  &advection_rp_aux_global, 0,
 		     amdq + efi.left_edge(row, col), apdq + efi.left_edge(row, col),
 		     wave + efi.left_edge(row, col), wave_speed + efi.left_edge(row, col));
-	
+
         advection_rp(q + fi.idx(row-1, col), q + fi.idx(row, col),
 		     aux, aux,  &advection_rp_aux_global, 1,
 		     amdq + efi.down_edge(row, col), apdq + efi.down_edge(row, col),
                      wave + efi.down_edge(row, col), wave_speed + efi.down_edge(row, col));
       }
     }
-    
+
 #pragma omp for schedule(runtime) nowait
     for(col = 1; col < efi.num_col_edge_transverse(); ++col) {
       row = efi.num_row_edge_transverse();
@@ -110,7 +110,7 @@ void advection_rp_grid_eval_omp( const real* q,  const real* aux,
 		   amdq + efi.down_edge(row, col), apdq + efi.down_edge(row, col),
 		   wave + efi.down_edge(row, col), wave_speed + efi.down_edge(row, col));
     }
-    
+
 #pragma omp for schedule(runtime) nowait
     for(row = 1; row < efi.num_row_edge_transverse(); ++row){
       col = efi.num_col_edge_transverse();
@@ -177,7 +177,7 @@ struct advection_rp_grid_eval_tbb_body
 		   aux, aux,  &advection_rp_aux_global, 0,
 		   amdq + efi.left_edge(row, col), apdq + efi.left_edge(row, col),
 		   wave + efi.left_edge(row, col), wave_speed + efi.left_edge(row, col));
-    } 
+    }
   }
 };
 
@@ -196,7 +196,7 @@ void advection_rp_grid_eval_tbb( const real* q,  const real* aux,
   advection_rp_grid_eval_tbb_body body(q, aux, nx, ny, amdq, apdq, wave, wave_speed);
 
   // note: we use nx+1 and ny+1 here and < in the body (instead of <= in the serial reference)
-  tbb::parallel_for(::tbb::blocked_range2d<int,int>(1, efi.num_row_edge_transverse(), 
+  tbb::parallel_for(::tbb::blocked_range2d<int,int>(1, efi.num_row_edge_transverse(),
 						    1, efi.num_col_edge_transverse()), body);
 }
 
@@ -205,15 +205,15 @@ void advection_rp_grid_eval_template( const real* q,  const real* aux,
                                       real* amdq, real* apdq, real* wave,
                                       real* wave_speed)
 {
-  template_rp_grid_eval_serial<advection_rp_aux_global_t>(&advection_rp,
-                                                          advection_rp_grid_params,
-                                                          advection_rp_aux_global,
-                                                          q,
-                                                          aux,
-                                                          nx,
-                                                          ny,
-                                                          amdq,
-                                                          apdq,
-                                                          wave,
-                                                          wave_speed);
+  template_rp_grid_eval_serial(&advection_rp,
+                               advection_rp_grid_params,
+                               (void *) &advection_rp_aux_global,
+                               q,
+                               aux,
+                               nx,
+                               ny,
+                               amdq,
+                               apdq,
+                               wave,
+                               wave_speed);
 }
