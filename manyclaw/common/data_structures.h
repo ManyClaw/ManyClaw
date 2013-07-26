@@ -16,23 +16,46 @@ struct rp_grid_params_t
   int num_wave;
 };
 
-typedef void (*set_bc_t)(real* q, real* aux, const int nx, const int ny,
-                               const int num_ghost, const int num_eqn);
+typedef void (*set_bc_t)(real* q, 
+                         real* aux, 
+                         const int nx, 
+                         const int ny,
+                         const int num_ghost, 
+                         const int num_eqn);
 
-typedef void (*rp_t)(const real* q_left, const real* q_right,
-                     const real* aux_left, const real* aux_right,
-                     const void* aux_global, const int direction,
-                     real* amdq, real* apdq, real* wave, real* s);
+typedef void (*rp_t)(const real* q_left,
+                     const real* q_right,
+                     const real* aux_left,
+                     const real* aux_right,
+                     const void* aux_global_void,
+                     const int direction,
+                     real* amdq,
+                     real* apdq,
+                     real* wave,
+                     real* s);
 
-typedef void (*rp_grid_eval_t)(const real* q, const real* aux,
-                          const int nx, const int ny, real* amdq,  real* apdq,
-                          real* wave, real* wave_speed);
+typedef void (*rp_grid_eval_t)(const real* q,
+                               const real* aux,
+                               const void* aux_global,
+                               const int nx,
+                               const int ny,
+                               real* amdq,
+                               real* apdq,
+                               real* wave,
+                               real* wave_speed);
 
-typedef void (*updater_t)(real* q, const real* aux, const int nx, const int ny,
-                                   const real* amdq, const real* apdq,
-                                   const real* wave, const real* wave_speed,
-                                   const int num_ghost, const int num_eqn,
-                                   const real dtdx);
+typedef void (*updater_t)(real* q,
+                          const real* aux,
+                          const int nx,
+                          const int ny,
+                          const real* amdq,
+                          const real* apdq,
+                          const real* wave,
+                          const real* wave_speed,
+                          const int num_ghost,
+                          const int num_eqn,
+                          const real dtdx);
+
 
 template <typename Vector>
 void randomize_vector(Vector& v)
@@ -184,6 +207,7 @@ struct State
   int num_eqn;
   int num_aux;
   int num_ghost; // not strictly needed but makes life easier for now
+  void* aux_global; // gotta store aux_global so user can set it.
 
 
   // State and auxilary variables
@@ -193,9 +217,9 @@ struct State
   // Non-owned reference
   Grid &grid;
 
-  State(Grid& grid, int num_eqn, int num_aux, int num_ghost);
+  // Constructor uses default aux_global
+  State(Grid& grid, int num_eqn, int num_aux, int num_ghost, void* aux_global);
   void randomize();
-
 };
 
 struct Solution

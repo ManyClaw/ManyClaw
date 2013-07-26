@@ -19,7 +19,9 @@ TEST(AdvectionGridEval, base) {
   real wave[efi.size()], wave_gold[efi.size()];
   real speed[efi.size()], speed_gold[efi.size()];
 
-  for(int idx=0; idx < fi.row_size() * fi.col_size(); ++idx)
+  advection_rp_aux_global_t aux_global = { {1.0, 1.0} };;
+
+  for(unsigned idx=0; idx < fi.row_size() * fi.col_size(); ++idx)
       q[idx] = 0.0;
   int r=2, c=2;
   q[fi.idx(r, c)] = 1.0;
@@ -51,7 +53,7 @@ TEST(AdvectionGridEval, base) {
   amdq_gold[efi.up_edge(r, c)] = 0.0;
   apdq_gold[efi.up_edge(r, c)] = -1.0;
   
-  advection_rp_grid_eval_serial(q, NULL, nx, ny, amdq, apdq, wave, speed);
+  advection_rp_grid_eval_serial(q, NULL, &aux_global, nx, ny, amdq, apdq, wave, speed);
 
   EXPECT_TRUE(ArraysMatch(wave, wave_gold, efi.size()));
   EXPECT_TRUE(ArraysMatch(speed, speed_gold, efi.size()));
