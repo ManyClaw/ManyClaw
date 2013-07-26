@@ -10,9 +10,9 @@
 // Evaluates void_rp via serial execution
 void void_rp_grid_eval_serial(rp_t rp,
                               rp_grid_params_t rp_grid_params,
-                              void* rp_aux_global,
                               const real* q,
                               const real* aux,
+                              const void* aux_global,
                               const int nx,
                               const int ny,
                               real* amdq,

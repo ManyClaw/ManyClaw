@@ -8,7 +8,7 @@ struct euler_rp_aux_global_t
     real gamma;
 };
 
-static const euler_rp_aux_global_t euler_rp_aux_global = {1.0};
+static const euler_rp_aux_global_t euler_rp_aux_global_default = {1.0};
 static const rp_grid_params_t euler_rp_grid_params = {2, 4, 0, 4};
 
 // Implementation of the Roe solver for the Euler equations
