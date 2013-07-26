@@ -48,6 +48,15 @@ void advection_rp_grid_eval_template(const real* q,
                                      real* wave,
                                      real* wave_speed);
 
+void advection_rp_grid_eval_void( const real* q,  
+                                  const real* aux,
+                                  const int nx, 
+                                  const int ny,
+                                  real* amdq, 
+                                  real* apdq, 
+                                  real* wave,
+                                  real* wave_speed);
+
 extern const char * advection_rp_grid_eval_names[];
 extern const rp_grid_eval_t advection_rp_grid_evals[];
 extern const size_t num_advection_rp_grid_eval_kernels;

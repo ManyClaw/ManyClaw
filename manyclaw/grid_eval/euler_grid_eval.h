@@ -9,6 +9,7 @@
 
 #include "template_grid_eval.h"
 
+#ifdef  USE_TEMPLATE_GRID_EVAL
 void euler_rp_grid_eval_template(const real* q,
                                      const real* aux,
                                      const int nx,
@@ -17,6 +18,12 @@ void euler_rp_grid_eval_template(const real* q,
                                      real* apdq,
                                      real* wave,
                                      real* wave_speed);
+#endif // USE_TEMPLATE_GRID_EVAL
+
+void euler_rp_grid_eval_void( const real* q,  const real* aux,
+                              const int nx, const  int ny,
+                              real* amdq, real* apdq, real* wave,
+                              real* wave_speed);
 
 extern const char * euler_rp_grid_eval_names[];
 extern const rp_grid_eval_t euler_rp_grid_evals[];

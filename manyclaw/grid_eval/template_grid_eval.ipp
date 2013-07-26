@@ -1,6 +1,8 @@
 #ifdef TEMPLATE_GRID_EVAL_IPP
 #define TEMPLATE_GRID_EVAL_IPP
 
+// Macro this off since ForestClaw has trouble with templates.
+#ifdef USE_TEMPLATE_GRID_EVAL
 #include "template_grid_eval.h"
 
 // Evaluates template_rp via serial execution
@@ -82,4 +84,6 @@ void template_rp_grid_eval_tbb(rp_t rp,
                               real* wave,
                               real* wave_speed);
 
+#endif // USE_TEMPLATE_GRID_EVAL
 #endif // TEMPLATE_GRID_EVAL_IPP
+
