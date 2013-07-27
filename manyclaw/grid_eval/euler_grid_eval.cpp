@@ -20,15 +20,15 @@ void euler_rp_grid_eval_template( const real* q,  const real* aux,
                                       real* amdq, real* apdq, real* wave,
                                       real* wave_speed)
 {
-  template_rp_grid_eval_serial<euler_rp_aux_global_t>(&euler_rp,
-                                                      euler_rp_grid_params,
-                                                      euler_rp_aux_global,
-                                                      q,
-                                                      aux,
-                                                      nx,
-                                                      ny,
-                                                      amdq,
-                                                      apdq,
-                                                      wave,
-                                                      wave_speed);
+  template_rp_grid_eval_serial(&euler_rp,
+                               euler_rp_grid_params,
+                               (void *) &euler_rp_aux_global,
+                               q,
+                               aux,
+                               nx,
+                               ny,
+                               amdq,
+                               apdq,
+                               wave,
+                               wave_speed);
 }

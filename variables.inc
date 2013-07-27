@@ -5,7 +5,7 @@ MAJOR_VERSION ?= 0
 MINOR_VERSION ?= 1.0
 
 
-CXX = g++
+CXX = c++
 LINK ?= $(CXX)
 ifeq ($(CXX), g++)
 	OMPCFLAGS = -fopenmp
@@ -16,20 +16,22 @@ endif
 
 ifdef OPT
 	OPTFLAGS = -03
-else 
+else
 	OPTFLAGS = -O0 -g
 endif
 WARNFLAGS =  -Wall -Wno-unused-parameter
 CXXFLAGS = -I./ $(OPTFLAGS) $(WARNFLAGS) $(OMPCFLAGS)
-LDFLAGS = 
+LDFLAGS =
 
 
 ifdef TBB_LIB
 	CXXFLAGS += -I$(TBB_INC)
-	TBB_LDFLAGS = -L$(TBB_LIB)  
+	TBB_LDFLAGS = -L$(TBB_LIB)
 endif
-TBB_LDFLAGS += -ltbb
-LDFLAGS += $(TBB_LD_FLAGS)
+#TBB_LDFLAGS += -ltbb
+#LDFLAGS += $(TBB_LD_FLAGS)
+CXXFLAGS += -I/opt/local/include
+TBB_LDFLAGS += -L /opt/local/lib -ltbb
 
 
 OCL_CXXFLAGS = -I$(MANYCLAW_DIR)/contrib -framework OpenCL
@@ -52,11 +54,11 @@ ifeq ($(UNAME), Linux)
         CXXFLAGS += -fPIC
         LDFLAGS += -shared
     endif
-else 
+else
     ifeq ($(UNAME), Darwin)
         # Darwin, has a few more options and calls its libraries something
-        # different but is taken care of here.  Note that we have to use the 
-        # flag -flat_namespace in order for it to act like linux, see the ld 
+        # different but is taken care of here.  Note that we have to use the
+        # flag -flat_namespace in order for it to act like linux, see the ld
         # man page for more information on the two-level namespace OS X uses
         LIB_FULL_NAME = lib$(NAME).$(MAJOR_VERSION).$(MINOR_VERSION).dylib
         LIB_MAJOR_NAME = lib$(NAME).$(MAJOR_VERSION).dylib
@@ -69,6 +71,9 @@ else
 		CXXFLAGS += -fPIC
 		LDFLAGS += -dynamiclib -flat_namespace -undefined suppress
         else ifeq ($(CXX), clang++)
+		CXXFLAGS += -fPIC
+		LDFLAGS += -dynamiclib -flat_namespace -undefined suppress
+        else ifeq ($(CXX), c++)
 		CXXFLAGS += -fPIC
 		LDFLAGS += -dynamiclib -flat_namespace -undefined suppress
         endif
