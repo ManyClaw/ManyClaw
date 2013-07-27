@@ -101,18 +101,18 @@ struct FieldIndexer
 //  *  <foo>_size is the number of arrays associated with field, so it include
 //         striding for multiple equations and wave.
 //  *  directions are either transverse (in the direction) or normal (any other direction)
-//  *  All members are inline and as const as possible, the hope is we can let 
+//  *  All members are inline and as const as possible, the hope is we can let
 //         the compiler vectorize any math done on the fields
 struct EdgeFieldIndexer
 {
   const unsigned nx, ny, num_ghosts, num_eqns, num_wave;
 
-  EdgeFieldIndexer(unsigned nx, unsigned ny, unsigned num_ghosts, 
+  EdgeFieldIndexer(unsigned nx, unsigned ny, unsigned num_ghosts,
 		   unsigned num_eqns)
     : nx(nx), ny(ny), num_ghosts(num_ghosts), num_eqns(num_eqns), num_wave(1)
   {}
 
-  EdgeFieldIndexer(unsigned nx, unsigned ny, unsigned num_ghosts, 
+  EdgeFieldIndexer(unsigned nx, unsigned ny, unsigned num_ghosts,
 		   unsigned num_eqns, unsigned num_wave)
     : nx(nx), ny(ny), num_ghosts(num_ghosts), num_eqns(num_eqns), num_wave(num_wave)
   {}
@@ -227,11 +227,14 @@ struct Solver
   // Non-owned references
   //Solution& solution;
 
+    Solver();
+
   //TODO: Deprecate this constructor
   Solver(Solution& solution, int num_ghost, int num_wave);
 
   Solver(int* num_cells, int num_eqn, int num_ghost, int num_wave);
-  
+    void define(int* num_cells, int num_eqn, int num_ghost, int num_wave);
+
   void step(Solution& solution, double dt, set_bc_t set_bc, rp_grid_eval_t rp_grid_eval, updater_t update);
 
   inline real cfl(int nx, int ny, int mbc, int meqn, int mwaves, real dtdx)

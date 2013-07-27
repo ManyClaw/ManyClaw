@@ -35,7 +35,7 @@ void Solution::write(int frame, std::string output_path)
   q_file.open(q_file_path.str().c_str(), std::ios::out);
 
   // Write header for fort.q file
-  q_file << std::setiosflags(std::ios::fixed) << std::setprecision(5) 
+  q_file << std::setiosflags(std::ios::fixed) << std::setprecision(5)
               << 1 << "                 grid_number\n";
   q_file << std::setiosflags(std::ios::fixed) << std::setprecision(5)
               << 1 << "                 AMR_level\n";
@@ -59,11 +59,11 @@ void Solution::write(int frame, std::string output_path)
     {
       for (int m = 0; m < state.num_eqn; m++)
       {
-        q_file << std::setiosflags(std::ios::fixed) 
+        q_file << std::setiosflags(std::ios::fixed)
                << std::setprecision(8)
-               << std::setw(16) 
-               << state.q[m + i * state.num_eqn 
-                            + j * (2*state.num_ghost + grid.num_cells[0])] 
+               << std::setw(16)
+               << state.q[m + i * state.num_eqn
+                            + j * (2*state.num_ghost + grid.num_cells[0])]
                << " ";
       }
       q_file << "\n";
@@ -83,13 +83,13 @@ void Solution::write(int frame, std::string output_path)
 
   t_file << std::setiosflags(std::ios::fixed) << std::setprecision(16)
               << std::setw(26) << t << "        time\n";
-  t_file << std::setiosflags(std::ios::fixed) << std::setprecision(5) 
+  t_file << std::setiosflags(std::ios::fixed) << std::setprecision(5)
               << state.num_eqn << "                 meqn\n";
-  t_file << std::setiosflags(std::ios::fixed) << std::setprecision(5) 
+  t_file << std::setiosflags(std::ios::fixed) << std::setprecision(5)
               << 1 << "                 ngrids\n";
-  t_file << std::setiosflags(std::ios::fixed) << std::setprecision(5) 
+  t_file << std::setiosflags(std::ios::fixed) << std::setprecision(5)
               << 0 << "                 maux\n";
-  t_file << std::setiosflags(std::ios::fixed) << std::setprecision(5) 
+  t_file << std::setiosflags(std::ios::fixed) << std::setprecision(5)
               << 2 << "                 ndim\n";
 
   t_file.close();
@@ -99,6 +99,11 @@ void State::randomize()
 {
   randomize_vector(q);
   randomize_vector(aux);
+}
+
+Solver::Solver()
+{
+    // Default constructor;
 }
 
 Solver::Solver(Solution& solution, int num_ghost, int num_wave):
@@ -132,6 +137,22 @@ Solver::Solver(int* num_cells, int num_eqn, int num_ghost, int num_wave):
   wave_speed.resize(wave_efi.size());
 }
 
+void Solver::define(int* num_cells, int num_eqn, int num_ghost, int num_wave)
+{
+    this->num_wave = num_wave;
+    this->num_ghost = num_ghost;
+    const int nx = num_cells[0];
+    const int ny = num_cells[1];
+    //const int dim = solution.grid.dim;
+    // Outputs on interfaces
+  EdgeFieldIndexer efi(nx, ny, num_ghost, num_eqn);
+  EdgeFieldIndexer wave_efi(nx, ny, num_ghost, num_eqn, num_wave);
+  amdq.resize(efi.size());
+  apdq.resize(efi.size());
+  wave.resize(wave_efi.size());
+  wave_speed.resize(wave_efi.size());
+}
+
 void Solver::step(Solution& solution, double dt, set_bc_t set_bc, rp_grid_eval_t rp_grid_eval, updater_t update)
 {
   // Note that this all will break if the grid is not uniform!
@@ -141,11 +162,11 @@ void Solver::step(Solution& solution, double dt, set_bc_t set_bc, rp_grid_eval_t
         solution.grid.num_cells[0], solution.grid.num_cells[1],
         num_ghost, solution.state.num_eqn);
 
-  rp_grid_eval(&solution.state.q[0], &solution.state.aux[0], 
+  rp_grid_eval(&solution.state.q[0], &solution.state.aux[0],
           solution.grid.num_cells[0], solution.grid.num_cells[1],
           &amdq[0], &apdq[0], &wave[0], &wave_speed[0]);
 
-  update(&solution.state.q[0], &solution.state.aux[0], 
+  update(&solution.state.q[0], &solution.state.aux[0],
           solution.grid.num_cells[0], solution.grid.num_cells[1],
           &amdq[0], &apdq[0], &wave[0], &wave_speed[0],
           num_ghost, solution.state.num_eqn, dtdx);
