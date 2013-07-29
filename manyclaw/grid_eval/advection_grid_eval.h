@@ -11,36 +11,36 @@
 
 // Evaluates advection_rp via serial execution
 void advection_rp_grid_eval_serial(const real* q,
-				   const real* aux,
+                   const real* aux,
                                    const void* aux_global,
-				   const int nx,
-				   const int ny,
-				   real* amdq,
-				   real* apdq,
-				   real* wave,
-				   real* wave_speed);
+                   const int nx,
+                   const int ny,
+                   real* amdq,
+                   real* apdq,
+                   real* wave,
+                   real* wave_speed);
 
 // Evaluates advection_rp via parallel execution via openmp
 void advection_rp_grid_eval_omp(const real* q,
-				const real* aux,
+                const real* aux,
                                 const void* aux_global,
-				const int nx,
-				const int ny,
-				real* amdq,
-				real* apdq,
-				real* wave,
-				real* wave_speed);
+                const int nx,
+                const int ny,
+                real* amdq,
+                real* apdq,
+                real* wave,
+                real* wave_speed);
 
 // Evaluates advection_rp via parallel execution via TBB
 void advection_rp_grid_eval_tbb(const real* q,
-				const real* aux,
+                const real* aux,
                                 const void* aux_global,
-				const int nx,
-				const int ny,
-				real* amdq,
-				real* apdq,
-				real* wave,
-				real* wave_speed);
+                const int nx,
+                const int ny,
+                real* amdq,
+                real* apdq,
+                real* wave,
+                real* wave_speed);
 
 void advection_rp_grid_eval_template(const real* q,
                                      const real* aux,
@@ -60,6 +60,12 @@ void advection_rp_grid_eval_void( const real* q,
                                   real* amdq, 
                                   real* apdq, 
                                   real* wave,
+                                  real* wave_speed);
+
+void advection_var_rp_grid_eval_void( const real* q,  const real* aux, 
+                                  const void* aux_global,
+                                  const int nx, const  int ny,
+                                  real* amdq, real* apdq, real* wave,
                                   real* wave_speed);
 
 extern const char * advection_rp_grid_eval_names[];

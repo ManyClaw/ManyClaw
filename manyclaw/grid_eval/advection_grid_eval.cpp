@@ -246,3 +246,21 @@ void advection_rp_grid_eval_void( const real* q,  const real* aux, const void* a
                            wave,
                            wave_speed);
 }
+
+void advection_var_rp_grid_eval_void( const real* q,  const real* aux, const void* aux_global,
+                                  const int nx, const  int ny,
+                                  real* amdq, real* apdq, real* wave,
+                                  real* wave_speed)
+{
+  void_rp_grid_eval_serial(&advection_var_rp,
+                           advection_var_rp_grid_params,
+                           q,
+                           aux,
+                           NULL,
+                           nx,
+                           ny,
+                           amdq,
+                           apdq,
+                           wave,
+                           wave_speed);
+}
