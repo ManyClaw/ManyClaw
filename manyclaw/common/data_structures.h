@@ -18,10 +18,10 @@ struct rp_grid_params_t
 
 typedef void (*set_bc_t)(real* q, 
                          real* aux, 
-                         const int nx, 
-                         const int ny,
-                         const int num_ghost, 
-                         const int num_eqn);
+                         const unsigned nx, 
+                         const unsigned ny,
+                         const unsigned num_ghost, 
+                         const unsigned num_eqn);
 
 typedef void (*rp_t)(const real* q_left,
                      const real* q_right,
