@@ -27,7 +27,8 @@ int main(int argc, char ** argv)
   for (int dim = 0; dim < grid.dim; dim++)
     grid.dx[dim] = (grid.upper[dim] - grid.lower[dim]) / grid.num_cells[dim];
 
-  State state(grid, num_eqn, num_aux, num_ghost);
+  advection_rp_aux_global_t aux_global = {{1,1}};
+  State state(grid, num_eqn, num_aux, num_ghost, &aux_global);
 
   Solution solution(grid, state);
   solution.t = 0.0;
