@@ -13,8 +13,8 @@ Grid::Grid(int nx, int ny)
   num_cells[1] = ny;
 }
 
-State::State(Grid& grid, int num_eqn, int num_aux, int num_ghost) :
-  num_eqn(num_eqn), num_aux(num_aux), num_ghost(num_ghost), grid(grid)
+State::State(Grid& grid, int num_eqn, int num_aux, int num_ghost, void* aux_global) :
+  num_eqn(num_eqn), num_aux(num_aux), num_ghost(num_ghost), aux_global(aux_global), grid(grid)
 {
   const int nx = grid.num_cells[0];
   const int ny = grid.num_cells[1];
@@ -141,7 +141,7 @@ void Solver::step(Solution& solution, double dt, set_bc_t set_bc, rp_grid_eval_t
         solution.grid.num_cells[0], solution.grid.num_cells[1],
         num_ghost, solution.state.num_eqn);
 
-  rp_grid_eval(&solution.state.q[0], &solution.state.aux[0], 
+  rp_grid_eval(&solution.state.q[0], &solution.state.aux[0], solution.state.aux_global,
           solution.grid.num_cells[0], solution.grid.num_cells[1],
           &amdq[0], &apdq[0], &wave[0], &wave_speed[0]);
 

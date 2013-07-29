@@ -38,26 +38,30 @@ void compare_arrays(const real *expected, const real *actual,
 }
 
 ::testing::AssertionResult GridEvalsMatch(int nx, int ny, rp_grid_params_t params,
-                      rp_grid_eval_t rp_grid_eval_1, rp_grid_eval_t rp_grid_eval_2)
+                                          rp_grid_eval_t rp_grid_eval_1, 
+                                          rp_grid_eval_t rp_grid_eval_2,
+                                          void* aux_global)
 {
   bool results[4];
   std::string msg;
   std::ostringstream omsg(msg);
   Grid grid(nx, ny);
 
-  State state(grid, params.num_eqn, params.num_aux, params.num_ghost);
+  State state(grid, params.num_eqn, params.num_aux, params.num_ghost, aux_global);
   state.randomize();
   Solution solution(grid, state);
 
   Solver solver_1(solution, params.num_ghost, params.num_wave);
   Solver solver_2(solution, params.num_ghost, params.num_wave);
 
-  rp_grid_eval_1(&state.q[0], &state.aux[0], grid.num_cells[0], grid.num_cells[1],
-              &solver_1.amdq[0], &solver_1.apdq[0], &solver_1.wave[0],
-              &solver_1.wave_speed[0]);
-  rp_grid_eval_2(&state.q[0], &state.aux[0], grid.num_cells[0], grid.num_cells[1],
-              &solver_2.amdq[0], &solver_2.apdq[0], &solver_2.wave[0],
-              &solver_2.wave_speed[0]);
+  rp_grid_eval_1(&state.q[0], &state.aux[0], state.aux_global,
+                 grid.num_cells[0], grid.num_cells[1],
+                 &solver_1.amdq[0], &solver_1.apdq[0], &solver_1.wave[0],
+                 &solver_1.wave_speed[0]);
+  rp_grid_eval_2(&state.q[0], &state.aux[0], state.aux_global, 
+                 grid.num_cells[0], grid.num_cells[1],
+                 &solver_2.amdq[0], &solver_2.apdq[0], &solver_2.wave[0],
+                 &solver_2.wave_speed[0]);
 
   compare_arrays(&solver_1.amdq[0], &solver_2.amdq[0], solver_1.amdq.size(), results[0], omsg);
   compare_arrays(&solver_1.apdq[0], &solver_2.apdq[0], solver_1.apdq.size(), results[1], omsg);
@@ -71,13 +75,13 @@ void compare_arrays(const real *expected, const real *actual,
 
 
 double compare_updates(int nx, int ny, rp_grid_params_t params, 
-                       rp_grid_eval_t rp_grid_eval, updater_t updater)
+                       rp_grid_eval_t rp_grid_eval, updater_t updater, void* aux_global)
 {
   int index;
   Grid grid(nx, ny);
 
-  State state(grid, params.num_eqn, params.num_aux, params.num_ghost);
-  State ref_state(grid, params.num_eqn, params.num_aux, params.num_ghost);
+  State state(grid, params.num_eqn, params.num_aux, params.num_ghost, aux_global);
+  State ref_state(grid, params.num_eqn, params.num_aux, params.num_ghost, aux_global);
 
   for (int row = params.num_ghost; row <= ny + params.num_ghost; ++row) {
     for (int col = params.num_ghost; col <= nx + params.num_ghost; ++col) {
@@ -96,7 +100,7 @@ double compare_updates(int nx, int ny, rp_grid_params_t params,
   Solution solution(grid, state);
   Solver solver(solution, params.num_ghost, params.num_wave);
 
-  rp_grid_eval(&state.q[0], &state.aux[0], grid.num_cells[0], grid.num_cells[1],
+  rp_grid_eval(&state.q[0], &state.aux[0], state.aux_global, grid.num_cells[0], grid.num_cells[1],
               &solver.amdq[0], &solver.apdq[0], &solver.wave[0],
               &solver.wave_speed[0]);
 

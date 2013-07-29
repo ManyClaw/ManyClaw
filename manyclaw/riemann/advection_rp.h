@@ -8,7 +8,7 @@ struct advection_rp_aux_global_t
   real u[2];
 };
 
-static const advection_rp_aux_global_t advection_rp_aux_global = {{1.0, 1.0}};
+static const advection_rp_aux_global_t advection_rp_aux_global_default = { {1.0, 1.0} };
 static const rp_grid_params_t advection_rp_grid_params = {2, 1, 0, 1};
 
 // Constanst coefficient Riemann problem
