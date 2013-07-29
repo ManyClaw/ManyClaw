@@ -101,6 +101,11 @@ void State::randomize()
   randomize_vector(aux);
 }
 
+Solver::Solver()
+{
+  // Default constructor;
+}
+
 Solver::Solver(Solution& solution, int num_ghost, int num_wave):
   num_ghost(num_ghost), num_wave(num_wave)
 {
@@ -123,6 +128,22 @@ Solver::Solver(int* num_cells, int num_eqn, int num_ghost, int num_wave):
   const int nx = num_cells[0];
   const int ny = num_cells[1];
   //const int dim = solution.grid.dim;
+  // Outputs on interfaces
+  EdgeFieldIndexer efi(nx, ny, num_ghost, num_eqn);
+  EdgeFieldIndexer wave_efi(nx, ny, num_ghost, num_eqn, num_wave);
+  amdq.resize(efi.size());
+  apdq.resize(efi.size());
+  wave.resize(wave_efi.size());
+  wave_speed.resize(wave_efi.size());
+}
+
+void Solver::define(int* num_cells, int num_eqn, int num_ghost, int num_wave)
+{
+  this->num_wave = num_wave;
+  this->num_ghost = num_ghost;
+  const int nx = num_cells[0];
+  const int ny = num_cells[1];
+
   // Outputs on interfaces
   EdgeFieldIndexer efi(nx, ny, num_ghost, num_eqn);
   EdgeFieldIndexer wave_efi(nx, ny, num_ghost, num_eqn, num_wave);
