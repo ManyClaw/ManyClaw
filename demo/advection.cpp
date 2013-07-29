@@ -27,42 +27,28 @@ int main(int argc, char ** argv)
   for (int dim = 0; dim < grid.dim; dim++)
     grid.dx[dim] = (grid.upper[dim] - grid.lower[dim]) / grid.num_cells[dim];
 
-  advection_rp_aux_global_t aux_global = {{1,1}};
+  advection_rp_aux_global_t aux_global = {{1,0.5}};
   State state(grid, num_eqn, num_aux, num_ghost, &aux_global);
 
   Solution solution(grid, state);
   solution.t = 0.0;
 
-  // Initialize q
+  // Initialize q  
   real x, y;
-  for (int j = num_ghost; j < ny + num_ghost; j++)
+  FieldIndexer fi_q(nx, ny, num_ghost, num_eqn);
+  FieldIndexer fi_aux(nx, ny, num_ghost, num_aux);
+  for (int row = num_ghost; row < ny + num_ghost; ++row)
   {
-    y = grid.lower[1] + (real(j) - 1.5) * grid.dx[1];
-    for (int i = num_ghost; i < nx + num_ghost; i++)
+    y = grid.lower[1] + (real(row) - 1.5) * grid.dx[1];
+    for (int col = num_ghost; col < nx + num_ghost; ++col)
     {
-      x = grid.lower[0] + (real(i) - 1.5) * grid.dx[0];
-      for (int m = 0; m < num_eqn; m++)
-      {
-        if (0.1 < x && x < 0.6 && 0.1 < y && y < 0.6) 
-          solution.state.q[m + i * num_eqn + j * (2*num_ghost + nx)] = 1.0;
-        else
-          solution.state.q[m + i * num_eqn + j * (2*num_ghost + nx)] = 0.1;
-      }
+      x = grid.lower[0] + (real(col) - 1.5) * grid.dx[0];
+      if (0.1 < x && x < 0.6 && 0.1 < y && y < 0.6) 
+        solution.state.q[0 + fi_q.idx(row, col)] = 1.0;
+      else
+        solution.state.q[0 + fi_q.idx(row, col)] = 0.1;
     }
   }
-  // for (int j = num_ghost; j < ny + num_ghost; j++)
-  // {
-  //   // y = grid.lower[1] + (double(j) - 1.5) * grid.dx[1];
-  //   for (int i = num_ghost; i < nx + num_ghost; i++)
-  //   {
-  //     // x = grid.lower[0] + (double(i) - 1.5) * grid.dx[0];
-  //     for (int m = 0; m < num_eqn; m++)
-  //     {
-  //       solution.state.q[m + i * num_eqn + j * (2*num_ghost + nx)] = 0.1;
-  //     }
-  //   }
-  // }
-  // solution.state.q[4 * num_eqn + 4 * (2*num_ghost + nx)] = 1.0;
   
   // Write out initial condition
   solution.write(0, output_path);
@@ -78,7 +64,7 @@ int main(int argc, char ** argv)
     {
       // Take a single time step
       solver.step(solution, grid.dx[0] * 0.4, set_zero_order_extrap_BCs, 
-                                              advection_rp_grid_eval_serial, 
+                                              advection_rp_grid_eval_void,
                                               updater_first_order_dimensional_splitting);
       std::cout << "Solution now at t=" << solution.t << "\n";
     }
