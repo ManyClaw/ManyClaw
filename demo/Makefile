@@ -3,7 +3,8 @@ include ../variables.inc
 CXXFLAGS += -I..
 LDFLAGS = $(TBB_LDFLAGS) -L../lib -lmanyclaw 
 
-DRIVERS = advection
+DRIVERS = advection \
+		  swirl
           # euler \
           # acoustics_const \
           # acoustics_var \
@@ -12,6 +13,9 @@ DRIVERS = advection
 all: $(DRIVERS)
 
 advection: advection.o
+	$(LINK) $(CXXFLAGS) $(LDFLAGS) -o $@ $<
+
+swirl: swirl.o
 	$(LINK) $(CXXFLAGS) $(LDFLAGS) -o $@ $<
 
 euler: euler.o 
@@ -27,7 +31,12 @@ limiters: limiters.o
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $<
 
 clean:
-	rm -rf advection advection.o euler euler.o acoustics_const acoustics_const.o acoustics_var acoustics_var.o limiters limiters.o
+	rm -rf advection advection.o \
+		   swirl swirl.o \
+		   euler euler.o \
+		   acoustics_const acoustics_const.o \
+		   acoustics_var acoustics_var.o \
+		   limiters limiters.o
 
 clobber: clean
 	$(MAKE) -C ../ clean

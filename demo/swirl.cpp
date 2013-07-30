@@ -2,6 +2,16 @@
 #include <tbb/task_scheduler_init.h>
 #include <string>
 
+#define _USE_MATH_DEFINES
+
+#include <cmath>
+
+
+double psi(double x, double y)
+{
+  return pow(sin(M_PI * x),2) * pow(sin(M_PI * y),2) / M_PI;
+}
+
 int main(int argc, char ** argv)
 {
   int nx = 10, ny = 10;
@@ -13,7 +23,7 @@ int main(int argc, char ** argv)
   }
 
   int num_eqn = 1;
-  int num_aux = 0;
+  int num_aux = 2;
   int num_ghost = 2;
   int num_wave = 1;
   std::string output_path = "./_output";
@@ -39,14 +49,13 @@ int main(int argc, char ** argv)
   FieldIndexer fi_aux(nx, ny, num_ghost, num_aux);
   for (int row = num_ghost; row < ny + num_ghost; ++row)
   {
-    y = grid.lower[1] + (real(row) - 1.5) * grid.dx[1];
     for (int col = num_ghost; col < nx + num_ghost; ++col)
     {
       x = grid.lower[0] + (real(col) - 1.5) * grid.dx[0];
-      if (0.1 < x && x < 0.6 && 0.1 < y && y < 0.6) 
+      if (x < 0.5) 
         solution.state.q[0 + fi_q.idx(row, col)] = 1.0;
       else
-        solution.state.q[0 + fi_q.idx(row, col)] = 0.1;
+        solution.state.q[0 + fi_q.idx(row, col)] = 0.0;
     }
   }
   
@@ -58,13 +67,32 @@ int main(int argc, char ** argv)
   solver.num_ghost = num_ghost;
 
   // Take multiple steps
-  for (int frame = 1; frame <= 10; frame++)
+  double dt = grid.dx[0] * 0.4;
+  double period = 4.0;
+  double vt;
+  for (int frame = 1; frame <= 20; frame++)
   {
-    for (int steps = 0; steps < 10; steps++)
+    for (int steps = 0; steps < 50; steps++)
     {
+      // Fill in aux array velocities
+      vt = cos(2.0 * M_PI * (solution.t + dt / 2.0) / period);
+      for (int row = num_ghost; row < ny + num_ghost; ++row)
+      {
+        y = grid.lower[1] + (real(row) - 1.5) * grid.dx[1];
+        for (int col = num_ghost; col < nx + num_ghost; ++col)
+        {
+          x = grid.lower[0] + (real(col) - 1.5) * grid.dx[0];
+          solution.state.aux[0 + fi_aux.idx(row, col)] = 
+                          -(psi(x,y + grid.dx[1]) - psi(x,y)) / grid.dx[1] * vt;
+          solution.state.aux[1 + fi_aux.idx(row, col)] = 
+                           (psi(x + grid.dx[0],y) - psi(x,y)) / grid.dx[0] * vt;
+        }
+      }
+          
+
       // Take a single time step
-      solver.step(solution, grid.dx[0] * 0.4, set_zero_order_extrap_BCs, 
-                                              advection_rp_grid_eval_void,
+      solver.step(solution, dt, set_zero_order_extrap_BCs, 
+                                              advection_var_rp_grid_eval_void,
                                               updater_first_order_dimensional_splitting);
       std::cout << "Solution now at t=" << solution.t << "\n";
     }
