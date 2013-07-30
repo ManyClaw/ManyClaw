@@ -5,11 +5,14 @@ MAJOR_VERSION ?= 0
 MINOR_VERSION ?= 1.0
 
 
+CXXFLAGS = 
+LDFLAGS = 
+
 CXX = g++
 LINK ?= $(CXX)
 ifeq ($(CXX), g++)
 	OMPCFLAGS = -fopenmp
-else ifeq ($(CXX), icc)
+else ifeq ($(CXX), icpc)
 	OMPCFLAGS = -openmp
 endif
 
@@ -20,8 +23,7 @@ else
 	OPTFLAGS = -O0 -g
 endif
 WARNFLAGS =  -Wall -Wno-unused-parameter
-CXXFLAGS = -I./ $(OPTFLAGS) $(WARNFLAGS) $(OMPCFLAGS)
-LDFLAGS = 
+CXXFLAGS += -I./ $(OPTFLAGS) $(WARNFLAGS) $(OMPCFLAGS)
 
 
 ifdef TBB_LIB
@@ -32,7 +34,8 @@ TBB_LDFLAGS += -ltbb
 LDFLAGS += $(TBB_LD_FLAGS)
 
 
-OCL_CXXFLAGS = -I$(MANYCLAW_DIR)/contrib -framework OpenCL
+#OCL_CXXFLAGS = -I$(MANYCLAW_DIR)/contrib -framework OpenCL
+OCL_CXXFLAGS = 
 OCL_LDFLAGS =
 CXXFLAGS += $(OCL_CXXFLAGS)
 LDFLAGS += $(OCL_LDFLAGS)
@@ -48,10 +51,10 @@ ifeq ($(UNAME), Linux)
     VERSION_FLAGS =
 
     # Compiler specific flags
-    ifeq ($(CXX), g++)
+#    ifeq ($(CXX), g++)
         CXXFLAGS += -fPIC
         LDFLAGS += -shared
-    endif
+#    endif
 else 
     ifeq ($(UNAME), Darwin)
         # Darwin, has a few more options and calls its libraries something
