@@ -180,12 +180,12 @@ struct void_grid_eval_tbb_body
 
 
 
-void void_grid_eval_tbb(rp_t rp,
-                        rp_grid_params_t rp_grid_params,
-                        const real* q,  const real* aux, const void* aux_global,
-                        const int nx, const  int ny,
-                        real* amdq, real* apdq, real* wave,
-                        real* wave_speed)
+void void_rp_grid_eval_tbb(rp_t rp,
+                           rp_grid_params_t rp_grid_params,
+                           const real* q,  const real* aux, const void* aux_global,
+                           const int nx, const  int ny,
+                           real* amdq, real* apdq, real* wave,
+                           real* wave_speed)
 {
   const int num_ghost = rp_grid_params.num_ghost;
   const int num_eqn = rp_grid_params.num_eqn;

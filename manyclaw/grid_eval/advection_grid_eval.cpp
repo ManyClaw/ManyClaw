@@ -29,6 +29,9 @@ const rp_grid_eval_t advection_rp_grid_evals[] =
     // TODO add other advection_rp_grid_eval functions here
   };
 
+
+const size_t num_advection_rp_grid_eval_kernels = sizeof(advection_rp_grid_evals)/sizeof(rp_grid_eval_t);
+
 const char * advection_var_rp_grid_eval_names[] =
   {
     "void_star",
@@ -268,16 +271,16 @@ void advection_rp_grid_eval_void_serial( const real* q,  const real* aux, const 
 
 
 void advection_rp_grid_eval_void_tbb(const real* q,  const real* aux,
-                                         const void* aux_global,
-                                         const int nx, const  int ny,
-                                         real* amdq, real* apdq, real* wave,
-                                         real* wave_speed)
+                                     const void* aux_global,
+                                     const int nx, const  int ny,
+                                     real* amdq, real* apdq, real* wave,
+                                     real* wave_speed)
 {
   void_rp_grid_eval_tbb(&advection_rp,
                         advection_rp_grid_params,
                         q,
                         aux,
-                        NULL,
+                        aux_global,
                         nx,
                         ny,
                         amdq,
@@ -287,16 +290,16 @@ void advection_rp_grid_eval_void_tbb(const real* q,  const real* aux,
 }
 
 void advection_rp_grid_eval_void_omp(const real* q,  const real* aux,
-                                         const void* aux_global,
-                                         const int nx, const  int ny,
-                                         real* amdq, real* apdq, real* wave,
-                                         real* wave_speed)
+                                     const void* aux_global,
+                                     const int nx, const  int ny,
+                                     real* amdq, real* apdq, real* wave,
+                                     real* wave_speed)
 {
   void_rp_grid_eval_omp(&advection_rp,
                         advection_rp_grid_params,
                         q,
                         aux,
-                        NULL,
+                        aux_global,
                         nx,
                         ny,  
                         amdq,

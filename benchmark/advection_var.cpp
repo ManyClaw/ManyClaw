@@ -22,12 +22,11 @@ int main(int argc, char ** argv)
 
   printf("Riemann Solve on %dx%d grid\n", nx, ny);
 
-  advection_rp_aux_global_t aux_global={{1.0, 1.0}};
 
-  for (size_t i = 0; i < num_advection_rp_grid_eval_kernels; i++)
+  for (size_t i = 0; i < num_advection_var_rp_grid_eval_kernels; i++)
   {
-    std::cout << advection_rp_grid_eval_names[i] << "  finished in " <<
-      1e3 * benchmark_grid_eval(nx, ny, advection_rp_grid_params, advection_rp_grid_evals[i], &aux_global) << " ms\n";
+    std::cout << advection_var_rp_grid_eval_names[i] << "  finished in " <<
+      1e3 * benchmark_grid_eval(nx, ny, advection_var_rp_grid_params, advection_var_rp_grid_evals[i], NULL) << " ms\n";
   }
   return 0;
 }
