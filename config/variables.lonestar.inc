@@ -5,33 +5,36 @@ MAJOR_VERSION ?= 0
 MINOR_VERSION ?= 1.0
 
 
-CXXFLAGS = 
+CXXFLAGS = -fPIC
 LDFLAGS = 
 
-CXX = g++
+CXX = icpc
 LINK ?= $(CXX)
-ifeq ($(CXX), g++)
-	OMPCFLAGS = -fopenmp
-else ifeq ($(CXX), icpc)
-	OMPCFLAGS = -openmp
-endif
+OMPCFLAGS = -openmp
+# ifeq ($(CXX), g++)
+# 	OMPCFLAGS ?= -fopenmp
+# else ifeq ($(CXX), icpc)
+# 	OMPCFLAGS ?= -openmp
+# endif
 
 
 ifdef OPT
-	OPTFLAGS = -03
+	OPTFLAGS = -O3
+	WARNFLAGS = 
 else 
 	OPTFLAGS = -O0 -g
+	WARNFLAGS = -Wall -Wno-unused-parameter
 endif
-WARNFLAGS =  -Wall -Wno-unused-parameter
-CXXFLAGS += -I./ $(OPTFLAGS) $(WARNFLAGS) $(OMPCFLAGS)
+CXXFLAGS = -I./ $(OPTFLAGS) $(WARNFLAGS) $(OMPCFLAGS) -tbb
 
 
-ifdef TBB_LIB
-	CXXFLAGS += -I$(TBB_INC)
-	TBB_LDFLAGS = -L$(TBB_LIB)  
-endif
-TBB_LDFLAGS += -ltbb
-LDFLAGS += $(TBB_LD_FLAGS)
+# ifdef TBB_LIB
+# 	CXXFLAGS += -I$(TBB_INC)
+# 	TBB_LDFLAGS = -L$(TBB_LIB)  
+# endif
+CXXFLAGS += -tbb
+TBB_LDFLAGS += -L/opt/apps/intel/11.1/tbb/lib/intel64 -ltbb
+LDFLAGS += $(TBB_LDFLAGS)
 
 
 #OCL_CXXFLAGS = -I$(MANYCLAW_DIR)/contrib -framework OpenCL

@@ -13,7 +13,8 @@ Symposium on Highly Parallel Architectures. 2012.
 Install
 -------
 
-* Edit the variables.inc file to specifics of your system
+* Edit the variables.inc file to specifics of your system 
+  > Try just copying a variables.foo.inc in config
 * make all
 * run programs in test and benchmark
 
@@ -23,14 +24,14 @@ Authors
 
 ## Main authors
 
-Andy R. Terrel <andy.terrel@gmail.com>
-Kyle T. Mandli <kyle.Mandli@gmail.com>
+Andy R. Terrel
+Kyle T. Mandli
 
 
 ## Contributors
 
-Nathan Bell <wnbell@gmail.com>
-Donna Calhoun <donna.calhoun@gmail.com>
+Nathan Bell
+Donna Calhoun
 
 
 License

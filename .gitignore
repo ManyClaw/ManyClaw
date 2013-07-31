@@ -21,3 +21,4 @@ src/fortran/manyclaw_fortran
  
 test/gtest_main.a
 *tester
+variables.inc
