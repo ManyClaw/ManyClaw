@@ -24,12 +24,12 @@ void advection_rp(const real* q_left, const real* q_right,
 
   // Wave and speed
   wave[0] = q_right[0] - q_left[0];
-  s[0] = ((advection_rp_aux_global_t*) aux_global)->u[direction];
+  s[0] = aux_global->u[direction];
 
   // This could also be implemented as an if statement or statically
   // based on the sign of s[0] (a.k.a. u)
-  amdq[0] = std::min(0.0,s[0]) * wave[0];
-  apdq[0] = std::max(0.0,s[0]) * wave[0];
+  amdq[0] = std::min(0.0, s[0]) * wave[0];
+  apdq[0] = std::max(0.0, s[0]) * wave[0];
 }
 
 // Variable coefficient Riemann problem
@@ -42,15 +42,13 @@ void advection_var_rp(const real* q_left, const real* q_right,
                   const int direction,
                   real* amdq, real* apdq, real* wave, real* s)
 {
-  const advection_rp_aux_global_t* aux_global = (const advection_rp_aux_global_t *) aux_global_void;
-
   // Wave and speed
   wave[0] = q_right[0] - q_left[0];
   s[0] = 0.5 * (aux_left[direction] + aux_right[direction]);
 
   // This could also be implemented as an if statement or statically
   // based on the sign of s[0] (a.k.a. u)
-  amdq[0] = std::min(0.0,s[0]) * wave[0];
-  apdq[0] = std::max(0.0,s[0]) * wave[0];
+  amdq[0] = std::min(0.0, s[0]) * wave[0];
+  apdq[0] = std::max(0.0, s[0]) * wave[0];
 }
 #endif // ADVECTION_RP_H

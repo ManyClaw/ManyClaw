@@ -30,13 +30,7 @@ real max_error(const Vector& v1, const Vector& v2)
 
 int test_function(int nx);
 
-void compare_grid_evals(int nx, int ny, rp_grid_params_t params,
-                        rp_grid_eval_t rp_grid_eval1, rp_grid_eval_t rp_grid_eval2,
-                        void* aux_global);
 double benchmark_grid_eval(int nx, int ny, rp_grid_params_t params,
                            rp_grid_eval_t rp_grid_eval,
                            void* aux_global);
-double compare_updates(int nx, int ny, rp_grid_params_t params, 
-                       rp_grid_eval_t rp_grid_eval, updater_t updater);
-
 #endif // COMMON_H

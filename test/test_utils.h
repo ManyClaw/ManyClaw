@@ -12,8 +12,8 @@
                                        const real *actual, int size);
 
 ::testing::AssertionResult GridEvalsMatch(int nx, int ny, rp_grid_params_t params,
-					  rp_grid_eval_t rp_grid_eval1, 
-					  rp_grid_eval_t rp_grid_eval2,
+                                          rp_grid_eval_t rp_grid_eval_1, const char* rp_grid_eval_name_1, 
+                                          rp_grid_eval_t rp_grid_eval_2, const char* rp_grid_eval_name_2, 
                                           void* aux_global);
 
 double compare_updates(int nx, int ny, rp_grid_params_t params, 
