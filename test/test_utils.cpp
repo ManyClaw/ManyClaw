@@ -37,13 +37,12 @@ void compare_arrays(const real *expected, const real *actual,
 }
 
 ::testing::AssertionResult GridEvalsMatch(int nx, int ny, rp_grid_params_t params,
-                                          rp_grid_eval_t rp_grid_eval_1, 
-                                          rp_grid_eval_t rp_grid_eval_2,
+                                          rp_grid_eval_t rp_grid_eval_1, const char* rp_grid_eval_name_1, 
+                                          rp_grid_eval_t rp_grid_eval_2, const char* rp_grid_eval_name_2, 
                                           void* aux_global)
 {
   bool results[4];
-  std::string msg;
-  std::ostringstream omsg(msg);
+  std::ostringstream msg;
   Grid grid(nx, ny);
 
   State state(grid, params.num_eqn, params.num_aux, params.num_ghost, aux_global);
@@ -62,13 +61,14 @@ void compare_arrays(const real *expected, const real *actual,
                  &solver_2.amdq[0], &solver_2.apdq[0], &solver_2.wave[0],
                  &solver_2.wave_speed[0]);
 
-  compare_arrays(&solver_1.amdq[0], &solver_2.amdq[0], solver_1.amdq.size(), results[0], omsg);
-  compare_arrays(&solver_1.apdq[0], &solver_2.apdq[0], solver_1.apdq.size(), results[1], omsg);
-  compare_arrays(&solver_1.wave[0], &solver_2.wave[0], solver_1.wave.size(), results[2], omsg);
+  compare_arrays(&solver_1.amdq[0], &solver_2.amdq[0], solver_1.amdq.size(), results[0], msg);
+  compare_arrays(&solver_1.apdq[0], &solver_2.apdq[0], solver_1.apdq.size(), results[1], msg);
+  compare_arrays(&solver_1.wave[0], &solver_2.wave[0], solver_1.wave.size(), results[2], msg);
   compare_arrays(&solver_1.wave_speed[0], &solver_2.wave_speed[0], solver_1.wave_speed.size(),
-                 results[3], omsg);
+                 results[3], msg);
   if (!(results[0] && results[1] && results[2] && results[3]))
-    return ::testing::AssertionFailure() << msg;
+    return ::testing::AssertionFailure() << "Error comparing " << rp_grid_eval_name_1 << " and " 
+					 << rp_grid_eval_name_2 << "\n" << msg.str();
   return ::testing::AssertionSuccess();
 }
 

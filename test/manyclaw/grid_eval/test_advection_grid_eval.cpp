@@ -19,7 +19,7 @@ TEST(AdvectionGridEval, base) {
   real wave[efi.size()], wave_gold[efi.size()];
   real speed[efi.size()], speed_gold[efi.size()];
 
-  advection_rp_aux_global_t aux_global = { {1.0, 1.0} };;
+  advection_rp_aux_global_t aux_global = { {1.0, 1.0} };
 
   for(unsigned idx=0; idx < fi.row_size() * fi.col_size(); ++idx)
       q[idx] = 0.0;
@@ -63,5 +63,16 @@ TEST(AdvectionGridEval, base) {
 
 // validates the different methods
 TEST(AdvectionGridEval, validate) {
+  int nx = 10, ny = 10;
+  rp_grid_params_t params = advection_rp_grid_params; 
+  advection_rp_aux_global_t aux_global = { {1.0, 1.0} };
+
+  for (unsigned idx = 1; idx < num_advection_rp_grid_eval_kernels; ++idx){
+    EXPECT_TRUE(GridEvalsMatch(nx, ny, params, 
+			       advection_rp_grid_evals[idx], advection_rp_grid_eval_names[idx], 
+			       advection_rp_grid_evals[0], advection_rp_grid_eval_names[0], 
+			       &aux_global) );
+  }
+  
 
 }
