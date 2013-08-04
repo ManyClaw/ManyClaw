@@ -29,11 +29,11 @@ void compare_arrays(const real *expected, const real *actual,
 ::testing::AssertionResult ArraysMatch(const real *expected,
                                        const real *actual, int size){
   bool result;
-  std::string msg;
-  std::ostringstream omsg(msg);
-  compare_arrays(expected, actual, size, result, omsg);
-  if (!result)
-    return ::testing::AssertionFailure() << msg;
+  std::ostringstream msg;
+  compare_arrays(expected, actual, size, result, msg);
+  if (!result){
+    return ::testing::AssertionFailure() << msg.str();
+  }
   return ::testing::AssertionSuccess();
 }
 
@@ -77,7 +77,7 @@ void compare_arrays(const real *expected, const real *actual,
 double compare_updates(int nx, int ny, rp_grid_params_t params, 
                        rp_grid_eval_t rp_grid_eval, updater_t updater, void* aux_global)
 {
-  int index;
+  //  int index;
   Grid grid(nx, ny);
 
   State state(grid, params.num_eqn, params.num_aux, params.num_ghost, aux_global);
@@ -85,7 +85,7 @@ double compare_updates(int nx, int ny, rp_grid_params_t params,
 
   for (int row = params.num_ghost; row <= ny + params.num_ghost; ++row) {
     for (int col = params.num_ghost; col <= nx + params.num_ghost; ++col) {
-      index = col + row * (nx + 2 * params.num_ghost);
+      //  index = col + row * (nx + 2 * params.num_ghost);
       for (int state = 0; state < params.num_eqn; ++state) {
         // q[index * params.num_eqn + state] = 0.0;
         // q[index * params.num_eqn + state] = 0.0;
