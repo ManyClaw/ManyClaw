@@ -1,0 +1,16 @@
+before-install:
+ - sudo apt-get update -qq
+ - sudo apt-get install -qq tbb
+
+install:
+  - cp configs/variables.default.inc variables.inc 
+  - make
+
+script: make -C tests
+
+compiler:
+  - clang
+  - gcc
+
+env:
+  - LD_LIBRARY_PATH=$TRAVISBUILD_DIR/lib:$LD_LIBRARY_PATH
