@@ -26,8 +26,7 @@ void compare_arrays(const real *expected, const real *actual,
   }
 }
 
-::testing::AssertionResult ArraysMatch(const real *expected,
-                                       const real *actual, int size){
+::testing::AssertionResult ArraysMatch(const real *actual, const real *expected, int size){
   bool result;
   std::ostringstream msg;
   compare_arrays(expected, actual, size, result, msg);

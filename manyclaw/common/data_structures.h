@@ -140,52 +140,52 @@ struct EdgeFieldIndexer
     : nx(nx), ny(ny), num_ghosts(num_ghosts), num_eqns(num_eqns), num_wave(num_wave)
   {}
 
-  inline int num_row_edge_normal() const
+  inline unsigned num_row_edge_normal() const
   {return (nx + 2*num_ghosts - 2);}
 
-  inline int num_row_edge_transverse() const
+  inline unsigned num_row_edge_transverse() const
   {return (nx + 2*num_ghosts - 1);}
 
-  inline int num_row_edge() const
+  inline unsigned num_row_edge() const
   {return num_row_edge_normal() * num_row_edge_transverse();}
 
-  inline int num_col_edge_normal() const
+  inline unsigned num_col_edge_normal() const
   {return (ny + 2*num_ghosts - 2);}
 
-  inline int num_col_edge_transverse() const
+  inline unsigned num_col_edge_transverse() const
   {return (ny + 2*num_ghosts - 1);}
 
-  inline int num_col_edge() const
+  inline unsigned num_col_edge() const
   {return num_col_edge_normal() * num_col_edge_transverse();}
 
-  inline int num_edge() const
+  inline unsigned num_edge() const
   {return num_row_edge() + num_col_edge();}
 
-  inline int row_normal_size() const
+  inline unsigned row_normal_size() const
   {return num_row_edge_normal()*num_eqns*num_wave;}
 
-  inline int row_transverse_size() const
+  inline unsigned row_transverse_size() const
   {return num_row_edge_transverse()*num_eqns*num_wave;}
 
-  inline int col_normal_size() const
+  inline unsigned col_normal_size() const
   {return num_col_edge_normal()*num_eqns*num_wave;}
 
-  inline int col_transverse_size() const
+  inline unsigned col_transverse_size() const
   {return num_col_edge_transverse()*num_eqns*num_wave;}
 
-  inline int size() const
+  inline unsigned size() const
   {return num_edge() * num_eqns * num_wave;}
 
-  inline int left_edge(const int row, const int col) const
+  inline unsigned left_edge(const unsigned row, const unsigned col) const
   {return (col - 1)*num_eqns*num_wave + (row - 1)*col_transverse_size();}
 
-  inline int right_edge(const int row, const int col) const
+  inline unsigned right_edge(const unsigned row, const unsigned col) const
   {return left_edge(row, col) + 1;}
 
-  inline int down_edge(const int row, const int col) const
+  inline unsigned down_edge(const unsigned row, const unsigned col) const
   {return (col - 1)*num_eqns*num_wave + (row - 1)*col_normal_size() + size()/2;}
 
-  inline int up_edge(const int row, const int col) const
+  inline unsigned up_edge(const unsigned row, const unsigned col) const
   {return (col - 1)*num_eqns*num_wave + row*col_normal_size() + size()/2;}
 };
 

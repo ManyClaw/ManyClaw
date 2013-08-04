@@ -13,7 +13,7 @@ void void_rp_grid_eval_serial(rp_t rp,
                               real* wave,
                               real* wave_speed)
 {
-  int col, row;
+  unsigned col, row;
   const int num_ghost = rp_grid_params.num_ghost;
   const int num_eqn = rp_grid_params.num_eqn;
   const int num_aux = rp_grid_params.num_aux;
@@ -66,7 +66,7 @@ void void_rp_grid_eval_omp(rp_t rp,
                            real* wave,
                            real* wave_speed)
 {
-  int col, row;
+  unsigned col, row;
   const int num_ghost = rp_grid_params.num_ghost;
   const int num_eqn = rp_grid_params.num_eqn;
   const int num_aux = rp_grid_params.num_aux;
@@ -136,7 +136,7 @@ struct void_grid_eval_tbb_body
 
   void operator()(const tbb::blocked_range2d<int>& r) const
   {
-    int col, row;
+    unsigned col, row;
     const int num_ghost = rp_grid_params.num_ghost;
     const int num_eqn = rp_grid_params.num_eqn;
     const int num_aux = rp_grid_params.num_aux;

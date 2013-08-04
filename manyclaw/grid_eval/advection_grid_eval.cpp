@@ -55,7 +55,7 @@ void advection_rp_grid_eval_serial( const real* q,  const real* aux, const void*
                                     real* amdq, real* apdq, real* wave,
                                     real* wave_speed)
 {
-  int col, row;
+  unsigned col, row;
   const int num_ghost = advection_rp_grid_params.num_ghost;
   const int num_eqn = advection_rp_grid_params.num_eqn;
   const int num_wave = advection_rp_grid_params.num_wave;
@@ -106,7 +106,7 @@ void advection_rp_grid_eval_omp( const real* q,  const real* aux, const void* au
                                  real* amdq, real* apdq, real* wave,
                                  real* wave_speed)
 {
-  int col, row;
+  unsigned col, row;
   const int num_ghost = advection_rp_grid_params.num_ghost;
   const int num_eqn = advection_rp_grid_params.num_eqn;
   const int num_wave = advection_rp_grid_params.num_wave;
@@ -169,10 +169,10 @@ struct advection_rp_grid_eval_tbb_body
     : q(q), aux(aux), aux_global(aux_global), nx(nx), ny(ny), amdq(amdq), apdq(apdq), wave(wave), wave_speed(wave_speed)
   {}
 
-  void operator()(const tbb::blocked_range2d<int>& r) const
+  void operator()(const tbb::blocked_range2d<unsigned>& r) const
   {
 
-    int col, row;
+    unsigned col, row;
     const int num_ghost = advection_rp_grid_params.num_ghost;
     const int num_eqn = advection_rp_grid_params.num_eqn;
     const int num_wave = advection_rp_grid_params.num_wave;
@@ -226,7 +226,7 @@ void advection_rp_grid_eval_tbb( const real* q,  const real* aux, const void* au
   advection_rp_grid_eval_tbb_body body(q, aux, aux_global, nx, ny, amdq, apdq, wave, wave_speed);
 
   // note: we use nx+1 and ny+1 here and < in the body (instead of <= in the serial reference)
-  tbb::parallel_for(::tbb::blocked_range2d<int,int>(1, efi.num_row_edge_transverse(),
+  tbb::parallel_for(::tbb::blocked_range2d<unsigned, unsigned>(1, efi.num_row_edge_transverse(),
                                                     1, efi.num_col_edge_transverse()), body);
 }
 

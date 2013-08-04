@@ -26,7 +26,7 @@ TEST(AdvectionGridEval, base) {
   int r=2, c=2;
   q[fi.idx(r, c)] = 1.0;
 
-  for(int idx=0; idx < efi.size(); ++idx) {
+  for(unsigned idx=0; idx < efi.size(); ++idx) {
     wave_gold[idx] = 0.0;
     speed_gold[idx] = 1.0;
     amdq_gold[idx] = 0.0;
