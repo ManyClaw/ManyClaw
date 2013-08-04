@@ -180,8 +180,8 @@ struct advection_rp_grid_eval_tbb_body
     FieldIndexer fi(nx, ny, num_ghost, num_eqn);
     EdgeFieldIndexer efi(nx, ny, num_ghost, num_eqn, num_wave);
 
-    for(row = r.rows().begin(); row < r.rows().end(); ++row){
-      for(col = r.cols().begin(); col < r.cols().end() - 1; ++col) {
+    for(row = r.rows().begin(); row != r.rows().end(); ++row){
+      for(col = r.cols().begin(); col != std::min(r.cols().end(), efi.num_col_edge_normal() + 1); ++col) {
         advection_rp(q + fi.idx(row, col-1), q + fi.idx(row, col),
                      aux, aux,  aux_global, 0,
                      amdq + efi.left_edge(row, col), apdq + efi.left_edge(row, col),
@@ -192,23 +192,53 @@ struct advection_rp_grid_eval_tbb_body
                      wave + efi.down_edge(row, col), wave_speed + efi.down_edge(row, col));
       }
     }
+  }
+};
 
-    for(col = r.cols().begin(); col < r.cols().end(); ++col) {
-      row = r.rows().end();
+struct advection_rp_grid_eval_tbb_boundary
+{
+  const real* q;
+  const real* aux;
+  const void* aux_global;
+  const int nx;
+  const int ny;
+  real* amdq; real* apdq;
+  real* wave; real* wave_speed;
+
+  advection_rp_grid_eval_tbb_boundary(const real* q,  const real* aux, const void* aux_global,
+				      const int nx, const int ny,
+				      real* amdq, real* apdq, real* wave,
+				      real* wave_speed)
+    : q(q), aux(aux), aux_global(aux_global), nx(nx), ny(ny), amdq(amdq), apdq(apdq), wave(wave), wave_speed(wave_speed)
+  {}
+
+  void operator()(const tbb::blocked_range<unsigned>& r) const
+  {
+    
+    unsigned col, row;
+    const int num_ghost = advection_rp_grid_params.num_ghost;
+    const int num_eqn = advection_rp_grid_params.num_eqn;
+    const int num_wave = advection_rp_grid_params.num_wave;
+
+    FieldIndexer fi(nx, ny, num_ghost, num_eqn);
+    EdgeFieldIndexer efi(nx, ny, num_ghost, num_eqn, num_wave);
+    
+    for(col = r.begin(); col != std::min(r.end(), efi.num_col_edge_transverse()); ++col) {
+      row = efi.num_row_edge_transverse();
       advection_rp(q + fi.idx(row - 1, col), q + fi.idx(row, col),
                    aux, aux,  aux_global, 1,
                    amdq + efi.down_edge(row, col), apdq + efi.down_edge(row, col),
                    wave + efi.down_edge(row, col), wave_speed + efi.down_edge(row, col));
     }
-
-    for(row = r.rows().begin(); row < r.rows().end(); ++row){
-      col = r.cols().end() + 1;
+    
+    for(row = r.begin(); row != std::min(r.end(), efi.num_row_edge_transverse()); ++row){
+      col = efi.num_col_edge_transverse();
       advection_rp(q + fi.idx(row, col - 1), q + fi.idx(row, col),
                    aux, aux,  aux_global, 0,
                    amdq + efi.left_edge(row, col), apdq + efi.left_edge(row, col),
                    wave + efi.left_edge(row, col), wave_speed + efi.left_edge(row, col));
     }
-  }
+  }	  
 };
 
 
@@ -224,10 +254,13 @@ void advection_rp_grid_eval_tbb( const real* q,  const real* aux, const void* au
   FieldIndexer fi(nx, ny, num_ghost, num_eqn);
   EdgeFieldIndexer efi(nx, ny, num_ghost, num_eqn, num_wave);
   advection_rp_grid_eval_tbb_body body(q, aux, aux_global, nx, ny, amdq, apdq, wave, wave_speed);
+  advection_rp_grid_eval_tbb_boundary boundary(q, aux, aux_global, nx, ny, amdq, apdq, wave, wave_speed);
 
-  // note: we use nx+1 and ny+1 here and < in the body (instead of <= in the serial reference)
   tbb::parallel_for(::tbb::blocked_range2d<unsigned, unsigned>(1, efi.num_row_edge_transverse(),
-                                                    1, efi.num_col_edge_transverse()), body);
+							       1, efi.num_col_edge_transverse()),
+		    body);
+  tbb::parallel_for(::tbb::blocked_range<unsigned>(1, std::max(efi.num_row_edge_transverse(), efi.num_col_edge_transverse())), 
+		    boundary);
 }
 
 // Macro this off since ForestClaw has trouble with templates.
