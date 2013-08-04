@@ -27,7 +27,7 @@ TEST(UpdateTest, FirstOrderDimensionalSplitting) {
     speed[idx] = 0.0;
   }
 
-  int r=1, c=1;
+  int r=3, c=3;
   amdq[efi.down_edge(r, c)] = -1.0;
   apdq[efi.left_edge(r, c)] = 1.0;
 
