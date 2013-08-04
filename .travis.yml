@@ -11,8 +11,6 @@ before_install:
 install:
   - cp config/variables.default.inc variables.inc 
   - make
+  - export LD_LIBRARY_PATH=$PWD/lib:$LD_LIBRARY_PATH
 
 script: make -C test
-
-env:
-  - LD_LIBRARY_PATH=$TRAVISBUILD_DIR/lib:$LD_LIBRARY_PATH
