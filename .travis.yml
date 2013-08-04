@@ -12,7 +12,7 @@ install:
   - cp config/variables.default.inc variables.inc 
   - make
 
-script: make -C tests
+script: make -C test
 
 env:
   - LD_LIBRARY_PATH=$TRAVISBUILD_DIR/lib:$LD_LIBRARY_PATH
