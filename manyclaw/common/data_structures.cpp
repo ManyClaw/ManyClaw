@@ -13,7 +13,7 @@ Grid::Grid(int nx, int ny)
   num_cells[1] = ny;
 }
 
-State::State(Grid& grid, int num_eqn, int num_aux, int num_ghost, void* aux_global) :
+State::State(Grid& grid, int num_eqn, int num_aux, int num_ghost, const void* aux_global) :
   num_eqn(num_eqn), num_aux(num_aux), num_ghost(num_ghost), aux_global(aux_global), grid(grid)
 {
   const int nx = grid.num_cells[0];

@@ -4,28 +4,48 @@ CXXFLAGS += -I../
 LDFLAGS =  -L../lib -lmanyclaw $(TBB_LDFLAGS)
 
 DRIVERS = advection \
-          advection_var
-#\
-#          euler \
-#          acoustics_const \
-#          acoustics_var
+          advection_var \
+          euler \
+          acoustics_const \
+          acoustics_var
 
-all: $(DRIVERS)
+OBJS = benchmark_utils.o
 
-advection: advection.o 
-	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
+all: $(OBJS) $(DRIVERS) benchit
 
-advection_var: advection_var.o 
-	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
+benchmark_utils.o: benchmark_utils.h
 
-euler: euler.o
-	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS) 
+advection: advection.o $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS) $(OBJS)
 
-acoustics_const: acoustics_const.o 
-	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
+advection_var: advection_var.o $(OBJS) 
+	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS) $(OBJS)
 
-acoustics_var: acoustics_var.o
-	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
+euler: euler.o $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS) $(OBJS)
+
+acoustics_const: acoustics_const.o $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS) $(OBJS)
+
+acoustics_var: acoustics_var.o $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS) $(OBJS)
+
+benchit: $(OBJS) $(DRIVERS)
+	@echo "==========================================="
+	@echo advection
+	./advection
+	@echo "==========================================="
+	@echo advection_var
+	./advection_var
+	@echo "==========================================="
+	@echo acoustics_const
+	./acoustics_const
+	@echo "==========================================="
+	@echo acoustics_var
+	./acoustics_var
+	@echo "==========================================="
+	@echo euler
+	./euler
 
 clean:
-	rm -rf advection advection.o advection_var advection_var.o euler euler.o acoustics_const acoustics_const.o acoustics_var acoustics_var.o
+	rm -rf advection advection.o advection_var advection_var.o euler euler.o acoustics_const acoustics_const.o acoustics_var acoustics_var.o  $(OBJS)
