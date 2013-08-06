@@ -27,10 +27,4 @@ real max_error(const Vector& v1, const Vector& v2)
      std::max<real>,
      abs_diff());
 }
-
-int test_function(int nx);
-
-double benchmark_grid_eval(int nx, int ny, rp_grid_params_t params,
-                           rp_grid_eval_t rp_grid_eval,
-                           void* aux_global);
 #endif // COMMON_H
