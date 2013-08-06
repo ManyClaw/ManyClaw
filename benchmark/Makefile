@@ -32,20 +32,15 @@ acoustics_var: acoustics_var.o $(OBJS)
 
 benchit: $(OBJS) $(DRIVERS)
 	@echo "==========================================="
-	@echo advection
-	./advection
+	./advection 1024 1024
 	@echo "==========================================="
-	@echo advection_var
-	./advection_var
+	./advection_var 1024 1024
 	@echo "==========================================="
-	@echo acoustics_const
-	./acoustics_const
+	./acoustics_const 1024 1024
 	@echo "==========================================="
-	@echo acoustics_var
-	./acoustics_var
+	./acoustics_var 1024 1024
 	@echo "==========================================="
-	@echo euler
-	./euler
+	./euler 1024 1024
 
 clean:
 	rm -rf advection advection.o advection_var advection_var.o euler euler.o acoustics_const acoustics_const.o acoustics_var acoustics_var.o  $(OBJS)
