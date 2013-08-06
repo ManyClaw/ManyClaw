@@ -62,7 +62,7 @@ TEST(AdvectionGridEval, base) {
 }
 
 // validates the different methods
-TEST(AdvectionGridEval, validate) {
+TEST(AdvectionGridEval, validate_const) {
   int nx = 10, ny = 10;
   rp_grid_params_t params = advection_rp_grid_params; 
   advection_rp_aux_global_t aux_global = { {1.0, 1.0} };
@@ -72,6 +72,20 @@ TEST(AdvectionGridEval, validate) {
 			       advection_rp_grid_evals[idx], advection_rp_grid_eval_names[idx], 
 			       advection_rp_grid_evals[0], advection_rp_grid_eval_names[0], 
 			       &aux_global) );
+  }
+  
+
+}
+
+TEST(AdvectionGridEval, validate_var) {
+  int nx = 10, ny = 10;
+  rp_grid_params_t params = advection_var_rp_grid_params; 
+
+  for (unsigned idx = 1; idx < num_advection_var_rp_grid_eval_kernels; ++idx){
+    EXPECT_TRUE(GridEvalsMatch(nx, ny, params, 
+			       advection_var_rp_grid_evals[idx], advection_var_rp_grid_eval_names[idx], 
+			       advection_var_rp_grid_evals[0], advection_var_rp_grid_eval_names[0], 
+			       NULL) );
   }
   
 
