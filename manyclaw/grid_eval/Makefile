@@ -1,6 +1,6 @@
 include ../../variables.inc
 
-OBJS=void_grid_eval.o advection_grid_eval.o euler_grid_eval.o
+OBJS=void_grid_eval.o advection_grid_eval.o acoustics_grid_eval.o euler_grid_eval.o
 
 all: ${OBJS}
 

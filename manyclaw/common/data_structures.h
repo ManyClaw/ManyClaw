@@ -207,7 +207,7 @@ struct State
   int num_eqn;
   int num_aux;
   int num_ghost; // not strictly needed but makes life easier for now
-  void* aux_global; // gotta store aux_global so user can set it.
+  const void* aux_global; // gotta store aux_global so user can set it.
 
 
   // State and auxilary variables
@@ -218,7 +218,7 @@ struct State
   Grid &grid;
 
   // Constructor uses default aux_global
-  State(Grid& grid, int num_eqn, int num_aux, int num_ghost, void* aux_global);
+  State(Grid& grid, int num_eqn, int num_aux, int num_ghost, const void* aux_global);
   void randomize();
 };
 
