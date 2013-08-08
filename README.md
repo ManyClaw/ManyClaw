@@ -7,7 +7,7 @@ the Intel MIC architecture. For more details see:
 
 A.R. Terrel and K. T. Mandli, ManyClaw: Slicing and dicing Riemann
 solvers for next generation highly parallel architectures, TACC-Intel
-Symposium on Highly Parallel Architectures. 2012.
+Symposium on Highly Parallel Architectures. 2012. [[arxiv](http://arxiv.org/abs/1308.1464)]
 
 
 Install
