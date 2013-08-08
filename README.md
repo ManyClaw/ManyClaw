@@ -24,14 +24,14 @@ Authors
 
 ## Main authors
 
-Andy R. Terrel
-Kyle T. Mandli
+* Andy R. Terrel
+* Kyle T. Mandli
 
 
 ## Contributors
 
-Nathan Bell
-Donna Calhoun
+* Nathan Bell
+* Donna Calhoun
 
 
 License
