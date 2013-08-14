@@ -1,42 +1,23 @@
-include ../variables.inc
+EXAMPLES = \
+	advection \
+	swirl \
+	euler_quadrants
 
-CXXFLAGS += -I..
-LDFLAGS = $(TBB_LDFLAGS) -L../lib -lmanyclaw 
+all: $(EXAMPLES)
 
-DRIVERS = advection \
-		  swirl
-          # euler \
-          # acoustics_const \
-          # acoustics_var \
-          # limiters
+advection:
+	$(MAKE) -C advection_2d_square
 
-all: $(DRIVERS)
+swirl:
+	$(MAKE) -C advection_2d_swirl
 
-advection: advection.o
-	$(LINK) $(CXXFLAGS) $(LDFLAGS) -o $@ $<
-
-swirl: swirl.o
-	$(LINK) $(CXXFLAGS) $(LDFLAGS) -o $@ $<
-
-euler: euler.o 
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $<
-
-acoustics_const: acoustics_const.o
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $<
-
-acoustics_var: acoustics_var.o
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $<
-
-limiters: limiters.o
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $<
+euler:
+	$(MAKE) -C euler_2d_quadrants
 
 clean:
-	rm -rf advection advection.o \
-		   swirl swirl.o \
-		   euler euler.o \
-		   acoustics_const acoustics_const.o \
-		   acoustics_var acoustics_var.o \
-		   limiters limiters.o
+	$(MAKE) -C advection_2d_square clean
+	$(MAKE) -C advection_2d_swirl clean
+	$(MAKE) -C euler_2d_quadrants clean
 
 clobber: clean
 	$(MAKE) -C ../ clean
