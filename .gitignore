@@ -26,5 +26,5 @@ variables.inc
 
 demo/advection_2d_square/advection
 demo/advection_2d_swirl/swirl
-demo/acoustics_2d_homogeneous/acoustics_homogeneous
+demo/acoustics_2d_homogeneous/acoustics
 demo/euler_2d_quadrants/quadrants

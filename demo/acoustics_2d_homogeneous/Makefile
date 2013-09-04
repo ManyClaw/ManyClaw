@@ -5,11 +5,11 @@ LINK ?= $(CXX)
 CXXFLAGS += -I../..
 LDFLAGS = $(TBB_LDFLAGS) -L../../lib -lmanyclaw 
 
-acoustics_homogeneous: acoustics_homogeneous.o
+acoustics: acoustics.o
 	$(LINK) $(CXXFLAGS) $(LDFLAGS) -o $@ $<
 
 clean:
-	-rm -rf acoustics_homogeneous acoustics_homogeneous.cpp
+	-rm -rf acoustics acoustics.cpp
 
 clobber: clean
 	$(MAKE) -C ../../ clean
