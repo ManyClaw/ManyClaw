@@ -117,3 +117,60 @@ inline void set_all_periodic_BCs(real* q, real* aux, const unsigned nx, const un
 }
 
 #endif
+
+
+// Zero-order Extrapolation boundary conditions
+inline void set_test_BCs(real* q, real* aux, const unsigned nx, const unsigned ny,
+                               const unsigned num_ghost, const unsigned num_eqn)
+{
+    FieldIndexer fi(nx, ny, num_ghost, num_eqn);
+
+    // Bottom edge
+    for (unsigned row = 0; row < num_ghost; ++row)
+    {
+        for (unsigned col = 0; col < fi.num_col(); ++col)
+        {
+            for (unsigned eqn = 0; eqn < num_eqn; ++eqn)
+            {
+                q[fi.idx(row, col) + eqn] = 100.0;
+            }
+        }
+    }
+
+    // Top edge
+    for (unsigned row = fi.num_row() - num_ghost; row < fi.num_row(); ++row)
+    {
+        for (unsigned col = 0; col < fi.num_col(); ++col)
+        {
+            for (unsigned eqn = 0; eqn < num_eqn; ++eqn)
+            {
+                q[fi.idx(row, col) + eqn] = 200.0;
+            }
+        }
+    }
+
+    // Left edge
+    for (unsigned row = 0; row < fi.num_row(); ++row)
+    {
+        for (unsigned col = 0; col < num_ghost; ++col)
+        {
+            for (unsigned eqn = 0; eqn < num_eqn; ++eqn)
+            {
+                q[fi.idx(row, col) + eqn] = 300.0 ;
+            }
+        }
+    }
+
+    // Right edge
+    for (unsigned row = 0; row < fi.num_row(); ++row)
+    {
+        for (unsigned col = fi.num_col() - num_ghost; col < fi.num_col(); ++col)
+        {
+            for (unsigned eqn = 0; eqn < num_eqn; ++eqn)
+               {
+                   q[fi.idx(row, col) + eqn] = 400.0;
+                                   
+               }   
+        }
+    }
+}
