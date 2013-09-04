@@ -8,7 +8,7 @@
 
 int main(int argc, char ** argv)
 {
-  int nx = 10, ny = 10;
+  int nx = 100, ny = 100;
 
   if (argc == 3)
   {
@@ -24,6 +24,7 @@ int main(int argc, char ** argv)
 
   // Physics
   real gamma = 1.4;
+  euler_rp_aux_global_t aux_global = {gamma};
 
   // Initialize solution
   Grid grid(nx, ny);
@@ -34,7 +35,6 @@ int main(int argc, char ** argv)
   for (int dim = 0; dim < grid.dim; dim++)
     grid.dx[dim] = (grid.upper[dim] - grid.lower[dim]) / grid.num_cells[dim];
 
-  advection_rp_aux_global_t aux_global = {{1,0.5}};
   State state(grid, num_eqn, num_aux, num_ghost, &aux_global);
 
   Solution solution(grid, state);
@@ -43,9 +43,7 @@ int main(int argc, char ** argv)
   // Initialize q  
   // Quadrant initializations
   real p_init[4], rho_init[4], u_init[4], v_init[4];
-  real four_corner_location[2];
-  four_corner_location[0] = 2.0;
-  four_corner_location[1] = 2.0;
+  real four_corner_location[2] = {0.8, 0.8};
 
   // First quadrant (upper right)
   p_init[0] = 1.5;
@@ -74,8 +72,6 @@ int main(int argc, char ** argv)
   real x, y;
   int quadrant;
   FieldIndexer fi_q(nx, ny, num_ghost, num_eqn);
-  FieldIndexer fi_aux(nx, ny, num_ghost, num_aux);
-
   for (int row = num_ghost; row < ny + num_ghost; ++row)
   {
     y = grid.lower[1] + (real(row) - 1.5) * grid.dx[1];
@@ -92,8 +88,6 @@ int main(int argc, char ** argv)
       else if (x >= four_corner_location[0] && y < four_corner_location[1])
         quadrant = 3;
 
-      std::cout << "(x,y,quad) = (" << x << ", " << y << ", " << quadrant << ")\n";
-      
       solution.state.q[fi_q.idx(row, col) + 0] = rho_init[quadrant];
       solution.state.q[fi_q.idx(row, col) + 1] = rho_init[quadrant] 
                                                              * u_init[quadrant];
@@ -114,15 +108,17 @@ int main(int argc, char ** argv)
   solver.num_ghost = num_ghost;
 
   // Take multiple steps
-  double dt = grid.dx[0] * 0.4;
+  double dt = grid.dx[0] * 0.04;
   for (int frame = 1; frame <= 20; frame++)
   {
-    // Take a single time step
-    solver.step(solution, dt, set_zero_order_extrap_BCs, 
-                              euler_rp_grid_eval_void_serial,
-                              updater_first_order_dimensional_splitting);
-    
-    std::cout << "Solution now at t=" << solution.t << "\n";
+    for (int steps = 0; steps < 10; steps++)
+    {
+      // Take a single time step
+      solver.step(solution, dt, set_zero_order_extrap_BCs, 
+                                euler_rp_grid_eval_void_serial,
+                                updater_first_order_dimensional_splitting);
+      std::cout << "Solution now at t=" << solution.t << "\n";
+    }
     solution.write(frame, output_path);      
   }
 
