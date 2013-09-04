@@ -2,6 +2,7 @@
 #define ACOUSTICS_RP_H
 
 #include "../common/manyclaw_common.h"
+#include <iostream>
 
 const real BULK = 1.0;
 const real RHO = 1.0;
@@ -12,9 +13,9 @@ struct acoustics_const_rp_aux_global_t
     real bulk;
     // Density
     real rho;
-    // Impedence
-    real c;  // = sqrt(bulk / rho);
     // Speed of sound
+    real c;  // = sqrt(bulk / rho);
+    // Impedence
     real Z; // = c * rho;
 };
 
@@ -29,39 +30,57 @@ void acoustics_const_rp(const real* q_left, const real* q_right,
                         const int direction,
                         real* amdq, real* apdq, real *wave, real *s)
 {
-
+    const int num_eqn = acoustics_const_rp_grid_params.num_eqn;
     const acoustics_const_rp_aux_global_t* aux_global = (acoustics_const_rp_aux_global_t*) aux_global_void;
 
-    // Local physical constants
-    real alpha[2],delta[2];
-    const int num_eqn = acoustics_const_rp_grid_params.num_eqn;
+    // Direction of sweep
+    int norm_direction, trans_direction;
+    if (direction == 0)
+    {
+        norm_direction = 1;
+        trans_direction = 2;
+    }
+    else
+    {
+        norm_direction = 2;
+        trans_direction = 1;
+    }
 
     // Wave strengths
+    real alpha[2], delta[2];
     delta[0] = q_right[0] - q_left[0];
-    delta[1] = q_right[1] - q_left[1];
+    delta[1] = q_right[norm_direction] - q_left[norm_direction];
     alpha[0] = (-delta[0] + aux_global->Z * delta[1]) / (2.0 * aux_global->Z);
-    alpha[1] = ( delta[1] + aux_global->Z * delta[1]) / (2.0 * aux_global->Z);
+    alpha[1] = ( delta[0] + aux_global->Z * delta[1]) / (2.0 * aux_global->Z);
 
     // Wave speeds
     s[0] = -aux_global->c, s[1] = aux_global->c;
 
     // Set wave vectors
     wave[0 * num_eqn + 0] = -alpha[0] * aux_global->Z;
-    wave[0 * num_eqn + 1] =  alpha[0];
-    wave[0 * num_eqn + 2] =  0.0;
+    wave[0 * num_eqn + norm_direction] =  alpha[0];
+    wave[0 * num_eqn + trans_direction] =  0.0;
 
     wave[1 * num_eqn + 0] = alpha[1] * aux_global->Z;
-    wave[1 * num_eqn + 1] = alpha[1];
-    wave[1 * num_eqn + 2] = 0.0;
+    wave[1 * num_eqn + norm_direction] = alpha[1];
+    wave[1 * num_eqn + trans_direction] = 0.0;
 
     // Grid edge fluctuations
     amdq[0] = s[0] * wave[0 * num_eqn + 0];
     amdq[1] = s[0] * wave[0 * num_eqn + 1];
-    amdq[2] = s[0] * wave[0 * num_eqn + 2];  // This could just be set to zero
+    amdq[2] = s[0] * wave[0 * num_eqn + 2];
 
     apdq[0] = s[1] * wave[1 * num_eqn + 0];
     apdq[1] = s[1] * wave[1 * num_eqn + 1];
-    apdq[2] = s[1] * wave[1 * num_eqn + 2];  // This could just be set to zero
+    apdq[2] = s[1] * wave[1 * num_eqn + 2];
+
+    // std::cout << "direction = " << direction << " norm,trans = " << norm_direction << ", " << trans_direction << "\n";
+    // std::cout << "alpha = " << alpha[0] << ", " << alpha[1] << "\n";
+    // std::cout << "s = " << s[0] << ", " << s[1] << "\n";
+    // std::cout << "wave[0] = " << wave[0] << ", " << wave[1] << ", " << wave[2] << "\n";
+    // std::cout << "wave[1] = " << wave[3] << ", " << wave[4] << ", " << wave[5] << "\n";
+    // std::cout << "amdq = [" << amdq[0] << ", " << amdq[1] << ", " << amdq[2] << "]\n";
+    // std::cout << "apdq = [" << apdq[0] << ", " << apdq[1] << ", " << apdq[2] << "]\n";
 }
 
 
