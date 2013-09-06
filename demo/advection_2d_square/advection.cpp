@@ -64,7 +64,7 @@ int main(int argc, char ** argv)
     {
       // Take a single time step
       solver.step(solution, grid.dx[0] * 0.4, set_all_periodic_BCs, 
-                                              advection_rp_grid_eval_omp,
+                                              advection_rp_grid_eval_serial,
                                               updater_first_order_dimensional_splitting);
       std::cout << "Solution now at t=" << solution.t << "\n";
     }
