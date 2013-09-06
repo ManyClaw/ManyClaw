@@ -84,38 +84,38 @@ void euler_rp(const real* q_left, const real* q_right,
 
   // Waves
   wave[0 * num_eqn + 0] = alpha[0];
-  wave[0 * num_eqn + 1] = alpha[0] * s[0];
-  wave[0 * num_eqn + 2] = alpha[0] * v_hat;
+  wave[0 * num_eqn + normal_velocity] = alpha[0] * s[0];
+  wave[0 * num_eqn + trans_velocity] = alpha[0] * v_hat;
   wave[0 * num_eqn + 3] = alpha[0] * (H - u_hat * sqrt(c2));
 
   wave[1 * num_eqn + 0] = 0.0;
-  wave[1 * num_eqn + 1] = 0.0;
-  wave[1 * num_eqn + 2] = alpha[1];
+  wave[1 * num_eqn + normal_velocity] = 0.0;
+  wave[1 * num_eqn + trans_velocity] = alpha[1];
   wave[1 * num_eqn + 3] = alpha[1] * v_hat;
 
   wave[2 * num_eqn + 0] = alpha[2];
-  wave[2 * num_eqn + 1] = alpha[2] * u_hat;
-  wave[2 * num_eqn + 2] = alpha[2] * v_hat;
+  wave[2 * num_eqn + normal_velocity] = alpha[2] * u_hat;
+  wave[2 * num_eqn + trans_velocity] = alpha[2] * v_hat;
   wave[2 * num_eqn + 3] = alpha[2] * 0.5 * u2v2;
 
   wave[3 * num_eqn + 0] = alpha[3];
-  wave[3 * num_eqn + 1] = alpha[3] * s[3];
-  wave[3 * num_eqn + 2] = alpha[3] * v_hat;
+  wave[3 * num_eqn + normal_velocity] = alpha[3] * s[3];
+  wave[3 * num_eqn + trans_velocity] = alpha[3] * v_hat;
   wave[3 * num_eqn + 3] = alpha[3] * (H + u_hat * sqrt(c2));
+
+  // TODO: Remove statement, only here for debugging
+  if (delta[0] != 0.0 && false && direction == 1)
+  {
+    std::cout << "Non trivial problem\n";
+    std::cout << " q_left = [" << q_left[0] << ", " << q_left[1] << ", " << q_left[2] << ", " << q_left[3] << "]\n";
+    std::cout << " q_right = [" << q_right[0] << ", " << q_right[1] << ", " << q_right[2] << ", " << q_right[3] << "]\n";
+    std::cout << " wave[0] = [" << wave[0*num_eqn + 0] << ", " << wave[0*num_eqn + 1] << ", " << wave[0*num_eqn + 2] << ", " << wave[0*num_eqn + 3] << "]\n";
+    std::cout << " wave[3] = [" << wave[3*num_eqn + 0] << ", " << wave[3*num_eqn + 1] << ", " << wave[3*num_eqn + 2] << ", " << wave[3*num_eqn + 3] << "]\n";
+  }
 
   // Apply entropy fix
   if (aux_global->entropy_fix)
   {
-    // TODO: Remove statement, only here for debugging
-    if (delta[0] != 0.0 && false)
-    {
-      std::cout << "Non trivial problem\n";
-      std::cout << " q_left = [" << q_left[0] << ", " << q_left[1] << ", " << q_left[2] << ", " << q_left[3] << "]\n";
-      std::cout << " q_right = [" << q_right[0] << ", " << q_right[1] << ", " << q_right[2] << ", " << q_right[3] << "]\n";
-      std::cout << " wave[0] = [" << wave[0*num_eqn + 0] << ", " << wave[0*num_eqn + 1] << ", " << wave[0*num_eqn + 2] << ", " << wave[0*num_eqn + 3] << "]\n";
-      std::cout << " wave[3] = [" << wave[3*num_eqn + 0] << ", " << wave[3*num_eqn + 1] << ", " << wave[3*num_eqn + 2] << ", " << wave[3*num_eqn + 3] << "]\n";
-    }
-
     // Splitting storage
     real sfract, df;
 
