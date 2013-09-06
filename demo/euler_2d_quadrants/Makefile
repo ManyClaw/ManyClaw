@@ -2,7 +2,7 @@ CXX ?= g++
 CXXFLAGS ?= 
 LINK ?= $(CXX)
 
-CXXFLAGS += -I../..
+CXXFLAGS += -I../.. -g
 LDFLAGS = $(TBB_LDFLAGS) -L../../lib -lmanyclaw 
 
 quadrants: quadrants.o
@@ -13,3 +13,7 @@ clean:
 
 clobber: clean
 	$(MAKE) -C ../../ clean
+
+new: clobber
+	$(MAKE) -C ../../
+	$(MAKE) quadrants

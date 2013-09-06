@@ -8,12 +8,18 @@
 
 int main(int argc, char ** argv)
 {
-  int nx = 100, ny = 100;
+  int nx = 100, ny = 100, problem = 0;
 
   if (argc == 3)
   {
     nx = std::atoi(argv[1]);
     ny = std::atoi(argv[2]);
+  }
+  else if (argc == 4)
+  {
+    nx = std::atoi(argv[1]);
+    ny = std::atoi(argv[2]);
+    problem = std::atoi(argv[3]);
   }
 
   int num_eqn = 4;
@@ -23,8 +29,9 @@ int main(int argc, char ** argv)
   std::string output_path = "./_output";
 
   // Physics
-  real gamma = 1.4;
-  euler_rp_aux_global_t aux_global = {gamma};
+  real const gamma = 1.4;
+  bool const entropy_fix = false;
+  euler_rp_aux_global_t aux_global = {gamma, entropy_fix};
 
   // Initialize solution
   Grid grid(nx, ny);
@@ -43,31 +50,83 @@ int main(int argc, char ** argv)
   // Initialize q  
   // Quadrant initializations
   real p_init[4], rho_init[4], u_init[4], v_init[4];
-  real four_corner_location[2] = {0.8, 0.8};
+  real four_corner_location[2];
+  int left_index, right_index;
 
-  // First quadrant (upper right)
-  p_init[0] = 1.5;
-  rho_init[0] = 1.5;
-  u_init[0] = 0.0;
-  v_init[0] = 0.0;
+  // Directionality of Riemann test problems
+  if (problem > 0)
+  {
+    four_corner_location[0] = 0.5;
+    four_corner_location[1] = 1.5;
 
-  // Second quadrant (upper left)
-  p_init[1] = 0.3;
-  rho_init[1] = 0.532258064516129;
-  u_init[1] = 1.206045378311055;
-  v_init[1] = 0.0;
+    left_index = 2;
+    right_index = 3;
+  }
+  else
+  {
+    four_corner_location[0] = 1.5;
+    four_corner_location[1] = 0.5;
 
-  // Third quadrant (lower left)
-  p_init[2] = 0.029032258064516;
-  rho_init[2] = 0.137992831541219;
-  u_init[2] = 1.206045378311055;
-  v_init[2] = 1.206045378311055;
+    left_index = 2;
+    right_index = 1;
+  }
 
-  // Fourth quadrant (lower right)
-  p_init[3] = 0.3;
-  rho_init[3] = 0.532258064516129;
-  u_init[3] = 0.0;
-  v_init[3] = 1.206045378311055;
+  if (problem == 0)
+  {
+    // Quadrants problem
+    four_corner_location[0] = 0.8;
+    four_corner_location[1] = 0.8;
+
+    // First quadrant (upper right)
+    p_init[0] = 1.5;
+    rho_init[0] = 1.5;
+    u_init[0] = 0.0;
+    v_init[0] = 0.0;
+
+    // Second quadrant (upper left)
+    p_init[1] = 0.3;
+    rho_init[1] = 0.532258064516129;
+    u_init[1] = 1.206045378311055;
+    v_init[1] = 0.0;
+
+    // Third quadrant (lower left)
+    p_init[2] = 0.029032258064516;
+    rho_init[2] = 0.137992831541219;
+    u_init[2] = 1.206045378311055;
+    v_init[2] = 1.206045378311055;
+
+    // Fourth quadrant (lower right)
+    p_init[3] = 0.3;
+    rho_init[3] = 0.532258064516129;
+    u_init[3] = 0.0;
+    v_init[3] = 1.206045378311055;
+  }
+  else if (abs(problem) == 1)
+  {
+    // Sod test problem
+    rho_init[left_index] = 3.0;
+    p_init[left_index] = 3.0;
+    u_init[left_index] = 0.0;
+    v_init[left_index] = 0.0;
+
+    rho_init[right_index] = 1.0;
+    p_init[right_index] = 1.0;
+    u_init[right_index] = 0.0;
+    v_init[right_index] = 0.0;
+  }
+  else if (abs(problem) == 2)
+  {
+    // Two shock test problem
+    rho_init[left_index] = 1.0;
+    u_init[left_index] = 3.0;
+    p_init[left_index] = 1.0;
+    v_init[left_index] = 0.0;
+
+    rho_init[right_index] = 2.0;
+    u_init[right_index] = 1.0;
+    p_init[right_index] = 1.0;
+    v_init[right_index] = 0.0;
+  }
 
   real x, y;
   int quadrant;
@@ -111,7 +170,7 @@ int main(int argc, char ** argv)
   double dt = grid.dx[0] * 0.04;
   for (int frame = 1; frame <= 20; frame++)
   {
-    for (int steps = 0; steps < 10; steps++)
+    for (int steps = 0; steps < 100; steps++)
     {
       // Take a single time step
       solver.step(solution, dt, set_zero_order_extrap_BCs, 
