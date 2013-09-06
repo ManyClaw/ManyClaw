@@ -9,7 +9,7 @@ acoustics: acoustics.o
 	$(LINK) $(CXXFLAGS) $(LDFLAGS) -o $@ $<
 
 clean:
-	-rm -rf acoustics acoustics.cpp
+	-rm -rf acoustics acoustics.o
 
 clobber: clean
 	$(MAKE) -C ../../ clean
