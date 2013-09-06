@@ -13,3 +13,7 @@ clean:
 
 clobber: clean
 	$(MAKE) -C ../../ clean
+
+new: clobber
+	$(MAKE) -C ../../
+	$(MAKE) swirl
