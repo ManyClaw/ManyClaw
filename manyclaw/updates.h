@@ -20,9 +20,9 @@ void updater_first_order_dimensional_splitting(real* q,
   FieldIndexer fi(nx, ny, num_ghost, num_eqn);
   EdgeFieldIndexer efi(nx, ny, num_ghost, num_eqn);
 
-  for(int row = num_ghost; row <= ny + num_ghost; ++row) 
+  for(int row = num_ghost; row <= ny + num_ghost - 1; ++row) 
   {
-    for(int col = num_ghost; col <= nx + num_ghost; ++col) 
+    for(int col = num_ghost; col <= nx + num_ghost - 1; ++col) 
     {
       for(int eqn=0; eqn < num_eqn; ++eqn)
       {
