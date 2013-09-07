@@ -23,3 +23,8 @@ src/fortran/manyclaw_fortran
 test/gtest_main.a
 *tester
 variables.inc
+
+demo/advection_2d_square/advection
+demo/advection_2d_swirl/swirl
+demo/acoustics_2d_homogeneous/acoustics
+demo/euler_2d_quadrants/quadrants

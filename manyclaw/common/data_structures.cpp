@@ -18,13 +18,15 @@ State::State(Grid& grid, int num_eqn, int num_aux, int num_ghost, const void* au
 {
   const int nx = grid.num_cells[0];
   const int ny = grid.num_cells[1];
-  q.resize((nx+num_ghost*2)*(ny+num_ghost*2)*num_eqn);
-  aux.resize((nx+num_ghost*2)*(ny+num_ghost*2)*num_aux);
+  q.resize((nx + num_ghost * 2) * (ny + num_ghost * 2) * num_eqn);
+  aux.resize((nx + num_ghost * 2) * (ny + num_ghost * 2) * num_aux);
 }
 
 void Solution::write(int frame, std::string output_path)
 {
   const char file_prefix[] = "fort.";
+
+  // TODO: Create output directory if not present
 
   std::ostringstream q_file_path;
   q_file_path << output_path << "/" << file_prefix << "q"
@@ -53,20 +55,21 @@ void Solution::write(int frame, std::string output_path)
               << std::setw(18) << grid.dx[1] << "    dy\n\n";
 
   // Write out q data
-  for (int j = state.num_ghost; j < grid.num_cells[0] + state.num_ghost; j++)
+  FieldIndexer fi(grid.num_cells[0], grid.num_cells[1], state.num_ghost,
+                  state.num_eqn);
+  for (int row = state.num_ghost; row < grid.num_cells[1] + state.num_ghost; ++row)
   {
-    for(int i = state.num_ghost; i < grid.num_cells[1] + state.num_ghost; i++)
+    for (int col = state.num_ghost; col < grid.num_cells[0] + state.num_ghost; ++col)
     {
-      for (int m = 0; m < state.num_eqn; m++)
+      for (int eqn = 0; eqn < state.num_eqn; ++eqn)
       {
         q_file << std::setiosflags(std::ios::fixed) 
                << std::setprecision(8)
                << std::setw(16) 
-               << state.q[m + i * state.num_eqn 
-                            + j * (2*state.num_ghost + grid.num_cells[0])] 
+               << state.q[eqn + fi.idx(row, col)] 
                << " ";
-      }
-      q_file << "\n";
+      }     
+      q_file << "\n"; 
     }
     q_file << "\n";
   }

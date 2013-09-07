@@ -3,6 +3,8 @@
 
 #include <manyclaw/manyclaw.h>
 
+#include <iostream>
+
 #include <limits.h>
 
 // Test the indexer methods
@@ -12,6 +14,7 @@ TEST(AdvectionGridEval, base) {
   int num_eqns = advection_rp_grid_params.num_eqn; 
   int num_wave = advection_rp_grid_params.num_wave; 
   FieldIndexer fi(nx, ny, num_ghost, num_eqns);
+  // Note that here we can use one EdgeFieldIndexer since `num_eqns == num_wave`
   EdgeFieldIndexer efi(nx, ny, num_ghost, num_eqns, num_wave);
   real q[fi.size()];
   real amdq[efi.size()], amdq_gold[efi.size()];

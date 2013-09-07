@@ -63,8 +63,8 @@ int main(int argc, char ** argv)
     for (int steps = 0; steps < 10; steps++)
     {
       // Take a single time step
-      solver.step(solution, grid.dx[0] * 0.4, set_zero_order_extrap_BCs, 
-                                              advection_rp_grid_eval_void,
+      solver.step(solution, grid.dx[0] * 0.4, set_all_periodic_BCs, 
+                                              advection_rp_grid_eval_serial,
                                               updater_first_order_dimensional_splitting);
       std::cout << "Solution now at t=" << solution.t << "\n";
     }
